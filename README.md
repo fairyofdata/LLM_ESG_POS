@@ -1,12 +1,14 @@
-# LLM-based ESG-Focused Portfolio Optimization Service (LEPOS) 
+# LLM-based ESG-Focused Portfolio Optimization Service
 
-Welcome to the ESG-Centered Portfolio Optimization System! This project utilizes the Black-Litterman model to create a portfolio optimization system based on ESG (Environmental, Social, Governance) criteria and user investment preferences.
+[![영상 제목](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
 
 ## About 
 **KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
 - **Adviser**: 조민수 교수 (Department of Information Convergence at KWU)
 - **Affiliated company**: 빌리언스랩 (표수진 박사)
 - **Contributer**: Team KWargs (백지헌(PM), 김나연, 장한재, 신해리)
+
+This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -18,62 +20,76 @@ Welcome to the ESG-Centered Portfolio Optimization System! This project utilizes
 7. [License](#license)
 
 ## Project Overview
-This project implements a portfolio optimization system that combines the Black-Litterman model with customizable ESG scoring. Users can prioritize environmental, social, or governance factors, or choose between financial or ESG-focused investment styles. The optimized portfolio is based on a blend of market data and user preferences, enhancing both financial performance and ESG impact.
+In recent years, ESG has become a critical metric for assessing a company's long-term sustainability and stability. However, traditional ESG evaluation methods often lack transparency and accessibility for non-expert investors. This project addresses these issues by providing a user-centered, transparent ESG evaluation system using an LLM, which performs text-based assessments and applies the Black-Litterman model for portfolio optimization. Through this, the system generates customized portfolios that balance ESG factors and financial returns according to user preferences.
 
 ### Core Objectives
-1. **Enhanced Portfolio Optimization** using Black-Litterman Model to incorporate market data and user-specific preferences.
-2. **Customizable ESG Scoring** allowing users to set weights for ESG factors and adjust their investment style.
-3. **User-Friendly Interface** powered by Streamlit for seamless customization and visualization.
+1. **Technical Implementation**: Develop a pipeline using LLM for ESG assessment and produce an optimized portfolio.
+2. **User-Centered Service**: Provide personalized portfolio construction with ESG evaluation based on user-selected criteria and preferences.
 
 ## Key Features
-- **Data Preprocessing**: Processes historical ESG scores and financial data over the past 5 years, with higher weights assigned to recent data.
-- **Dynamic ESG Scoring**: Customizes scores based on user-defined ESG weights and investment style.
-- **Black-Litterman Model**: Integrates user preferences with market data to compute adjusted expected returns.
-- **Covariance Matrix Shrinkage**: Reduces noise in financial data using the Ledoit-Wolf shrinkage method.
-- **Quadratic Programming Optimization**: Solves the portfolio optimization problem with constraints, ensuring a balanced asset allocation.
-- **Performance Metrics**: Calculates expected return, volatility, and Sharpe ratio for optimized portfolios.
-- **Intuitive UI**: Built with Streamlit, allowing users to interactively adjust ESG weights, investment style, and view results.
+1. **Text Data Collection and Processing**  
+   - Collect articles related to selected companies from various sources using `Selenium` and `BeautifulSoup`, storing the data in `MongoDB` for efficient management.
+   - Preprocess the collected data, anonymizing company names and filtering irrelevant content to ensure high data quality.
+   
+2. **LLM-based ESG Scoring**
+   - Use an LLM (via the OpenAI API) to evaluate collected articles based on ESG relevance, extracting and labeling content by ESG factors and sentiment.
+   - Fine-tune a `KoElectra` model for classification, allowing independent ESG assessments without API dependency.
 
-## Installation (TBU)
-To run this project, you need Python 3.x and the following libraries:
-```bash
-pip install numpy pandas matplotlib pypfopt cvxopt streamlit yfinance
-```
+3. **Comprehensive ESG Evaluation**
+   - Utilize user input for adjusting weights on ESG factors (environmental, social, governance) to customize scoring.
+   - Adjust scores dynamically based on investment style preferences: financial-centered, ESG-centered, or balanced.
+   - Apply a scoring model that integrates multiple ESG rating agencies’ criteria to build a comprehensive score, enabling evaluation for companies outside major agency coverage.
 
-## Usage (TBU)
+4. **Portfolio Optimization via Black-Litterman Model**
+   - Calculate market data and covariance matrices for selected companies using Yahoo Finance data.
+   - Integrate user ESG-adjusted scores into the Black-Litterman model, generating customized expected returns based on user preferences.
+   - Apply `cvxopt` for quadratic programming to calculate optimized portfolio weights, considering constraints like maximum asset weight.
+
+5. **User Interface with Streamlit**
+   - A user-friendly interface allows users to input ESG preferences and visualize optimized portfolios.
+   - Interactive sliders for ESG weights and investment styles, providing an intuitive way to construct personalized portfolios.
+   - Visualization of portfolio metrics, including expected return, volatility, and Sharpe ratio.
+
+## Installation
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/esg-portfolio-optimization.git
-   cd esg-portfolio-optimization
+   git clone https://github.com/fairyofdata/LLM-ESG-POS.git
+   cd LLM-ESG-POS
    ```
 
-2. **Run Streamlit Application**:
+2. **Install Required Packages**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run Streamlit Application**:
    ```bash
    streamlit run app.py
    ```
 
-3. **Interacting with the System**:
-   - Set ESG weights (environmental, social, governance).
-   - Choose an investment style (Financial, Balanced, ESG-focused).
-   - View the optimized portfolio's asset allocation, expected returns, volatility, and Sharpe ratio.
+## Usage
+1. **Data Collection**: Configure company tickers and data sources for article collection.
+2. **Set ESG Preferences**: Use the Streamlit UI to define weights for environmental, social, and governance factors.
+3. **Investment Style Selection**: Choose from financial-centered, ESG-centered, or balanced portfolio options.
+4. **View Portfolio Results**: See portfolio composition and performance metrics, including expected return and volatility.
 
-## Project Structure (TBU)
+## Project Structure
 ```plaintext
-├── data/                   # Historical data and ESG score tables
-├── src/                    # Source code for Black-Litterman and optimization functions
-│   ├── data_preprocessing.py
-│   ├── esg_scoring.py
-│   ├── black_litterman.py
-│   └── portfolio_optimization.py
-├── app.py                  # Streamlit application file
+├── data/                   # Data and ESG score tables
+├── src/                    # Source code for ESG scoring and portfolio optimization
+│   ├── data_processing.py   # LLM-based text processing
+│   ├── esg_scoring.py       # ESG scoring functions
+│   ├── portfolio_optimization.py  # Optimization with Black-Litterman
+│   └── ui/                  # Streamlit UI code
+├── app.py                  # Main application script
 ├── README.md               # Project documentation
 └── requirements.txt        # List of dependencies
 ```
 
 ## Future Extensions
-This project provides several potential extension points:
-- **Real-time Data Integration**: Incorporate live market data updates for more dynamic portfolio adjustments.
-- **Non-public Company Analysis**: Explore ESG scoring for startups and non-public companies.
-- **Additional Optimization Constraints**: Introduce sector or industry constraints for a more diversified portfolio.\
+1. **Expanded ESG Evaluation**: Integrate additional ESG rating sources and add real-time news updates for responsive scoring.
+2. **Scalability for Non-listed Companies**: Develop scoring mechanisms that leverage LLMs to assess startups and non-public companies.
+3. **Improved Constraints in Optimization**: Include sector-specific constraints for better portfolio diversification.
 
-
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
