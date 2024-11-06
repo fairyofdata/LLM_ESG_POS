@@ -1,10 +1,12 @@
 # LLM-based ESG-Focused Portfolio Optimization Support service (LEPOS) 
-KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project 
- * Adviser: 조민수 교수 (Department of Information Convergence at KWU)
- * Affiliated company: 빌리언스랩 (표수진 박사)
- * Contributer: Team KWargs (백지헌(PM), 김나연, 장한재, 신해리)
 
 Welcome to the ESG-Centered Portfolio Optimization System! This project utilizes the Black-Litterman model to create a portfolio optimization system based on ESG (Environmental, Social, Governance) criteria and user investment preferences.
+
+## About 
+**KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
+- **Adviser**: 조민수 교수 (Department of Information Convergence at KWU)
+- **Affiliated company**: 빌리언스랩 (표수진 박사)
+- **Contributer**: Team KWargs (백지헌(PM), 김나연, 장한재, 신해리)
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
@@ -72,4 +74,6 @@ pip install numpy pandas matplotlib pypfopt cvxopt streamlit yfinance
 This project provides several potential extension points:
 - **Real-time Data Integration**: Incorporate live market data updates for more dynamic portfolio adjustments.
 - **Non-public Company Analysis**: Explore ESG scoring for startups and non-public companies.
-- **Additional Optimization Constraints**: Introduce sector or industry constraints for a more diversified portfolio.
+- **Additional Optimization Constraints**: Introduce sector or industry constraints for a more diversified portfolio.\
+
+
