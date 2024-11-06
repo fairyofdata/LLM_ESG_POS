@@ -1,4 +1,4 @@
-# LLM-based ESG-Focused Portfolio Optimization Support service (LEPOS) 
+# LLM-based ESG-Focused Portfolio Optimization Service (LEPOS) 
 
 Welcome to the ESG-Centered Portfolio Optimization System! This project utilizes the Black-Litterman model to create a portfolio optimization system based on ESG (Environmental, Social, Governance) criteria and user investment preferences.
 
