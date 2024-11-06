@@ -1,6 +1,5 @@
 # LLM-based ESG-Focused Portfolio Optimization Service
-
-[![영상 제목](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
+This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
 
 ## About 
 **KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
@@ -8,7 +7,8 @@
 - **Affiliated company**: 빌리언스랩 (표수진 박사)
 - **Contributer**: Team KWargs (백지헌(PM), 김나연, 장한재, 신해리)
 
-This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
+## Project Introduce focused on UI/UX
+[![영상 제목](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
