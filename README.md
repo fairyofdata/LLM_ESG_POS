@@ -8,6 +8,8 @@ This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service
 - **Contributer**: Team KWargs (백지헌(PM), 김나연, 장한재, 신해리)
 
 ## Project Introduce focused on UI/UX
+**Click the below ![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white) video Thumbnail.**
+
 [![영상 제목](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
 
 ## Table of Contents
