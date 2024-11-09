@@ -10,7 +10,7 @@ This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service
 ## Project Introduce focused on UI/UX
 **If you want to watch UI/UX introducing Video, Click the below ![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white) video Thumbnail.**
 
-(I'm Sorry but please right-click the Thumbnail and select **'Open link in new tab'**, if you want keep this tab.)
+(Sorry but please right-click the Thumbnail and select **'Open link in new tab'**, if you want keep this tab.)
 
 [![영상 제목](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
 
