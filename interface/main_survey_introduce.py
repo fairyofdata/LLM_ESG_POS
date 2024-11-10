@@ -152,10 +152,10 @@ with start_page:
         switch_page = st.button("설문 시작하기")
         if switch_page:
             if user_name:
-                with open(r"C:\esgpage\LLM-ESG-POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
+                with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
                     f.write(user_name + '님')
             else:
-                with open(r"C:\esgpage\LLM-ESG-POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
+                with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
                     f.write('당신')
             selected = '설문 페이지'
             st.switch_page('pages/survey_page.py')

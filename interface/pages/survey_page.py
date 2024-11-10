@@ -41,12 +41,15 @@ st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
 
-with st.form('usersurvey',clear_on_submit=False):
-# 설문지 제목
-    # st.markdown('<h1 style="font-size:30px;text-align:center;">ESG 관심 테스트</h1>', unsafe_allow_html=True)
-    # st.markdown('<p style="font-size:15px;text-align:center;"><strong>지속 가능한 투자</strong>에 관심이 있으신가요?</p>', unsafe_allow_html=True)
-    # st.markdown('<p style="font-size:15px;text-align:center;">여러분의 ESG 우선순위를 파악하여 <strong>맞춤형 포트폴리오</strong>를 만들어 드립니다.</p>', unsafe_allow_html=True)
+def evaluate_care_level(response):
+    if response == "신경 쓴다.":
+        return 1
+    elif response == "보통이다.":
+        return 0.5
+    elif response == "신경 쓰지 않는다.":
+        return 0
     
+with st.form('usersurvey',clear_on_submit=False):
     st.markdown('<div class="form-container">', unsafe_allow_html=True)
     # E 섹터 질문
     st.markdown('''
@@ -230,23 +233,13 @@ with st.form('usersurvey',clear_on_submit=False):
     q16 = st.radio('               ', options=('ESG 요소를 중심적으로 고려한다.','ESG와 재무적인 요소를 모두 고려한다.','재무적인 요소를 중심적으로 고려한다.'))
     st.markdown('</div>',unsafe_allow_html=True)
     
-    
+    st.write(q1)
     care_levels = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
     esg_interest = 0
     financial_interest = 0
     results = [evaluate_care_level(level) for level in care_levels]
     for i in range(1, 16):
         exec(f'q{i} = evaluate_care_level(q{i})')
-    for result in results:
-        if result == 1:  # 신경 쓴다 -> ESG 관심도 +1
-            esg_interest += 1
-        elif result == 0.5:  # 보통이다 -> ESG +1, 재무적 관심도 +1
-            esg_interest += 1
-            financial_interest += 1
-        elif result == 0:  # 신경 쓰지 않는다 -> 재무적 관심도 +1
-            financial_interest += 1
-    financial_interest = financial_interest/(esg_interest + financial_interest) * 100
-    esg_interest = esg_interest/(esg_interest + financial_interest) * 100
     _,survey_submitted, _ = st.columns([3,1,3])
     with survey_submitted:
         submitted = st.form_submit_button('설문 완료')
@@ -255,82 +248,58 @@ with st.form('usersurvey',clear_on_submit=False):
         try:
             survey_result = pd.DataFrame(index=['E', 'S', 'G'], columns=['esg1', 'sandp', 'sustain', 'iss', 'msci'])
             survey_result.loc[:, :] = 0
-            no_esg_interest = 0
-            yes_interest = 0
+            yes_interest = 1
+            no_esg_interest = 1
             if q1 == 1:
                 survey_result.at['E', 'sustain'] += (1 * q1)
                 survey_result.at['E', 'msci'] += (0.5 * q1)
-                yes_interest += 1
             elif q1 == 0.5: 
                 survey_result.at['E', 'sustain'] += (0.5 * q1)
                 survey_result.at['E', 'msci'] += (0.25 * q1)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
+
                 
             if q2 == 1:
                 survey_result.at['E', 'iss'] += (0.33 * q2)
                 survey_result.at['E', 'sandp'] += (1 * q2)
-                yes_interest += 1
+
             elif q2 == 0.5:
                 survey_result.at['E', 'iss'] += (0.165 * q2)
                 survey_result.at['E', 'sandp'] += (0.5 * q2)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q3 == 1:
                 survey_result.at['E', 'iss'] += (0.33 * q3)
                 survey_result.at['E', 'esg1'] += (1 * q3)
-                yes_interest += 1
+
             elif q3 == 0.5:
                 survey_result.at['E', 'iss'] += (0.165 * q3)
                 survey_result.at['E', 'esg1'] += (0.5 * q3)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q4 == 1:
                 survey_result.at['E', 'iss'] += (0.33 * q4)
-                yes_interest += 1
             elif q4 == 0.5:
                 survey_result.at['S', 'iss'] += (0.165 * q4)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
 
             if q5 == 1:
                 survey_result.at['E', 'msci'] += (0.5 * q5)
-                yes_interest += 1
             elif q5 == 0.5:
                 survey_result.at['E', 'msci'] += (0.25 * q5)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q6 == 1:
                 survey_result.at['S', 'sustain'] += (0.25 * q6)
                 survey_result.at['S', 'msci'] += (0.2 * q6)
-                yes_interest += 1
             elif q6 == 0.5:
                 survey_result.at['S', 'sustain'] += (0.125 * q6)
                 survey_result.at['S', 'msci'] += (0.1 * q6)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
+
                 
             if q7 == 1:
                 survey_result.at['S', 'sustain'] += (0.25 * q7)
                 survey_result.at['S', 'msci'] += (0.2 * q7)
                 survey_result.at['S', 'iss'] += (0.33 * q7)
-                yes_interest += 1
             elif q7 == 0.5:
                 survey_result.at['S', 'sustain'] += (0.125 * q7)
                 survey_result.at['S', 'msci'] += (0.1 * q7)
                 survey_result.at['S', 'iss'] += (0.165 * q7)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q8 == 1:
                 survey_result.at['S', 'msci'] += (0.2 * q8)
@@ -431,9 +400,9 @@ with st.form('usersurvey',clear_on_submit=False):
             
                 
         finally:
-            survey_result.to_csv(r"C:\esgpage\LLM-ESG-POS\interface\survey_result.csv", encoding='utf-8', index=True)
+            survey_result.to_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index=True)
 
-            with open(r"C:\esgpage\LLM-ESG-POS\interface\user_investment_style.txt", 'w', encoding='utf-8') as f:
+            with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'w', encoding='utf-8') as f:
                 f.write(q16)
                 
             if q16 == "재무적인 요소를 중심적으로 고려한다.":
@@ -444,7 +413,7 @@ with st.form('usersurvey',clear_on_submit=False):
                 q16 = 1
                 
             user_interest = yes_interest / (q16 + no_esg_interest + yes_interest) * 100
-            with open(r"C:\esgpage\LLM-ESG-POS\interface\user_interest.txt", 'w', encoding='utf-8') as f:
+            with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'w', encoding='utf-8') as f:
                 f.write(str(user_interest))
                 
             st.switch_page('pages/survey_result.py')
