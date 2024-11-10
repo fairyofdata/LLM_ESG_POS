@@ -23,432 +23,164 @@ from streamlit_authenticator.utilities import (CredentialsError,
                                                UpdateError)
 from streamlit_extras.switch_page_button import switch_page
 
+import streamlit as st
+import pandas as pd
+import os
+
+import streamlit as st
+import pandas as pd
+import os
+
 st.set_page_config(
-    page_title = "설문 조사",
+    page_title="설문 조사",
     page_icon=":earth_africa:",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-with st.sidebar:
-    st.page_link('main_survey_introduce.py', label='홈', icon="🎯")
-    st.page_link('pages/survey_page.py', label='설문', icon="📋")
-    st.page_link('pages/survey_result.py', label='설문 결과',icon="📊")
-    st.page_link('pages/recent_news.py', label='최신 뉴스',icon="🆕")
-    st.page_link('pages/esg_introduce.py', label='ESG 소개 / 투자 방법', icon="🧩")
-    
-st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
-st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
-values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
+# Get the directory where the current file is located
+BASE_DIR = os.path.dirname(__file__)
 
-with st.form('usersurvey',clear_on_submit=False):
-# 설문지 제목
-    # st.markdown('<h1 style="font-size:30px;text-align:center;">ESG 관심 테스트</h1>', unsafe_allow_html=True)
-    # st.markdown('<p style="font-size:15px;text-align:center;"><strong>지속 가능한 투자</strong>에 관심이 있으신가요?</p>', unsafe_allow_html=True)
-    # st.markdown('<p style="font-size:15px;text-align:center;">여러분의 ESG 우선순위를 파악하여 <strong>맞춤형 포트폴리오</strong>를 만들어 드립니다.</p>', unsafe_allow_html=True)
-    
+# Define file paths based on the current file's directory
+questions_file = os.path.join(BASE_DIR, "../questions_with_weights.csv")
+user_investment_style_file = os.path.join(BASE_DIR, "../user_investment_style.txt")
+user_interest_file = os.path.join(BASE_DIR, "../user_interest.txt")
+survey_result_file = os.path.join(BASE_DIR, "../survey_result.csv")
+
+# Load questions and weights from CSV
+questions_df = pd.read_csv(questions_file, encoding="cp949")
+
+st.write('''
+<style>
+    /* 전체 페이지 배경과 텍스트 색상 설정 */
+    body, div[data-testid="stApp"] {
+        background-color: #ffffff !important; /* 흰색 배경 */
+        color: #000000 !important;           /* 검정색 텍스트 */
+        font-family: Arial, sans-serif;
+    }
+
+    /* 폼 및 질문 스타일 */
+    .form-container, .question {
+        font-size: 20px;
+        text-align: center;
+        font-weight: bold;
+        margin: auto;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff !important; /* 흰색 배경 */
+        color: #000000 !important;           /* 검정색 텍스트 */
+    }
+
+    /* 라디오 버튼 행 스타일 */
+    div.row-widget.stRadio > div {
+        flex-direction: row;
+        justify-content: center;
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+
+    /* 라디오 버튼 옵션 텍스트 강제 색상 설정 */
+    div.stRadio > label {
+        color: #000000 !important; /* 검정색 텍스트 */
+    }
+    div.stRadio div[role="radiogroup"] > label {
+        color: #000000 !important; /* 검정색 텍스트 */
+    }
+
+    /* 버튼 스타일 */
+    button[data-testid="baseButton-secondaryFormSubmit"] {
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff !important; /* 흰색 배경 */
+        color: #000000 !important;           /* 검정색 텍스트 */
+        border: 1px solid #000000;
+    }
+</style>
+''', unsafe_allow_html=True)
+
+
+with st.form('usersurvey', clear_on_submit=False):
     st.markdown('<div class="form-container">', unsafe_allow_html=True)
-    # E 섹터 질문
-    st.markdown('''
-                <!DOCTYPE html>
-                <html lang="ko">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>
-                        div[data-testid="stForm"]{
-                                background-color:#FFFF;
-                            }
-                        div[class="question"]{
-                            margin: auto; 
-                            padding: 40px; 
-                            border-radius: 10px; 
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        }
-                        div[class="st-ae st-af st-ag st-ah st-ai st-aj st-ak st-al"]{
-                            margin:auto;
-                            padding:10px;
-                        }
-                        div[class="st-ay st-az st-b0 st-b1 st-b2 st-b3 st-b4 st-ae st-b5 st-b6 st-b7 st-b8 st-b9 st-ba st-bb st-bc st-bd st-be st-bf st-bg"] {
-                            transform: scale(2.5);
-                            margin-right: 10px;
-                            background-color:#070B19;
-                        }
-                        div[class="st-ay st-c1 st-b0 st-b1 st-b2 st-b3 st-b4 st-ae st-b5 st-b6 st-b7 st-b8 st-b9 st-ba st-bb st-bc st-bd st-be st-bf st-bg"]{
-                            transform: scale(1.5);
-                            margin-right: 10px;
-                            background-color:#070B19;
-                        }
-                        button[data-testid="baseButton-secondaryFormSubmit"]{
-                            border-radius: 10px; 
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                        }
-                    </style>
-                </head>
-                ''',unsafe_allow_html=True)
-    
 
-    
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">1. 투자할 때 기업이 탄소 배출이나 오염물질 관리 등 자연을 보호하는 데 신경 쓰는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q1 = st.radio('', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">2. 투자할 때 기업이 환경 관리 시스템을 구축하는 등 기후 변화에 적극 대응하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q2 = st.radio(' ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">3. 투자할 때 기업이 생산 과정에서 친환경적으로 제품과 서비스를 제공하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q3 = st.radio('  ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    # Sustainalytics ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">4. 투자할 때 기업이 자원을 효율적으로 사용하고 배출량을 줄이는지 고려 하시나요?</div>', unsafe_allow_html=True)
-    q4 = st.radio('   ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">5. 투자할 때 기업이 신재생에너지를 활용하는 등 친환경적으로 활동하는지  고려하시나요?</div>', unsafe_allow_html=True)
-    q5 = st.radio('    ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
+    responses = {}
+    for index, row in questions_df.iterrows():
+        question_id = row["id"]
+        question_text = row["question"]
+        st.markdown(f'<div class="question">{question_text}</div>', unsafe_allow_html=True)
+        responses[question_id] = st.radio('', options=('신경 쓴다.', '보통이다.', '신경 쓰지 않는다.'), key=f"q{question_id}")
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">6. 투자할 때 기업이 직원의 안전을 보장하고 소비자의 권리를 보호하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q6 = st.radio('     ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    # MSCI ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">7. 투자할 때 기업이 지역사회와의 관계를 잘 유지하고 공정하게 운영하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q7 = st.radio('      ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">8. 투자할 때 기업이 건강과 사회에 미치는 부정적인 영향을 줄이는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q8 = st.radio('       ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
+    # Question 16: Special handling for custom logic
+    st.markdown('<div class="question">16. 귀하는 투자시 무엇을 고려하시나요?</div>', unsafe_allow_html=True)
+    q16_response = st.radio('', options=('ESG 요소를 중심적으로 고려한다.', 'ESG와 재무적인 요소를 모두 고려한다.', '재무적인 요소를 중심적으로 고려한다.'),
+                            key="q16")
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">9. 투자할 때 기업이 직원에게 차별 없이 워라벨을 지켜주고, 역량 개발을 지원하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q9 = st.radio('        ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
+    # Add the submit button
+    submitted = st.form_submit_button('설문 완료')
 
-    # 한국ESG기준원 ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">10. 투자할 때 기업이 환경 보호, 직원 복지, 공정 거래 등 사회적 책임을 다하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q10 = st.radio('         ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">11. 투자할 때 기업이 개인정보 보호 등 사이버 보안을 잘 관리하는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q11 = st.radio('          ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">12. 투자할 때 기업이 경영 구조를 유지하기 위해 이사회의 독립성과 전문성을 높이려는 것을 고려하시나요?</div>', unsafe_allow_html=True)
-    q12 = st.radio('           ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-
-    # ISS ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">13. 투자할 때 기업이 감사팀을 운영하고 회계 규정을 잘 지키는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q13 = st.radio('            ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">14. 투자할 때 기업이 주주의 권리를 보호하고 이익을 돌려주는지 고려하시나요?</div>', unsafe_allow_html=True)
-    q14 = st.radio('             ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">15. 투자할 때 기업이 나라에 미치는 영향을 잘 관리하고, 새로운 경영 방식을 도입하는 것을 고려하시나요?</div>', unsafe_allow_html=True)
-    q15 = st.radio('              ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    
-    # 투자 성향에 대한 질문 ()
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">16. 귀하는 투자시 무엇을 고려하시나요?</div>', unsafe_allow_html=True)
-    q16 = st.radio('               ', options=('ESG 요소를 중심적으로 고려한다.','ESG와 재무적인 요소를 모두 고려한다.','재무적인 요소를 중심적으로 고려한다.'))
-    st.markdown('</div>',unsafe_allow_html=True)
-    
-    
-    care_levels = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
-    esg_interest = 0
-    financial_interest = 0
-    results = [evaluate_care_level(level) for level in care_levels]
-    for i in range(1, 16):
-        exec(f'q{i} = evaluate_care_level(q{i})')
-    for result in results:
-        if result == 1:  # 신경 쓴다 -> ESG 관심도 +1
-            esg_interest += 1
-        elif result == 0.5:  # 보통이다 -> ESG +1, 재무적 관심도 +1
-            esg_interest += 1
-            financial_interest += 1
-        elif result == 0:  # 신경 쓰지 않는다 -> 재무적 관심도 +1
-            financial_interest += 1
-    financial_interest = financial_interest/(esg_interest + financial_interest) * 100
-    esg_interest = esg_interest/(esg_interest + financial_interest) * 100
-    _,survey_submitted, _ = st.columns([3,1,3])
-    with survey_submitted:
-        submitted = st.form_submit_button('설문 완료')
-    
     if submitted:
-        try:
-            survey_result = pd.DataFrame(index=['E', 'S', 'G'], columns=['esg1', 'sandp', 'sustain', 'iss', 'msci'])
-            survey_result.loc[:, :] = 0
-            no_esg_interest = 0
-            yes_interest = 0
-            if q1 == 1:
-                survey_result.at['E', 'sustain'] += (1 * q1)
-                survey_result.at['E', 'msci'] += (0.5 * q1)
+        # Initialize survey result DataFrame
+        survey_result = pd.DataFrame(index=['E', 'S', 'G'], columns=['esg1', 'sandp', 'sustain', 'iss', 'msci']).fillna(
+            0)
+        no_esg_interest = 0
+        yes_interest = 0
+
+        # Process questions 1-15 based on weights from CSV
+        for index, row in questions_df.iterrows():
+            question_id = row["id"]
+            answer = responses[question_id]
+
+            # Define weights
+            score_sustain = row["score_sustain"]
+            score_iss = row["score_iss"]
+            score_msci = row["score_msci"]
+            score_esg1 = row["score_esg1"]
+            score_sandp = row["score_sandp"]
+
+            # Assign the area based on question ID
+            if 1 <= question_id <= 5:
+                area = 'E'
+            elif 6 <= question_id <= 10:
+                area = 'S'
+            elif 11 <= question_id <= 15:
+                area = 'G'
+
+            # Calculate scores based on responses and weights
+            if answer == '신경 쓴다.':
+                survey_result.at[area, 'sustain'] += score_sustain
+                survey_result.at[area, 'iss'] += score_iss
+                survey_result.at[area, 'msci'] += score_msci
+                survey_result.at[area, 'esg1'] += score_esg1
+                survey_result.at[area, 'sandp'] += score_sandp
                 yes_interest += 1
-            elif q1 == 0.5: 
-                survey_result.at['E', 'sustain'] += (0.5 * q1)
-                survey_result.at['E', 'msci'] += (0.25 * q1)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q2 == 1:
-                survey_result.at['E', 'iss'] += (0.33 * q2)
-                survey_result.at['E', 'sandp'] += (1 * q2)
-                yes_interest += 1
-            elif q2 == 0.5:
-                survey_result.at['E', 'iss'] += (0.165 * q2)
-                survey_result.at['E', 'sandp'] += (0.5 * q2)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q3 == 1:
-                survey_result.at['E', 'iss'] += (0.33 * q3)
-                survey_result.at['E', 'esg1'] += (1 * q3)
-                yes_interest += 1
-            elif q3 == 0.5:
-                survey_result.at['E', 'iss'] += (0.165 * q3)
-                survey_result.at['E', 'esg1'] += (0.5 * q3)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q4 == 1:
-                survey_result.at['E', 'iss'] += (0.33 * q4)
-                yes_interest += 1
-            elif q4 == 0.5:
-                survey_result.at['S', 'iss'] += (0.165 * q4)
+            elif answer == '보통이다.':
+                survey_result.at[area, 'sustain'] += score_sustain * 0.5
+                survey_result.at[area, 'iss'] += score_iss * 0.5
+                survey_result.at[area, 'msci'] += score_msci * 0.5
+                survey_result.at[area, 'esg1'] += score_esg1 * 0.5
+                survey_result.at[area, 'sandp'] += score_sandp * 0.5
                 yes_interest += 1
             else:
                 no_esg_interest += 1
 
-            if q5 == 1:
-                survey_result.at['E', 'msci'] += (0.5 * q5)
-                yes_interest += 1
-            elif q5 == 0.5:
-                survey_result.at['E', 'msci'] += (0.25 * q5)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q6 == 1:
-                survey_result.at['S', 'sustain'] += (0.25 * q6)
-                survey_result.at['S', 'msci'] += (0.2 * q6)
-                yes_interest += 1
-            elif q6 == 0.5:
-                survey_result.at['S', 'sustain'] += (0.125 * q6)
-                survey_result.at['S', 'msci'] += (0.1 * q6)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q7 == 1:
-                survey_result.at['S', 'sustain'] += (0.25 * q7)
-                survey_result.at['S', 'msci'] += (0.2 * q7)
-                survey_result.at['S', 'iss'] += (0.33 * q7)
-                yes_interest += 1
-            elif q7 == 0.5:
-                survey_result.at['S', 'sustain'] += (0.125 * q7)
-                survey_result.at['S', 'msci'] += (0.1 * q7)
-                survey_result.at['S', 'iss'] += (0.165 * q7)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q8 == 1:
-                survey_result.at['S', 'msci'] += (0.2 * q8)
-                yes_interest += 1
-            elif q8 == 0.5:
-                survey_result.at['S', 'msci'] += (0.1 * q8)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q9 == 1:
-                survey_result.at['S', 'iss'] += (0.33 * q9)
-                survey_result.at['S', 'esg1'] += (1 * q9)
-                yes_interest += 1
-            elif q9 == 0.5:
-                survey_result.at['S', 'iss'] += (0.165 * q9)
-                survey_result.at['S', 'esg1'] += (0.5 * q9)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q10 == 1:
-                survey_result.at['S', 'sustain'] += (0.25 * q10)
-                survey_result.at['S', 'iss'] += (0.33 * q10)
-                yes_interest += 1
-            elif q10 == 0.5:
-                survey_result.at['S', 'sustain'] += (0.125 * q10)
-                survey_result.at['S', 'iss'] += (0.165 * q10)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q11 == 1:
-                survey_result.at['S', 'sustain'] += (0.25 * q11)
-                survey_result.at['S', 'msci'] += (0.2 * q11)
-                survey_result.at['S', 'sandp'] += (1 * q11)
-                yes_interest += 1
-            elif q11 == 0.5:
-                survey_result.at['S', 'sustain'] += (0.125 * q11)
-                survey_result.at['S', 'msci'] += (0.1 * q11)
-                survey_result.at['S', 'sandp'] += (0.5 * q11)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q12 == 1:
-                survey_result.at['G', 'sustain'] += (0.25 * q12)
-                survey_result.at['G', 'msci'] += (0.2 * q12)
-                survey_result.at['G', 'iss'] += (0.2 * q12)
-                survey_result.at['G', 'sandp'] += (1 * q12)
-                survey_result.at['G', 'esg1'] += (0.2 * q12)
-                yes_interest += 1
-            elif q12 == 0.5:
-                survey_result.at['G', 'sustain'] += (0.5 * q12)
-                survey_result.at['G', 'msci'] += (0.5 * q12)
-                survey_result.at['G', 'iss'] += (0.165 * q12)
-                survey_result.at['G', 'sandp'] += (0.165 * q12)
-                survey_result.at['G', 'esg1'] += (0.165 * q12)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q13 == 1:
-                survey_result.at['G', 'iss'] += (0.33 * q13)
-                survey_result.at['G', 'sandp'] += (0.33 * q13)
-                survey_result.at['G', 'esg1'] += (0.33 * q13)
-                yes_interest += 1
-            elif q13 == 0.5:
-                survey_result.at['G', 'iss'] += (0.165 * q13)
-                survey_result.at['G', 'sandp'] += (0.165 * q13)
-                survey_result.at['G', 'esg1'] += (0.165 * q13)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q14 == 1:
-                survey_result.at['G', 'iss'] += (0.33 * q14)
-                survey_result.at['G', 'esg1'] += (0.33 * q14)
-                yes_interest += 1
-            elif q14 == 0.5:
-                survey_result.at['G', 'iss'] += (0.165 * q14)
-                survey_result.at['G', 'esg1'] += (0.165 * q14)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-                
-            if q15 == 1:
-                survey_result.at['G', 'sandp'] += (0.33 * q15)
-                survey_result.at['G', 'esg1'] += (0.33 * q15)
-                yes_interest += 1
-            elif q15 == 0.5:
-                survey_result.at['G', 'sandp'] += (0.33 * q15)
-                survey_result.at['G', 'esg1'] += (0.33 * q15)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
-            
-            
-                
-        finally:
-            survey_result.to_csv(r"C:\esgpage\LLM-ESG-POS\interface\survey_result.csv", encoding='utf-8', index=True)
+        # Process question 16 response
+        with open(user_investment_style_file, 'w', encoding='utf-8') as f:
+            f.write(q16_response)
 
-            with open(r"C:\esgpage\LLM-ESG-POS\interface\user_investment_style.txt", 'w', encoding='utf-8') as f:
-                f.write(q16)
-                
-            if q16 == "재무적인 요소를 중심적으로 고려한다.":
-                q16 = 0.5
-            elif q16 == "ESG와 재무적인 요소를 모두 고려한다.":
-                q16 = 1 
-            elif q16 == "ESG 요소를 중심적으로 고려한다.":
-                q16 = 1
-                
-            user_interest = yes_interest / (q16 + no_esg_interest + yes_interest) * 100
-            with open(r"C:\esgpage\LLM-ESG-POS\interface\user_interest.txt", 'w', encoding='utf-8') as f:
-                f.write(str(user_interest))
-                
-            st.switch_page('pages/survey_result.py')
-            
+        if q16_response == "재무적인 요소를 중심적으로 고려한다.":
+            q16_weight = 0.5
+        elif q16_response == "ESG와 재무적인 요소를 모두 고려한다.":
+            q16_weight = 1
+        else:
+            q16_weight = 1
+
+        user_interest = yes_interest / (q16_weight + no_esg_interest + yes_interest) * 100
+        with open(user_interest_file, 'w', encoding='utf-8') as f:
+            f.write(str(user_interest))
+
+        # Save the survey results to CSV and redirect to results page
+        survey_result.to_csv(survey_result_file, encoding='utf-8', index=True)
+        st.switch_page('pages/survey_result.py')
 
 # elif selected == 'ESG 소개':
 #     col1,_,_ = st.columns([1,2,1])
