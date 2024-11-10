@@ -1,0 +1,9 @@
+from streamlit_plotly_events import plotly_events
+import streamlit as st
+import plotly.express as px
+
+
+st.subheader("# Test")
+fig3 = px.bar(x=[0, 1, 2, 3], y=[0, 1, 2, 3])
+plot_name_holder3 = st.empty()
+clickedPoint3 = plotly_events(fig3, key='bar')

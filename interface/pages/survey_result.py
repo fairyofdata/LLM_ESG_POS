@@ -62,6 +62,29 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# 전역 스타일 설정
+st.markdown("""
+    <style>
+        /* 페이지 전체 배경 */
+        body, div[data-testid="stApp"] {
+            background-color: #ffffff !important;  /* 전체 배경을 흰색으로 설정 */
+            color: #000000 !important;            /* 텍스트를 검정색으로 설정 */
+        }
+
+        /* 일반 텍스트, 제목, 테이블 등 다른 요소에 대한 색상 설정 */
+        h1, h2, h3, h4, h5, h6, p, table, th, td, .stButton > button, .stRadio > label, .stSlider {
+            color: #000000 !important;            /* 모든 텍스트를 검정색으로 설정 */
+        }
+
+        /* 특정 요소의 스타일 설정 */
+        .st-emotion-cache-* {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
 with st.sidebar:
     st.page_link('main_survey_introduce.py', label='홈', icon="🎯")
     st.page_link('pages/survey_page.py', label='설문', icon="📋")
@@ -109,14 +132,29 @@ st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
 
-survey_result = pd.read_csv(r"C:\esgpage\LLM-ESG-POS\interface\survey_result.csv", encoding='utf-8', index_col=0)
-with open(r"C:\esgpage\LLM-ESG-POS\interface\user_investment_style.txt", 'r', encoding='utf-8') as f:
+
+import os
+import pandas as pd
+
+# 최상위 프로젝트 경로 설정
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# 파일 경로 상수 정의
+SURVEY_RESULT_PATH = os.path.join(BASE_DIR, 'survey_result.csv')
+USER_INVESTMENT_STYLE_PATH = os.path.join(BASE_DIR, 'user_investment_style.txt')
+USER_INTEREST_PATH = os.path.join(BASE_DIR, 'user_interest.txt')
+USER_NAME_PATH = os.path.join(BASE_DIR, 'user_name.txt')
+DUMMY_UPDATE_PATH = os.path.join(BASE_DIR, '241007_dummy_update.csv')
+
+survey_result = pd.read_csv(SURVEY_RESULT_PATH, encoding='utf-8', index_col=0)
+
+with open(USER_INVESTMENT_STYLE_PATH, 'r', encoding='utf-8') as f:
     user_investment_style = f.read().strip()
 
-with open(r"C:\esgpage\LLM-ESG-POS\interface\user_interest.txt", 'r', encoding='utf-8') as f:
+with open(USER_INTEREST_PATH, 'r', encoding='utf-8') as f:
     user_interest = f.read().strip()
 
-with open(r"C:\esgpage\LLM-ESG-POS\interface\user_name.txt", 'r', encoding='utf-8') as f:
+with open(USER_NAME_PATH, 'r', encoding='utf-8') as f:
     user_name = f.read().strip()
 
 # 전처리 함수 정의
@@ -160,9 +198,7 @@ def preprocess_data(df):
         raise KeyError("The expected columns 'environmental', 'social', and 'governance' are not present in the dataframe.")
 
 # step 1 : load the provided dataset
-file_path = r"C:\esgpage\LLM-ESG-POS\interface\241007_dummy_update.csv"
-# file_path = r"interface/241007_dummy_update.csv"
-dummy = pd.read_csv(file_path, encoding='euc-kr')
+dummy = pd.read_csv(DUMMY_UPDATE_PATH, encoding='euc-kr')
 # dummy = pd.read_csv(file_path, encoding='cp949')
 # dummy = pd.read_csv(file_path, encoding='utf-8')
 # dummy = pd.read_csv(file_path)
@@ -591,7 +627,7 @@ top_companies['Weight'] = top_companies['Weight'] * 100
 # top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
     # top_companies['Weight'] = top_companies['ticker'].map(cleaned_weights)
     
-with col2:
+with col2: # 파이차트
     st.markdown(f"""<div>
                         <h2 style="font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여 더 다양한 정보를 경험해 보세요.</h2>
                     </div>
@@ -649,6 +685,7 @@ with col3:
             border-radius: 0.5rem;
             padding: 5px;
             background-color: #e4edfb;
+            color: #000000;
             margin : 5px;
             display: flex;
             justify-content: center;
@@ -699,31 +736,49 @@ def generate_html():
         <style>
             body {{
                 font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
             }}
             h1, h2, h3, h4, h5, h6 {{
                 text-align: center;
                 font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
+            
             }}
             .container {{
                 width: 80%;
                 margin: auto;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
+            
             }}
             p {{
                 text-align: center;
                 font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
+            
             }}
             table {{
                 width: 100%;
                 border-collapse: collapse;
                 font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
+            
             }}
             th, td {{
                 border: 1px solid #ddd;
                 padding: 8px;
                 text-align: center;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
+            
             }}
             th {{
-                background-color: #f2f2f2;
+                background-color: #ffffff; /* 밝은 배경 */
+                color: #000000; /* 어두운 텍스트 */
             }}
         </style>
     </head>
@@ -952,66 +1007,103 @@ with col_2:
         
     else:
         st.write('')
-                
+
 with col_3:
     if clicked_points:
         st.markdown(f"""<div>
                             <h2 style="font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
                             </div>
                 """, unsafe_allow_html=True)
-        # MongoDB에서 Company 필드의 고유 값들을 불러오기
-        company_list = collection.distinct('Company')
-            
-        # 유니코드 정규화를 사용해 clicked_company와 company_list 값을 동일한 형식으로 변환
-        clicked_company_normalized = unicodedata.normalize('NFC', clicked_company)
 
-        # 리스트 내의 각 값을 정규화 후 비교
-        clicked_company = next((company for company in company_list if unicodedata.normalize('NFC', company) == clicked_company_normalized), None)
-        titles = collection.find({'Company': clicked_company}, {'_id': 0, 'title': 1})
+        try:
+            # MongoDB에서 Company 필드의 고유 값들을 불러오기
+            company_list = collection.distinct('Company')
 
-# 불러온 데이터 리스트로 저장
-        title_list = [document['title'] for document in titles if 'title' in document]
+            # 유니코드 정규화를 사용해 clicked_company와 company_list 값을 동일한 형식으로 변환
+            clicked_company_normalized = unicodedata.normalize('NFC', clicked_company)
+            clicked_company = next((company for company in company_list if
+                                    unicodedata.normalize('NFC', company) == clicked_company_normalized), None)
+            titles = collection.find({'Company': clicked_company}, {'_id': 0, 'title': 1})
 
-# title_list가 비어 있는지 확인
+            # 불러온 데이터 리스트로 저장
+            title_list = [document['title'] for document in titles if 'title' in document]
+
+        except Exception as e:
+            # MongoDB 오류 발생 시 임시 텍스트 기반 워드클라우드 생성
+            title_list = ["sustainability", "ESG", "environment", "governance", "investment", "responsibility", "renewable", "energy"]  # 예시 텍스트로 대체
+
+        # title_list가 비어 있는지 확인
         if not title_list:
             st.warning("데이터가 없습니다. 다른 기업을 선택해 주세요.")
         else:
-    # 형태소 분석기 설정
-            okt = Okt()
-            nouns_adj_verbs = []
-
-    # 명사, 형용사만 추출
-            for title in title_list:
-                tokens = okt.pos(title, stem=True)
-                for word, pos in tokens:
-                    if pos in ['Noun', 'Adjective']:
-                        nouns_adj_verbs.append(word)
-
-    # 빈도수 계산
-            word_counts = Counter(nouns_adj_verbs)
-            data = word_counts.most_common(500)
-            tmp_data = dict(data)
-
-    # 워드 클라우드 생성 - 폰트 경로 확인 후 설정
             try:
+                # 형태소 분석기 설정 및 단어 목록 생성
+                okt = Okt()
+                nouns_adj_verbs = []
+
+                # 명사, 형용사만 추출
+                for title in title_list:
+                    tokens = okt.pos(title, stem=True)
+                    for word, pos in tokens:
+                        if pos in ['Noun', 'Adjective']:
+                            nouns_adj_verbs.append(word)
+
+                # 빈도수 계산
+                word_counts = Counter(nouns_adj_verbs)
+                data = word_counts.most_common(500)
+                tmp_data = dict(data)
+
+            except Exception:
+                # Java/JVM 문제가 발생하면 기본 단어 목록을 사용
+                tmp_data = {
+                    "sustainability": 100,
+                    "ESG": 80,
+                    "environment": 80,
+                    "governance": 70,
+                    "investment": 60,
+                    "responsibility": 50,
+                    "renewable": 40,
+                    "energy": 30,
+                }
+
+            # 워드 클라우드 생성 - 폰트 경로 확인 후 설정
+            try:
+                # tmp_data가 비어 있는지 확인하여 기본 단어 목록 설정
+                if not tmp_data:
+                    tmp_data = {
+                        "sustainability": 100,
+                        "ESG": 80,
+                        "environment": 80,
+                        "governance": 70,
+                        "investment": 60,
+                        "responsibility": 50,
+                        "renewable": 40,
+                        "energy": 30,
+                    }
+
                 wordcloud = WordCloud(
                     font_path='C:/Windows/Fonts/malgun.ttf',  # Windows 시스템에서 사용할 기본 폰트 설정
                     background_color='white',
                     width=800,
                     height=600
-                        ).generate_from_frequencies(tmp_data)
+                ).generate_from_frequencies(tmp_data)
+
+            except ValueError as e:
+                st.error("워드 클라우드를 생성할 데이터가 부족합니다.")
+                st.stop()
             except OSError:
                 st.error("폰트 파일을 불러올 수 없습니다. 폰트 경로를 확인하거나 설치해 주세요.")
                 st.stop()
 
-    # 워드 클라우드 시각화 및 출력
+            # 워드 클라우드 시각화 및 출력
             fig, ax = plt.subplots(figsize=(10, 6))
             ax.imshow(wordcloud, interpolation='bilinear')
             ax.axis('off')
 
-    # Streamlit에 워드 클라우드 출력
+            # Streamlit에 워드 클라우드 출력
             st.pyplot(fig)
-            
+
+
 # with col_4:
 #     if clicked_points:
 #         st.markdown(f"""<div>

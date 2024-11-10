@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: finance-datareader
+Version: 0.9.94
+Summary: Financial data reader (price, stock list of markets)
+Home-page: https://github.com/financedata/financedatareader
+Author: FinanceData.KR
+Author-email: plusjune@financedata.kr
+License: MIT License
+Keywords: data,finance
+Requires-Python: >=3.5
+Requires-Dist: pandas (>=0.19.2)
+Requires-Dist: requests (>=2.3.0)
+Requires-Dist: requests-file
+Requires-Dist: lxml
+Requires-Dist: tqdm
+
