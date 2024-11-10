@@ -10,6 +10,7 @@ import streamlit.components.v1 as html
 import streamlit_authenticator as stauth
 import numpy as np
 from streamlit_authenticator.utilities.hasher import Hasher
+import os
 import os.path
 import pickle as pkle
 from streamlit_js_eval import streamlit_js_eval
@@ -23,13 +24,9 @@ from streamlit_authenticator.utilities import (CredentialsError,
                                                UpdateError)
 from streamlit_extras.switch_page_button import switch_page
 
-import streamlit as st
-import pandas as pd
-import os
-
-import streamlit as st
-import pandas as pd
-import os
+ESG_IMPORTANT = 'ESG가 재무적 측면보다 중요하다.'
+BALANCED_IMPORTANCE = 'ESG와 재무적 가치의 적절한 균형'
+FINANCIAL_IMPORTANT = '재무적 가치가 ESG보다 중요하다.'
 
 st.set_page_config(
     page_title="설문 조사",
@@ -50,55 +47,85 @@ survey_result_file = os.path.join(BASE_DIR, "../survey_result.csv")
 # Load questions and weights from CSV
 questions_df = pd.read_csv(questions_file, encoding="cp949")
 
-st.write('''
-<style>
-    /* 전체 페이지 배경과 텍스트 색상 설정 */
-    body, div[data-testid="stApp"] {
-        background-color: #ffffff !important; /* 흰색 배경 */
-        color: #000000 !important;           /* 검정색 텍스트 */
-        font-family: Arial, sans-serif;
-    }
-
-    /* 폼 및 질문 스타일 */
-    .form-container, .question {
-        font-size: 20px;
-        text-align: center;
-        font-weight: bold;
-        margin: auto;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #ffffff !important; /* 흰색 배경 */
-        color: #000000 !important;           /* 검정색 텍스트 */
-    }
-
-    /* 라디오 버튼 행 스타일 */
-    div.row-widget.stRadio > div {
-        flex-direction: row;
-        justify-content: center;
-        color: #000000 !important;
-        background-color: #ffffff !important;
-    }
-
-    /* 라디오 버튼 옵션 텍스트 강제 색상 설정 */
-    div.stRadio > label {
-        color: #000000 !important; /* 검정색 텍스트 */
-    }
-    div.stRadio div[role="radiogroup"] > label {
-        color: #000000 !important; /* 검정색 텍스트 */
-    }
-
-    /* 버튼 스타일 */
-    button[data-testid="baseButton-secondaryFormSubmit"] {
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        background-color: #ffffff !important; /* 흰색 배경 */
-        color: #000000 !important;           /* 검정색 텍스트 */
-        border: 1px solid #000000;
-    }
-</style>
-''', unsafe_allow_html=True)
-
+st.write("""
+    <style>
+        /* 전체 페이지 배경과 기본 텍스트 색상 설정 */
+        body, div[data-testid="stApp"] {
+            background-color: #ffffff !important; /* 흰색 배경 */
+            color: #000000 !important;           /* 검정색 텍스트 */
+            font-family: Arial, sans-serif;
+        }
+    
+        /* 폼 및 질문 스타일 */
+        .form-container, .question {
+            font-size: 20px;
+            text-align: center;
+            font-weight: bold;
+            margin: auto;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f0f0f0 !important; /* 밝은 회색 배경 */
+            color: #000000 !important;           /* 검정색 텍스트 */
+        }
+    
+        /* 라디오 버튼 행 스타일 */
+        .stRadio {
+            display: flex !important;
+            justify-content: center !important;
+            flex-direction: row !important; /* 가로 정렬 */
+            gap: 15px !important;           /* 버튼 간 간격 */
+        }
+        .stRadio div[role="radiogroup"] > label {
+            font-size: 16px !important;
+            color: #000000 !important;          /* 검정색 텍스트 */
+            background-color: #e0e0e0 !important; /* 밝은 회색 배경 */
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin: 5px;
+        }
+    
+        /* 라디오 버튼 호버 효과 */
+        .stRadio div[role="radiogroup"] > label:hover {
+            background-color: #c8c8c8 !important; /* 더 짙은 회색 배경 */
+        }
+    
+        /* 설문 완료 버튼 스타일 */
+        .stButton button {
+            display: block !important;
+            margin: 10px auto !important; /* 가운데 정렬 */
+            background-color: #555555 !important; /* 중간 회색 배경 */
+            color: #ffffff !important;            /* 흰색 텍스트 */
+            border: none !important;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        /* 설문 완료 버튼 호버 스타일 */
+        .stButton button:hover {
+            background-color: #333333 !important; /* 더 짙은 회색 */
+        }
+        .centered-button {
+            display: block;
+            margin: 20px auto; /* 가운데 정렬 */
+            background-color: #555555; /* 중간 회색 배경 */
+            color: #ffffff; /* 흰색 텍스트 */
+            border: none;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .centered-button:hover {
+            background-color: #333333; /* 더 짙은 회색 */
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 with st.form('usersurvey', clear_on_submit=False):
     st.markdown('<div class="form-container">', unsafe_allow_html=True)
@@ -108,12 +135,14 @@ with st.form('usersurvey', clear_on_submit=False):
         question_id = row["id"]
         question_text = row["question"]
         st.markdown(f'<div class="question">{question_text}</div>', unsafe_allow_html=True)
-        responses[question_id] = st.radio('', options=('신경 쓴다.', '보통이다.', '신경 쓰지 않는다.'), key=f"q{question_id}")
 
-    # Question 16: Special handling for custom logic
+        # 라디오 버튼들을 한 줄에 배치하고 가운데 정렬
+        responses[question_id] = st.radio('', options=('그렇다', '보통이다', '아니다'), key=f"q{question_id}", index=1)
+
+    # Question 16: Custom logic 적용
     st.markdown('<div class="question">16. 귀하는 투자시 무엇을 고려하시나요?</div>', unsafe_allow_html=True)
-    q16_response = st.radio('', options=('ESG 요소를 중심적으로 고려한다.', 'ESG와 재무적인 요소를 모두 고려한다.', '재무적인 요소를 중심적으로 고려한다.'),
-                            key="q16")
+    q16_response = st.radio('', options=(ESG_IMPORTANT, BALANCED_IMPORTANCE, FINANCIAL_IMPORTANT),
+                            key="q16", index=1)
 
     # Add the submit button
     submitted = st.form_submit_button('설문 완료')
@@ -146,14 +175,14 @@ with st.form('usersurvey', clear_on_submit=False):
                 area = 'G'
 
             # Calculate scores based on responses and weights
-            if answer == '신경 쓴다.':
+            if answer == '그렇다':
                 survey_result.at[area, 'sustain'] += score_sustain
                 survey_result.at[area, 'iss'] += score_iss
                 survey_result.at[area, 'msci'] += score_msci
                 survey_result.at[area, 'esg1'] += score_esg1
                 survey_result.at[area, 'sandp'] += score_sandp
                 yes_interest += 1
-            elif answer == '보통이다.':
+            elif answer == '보통이다':
                 survey_result.at[area, 'sustain'] += score_sustain * 0.5
                 survey_result.at[area, 'iss'] += score_iss * 0.5
                 survey_result.at[area, 'msci'] += score_msci * 0.5
@@ -167,12 +196,12 @@ with st.form('usersurvey', clear_on_submit=False):
         with open(user_investment_style_file, 'w', encoding='utf-8') as f:
             f.write(q16_response)
 
-        if q16_response == "재무적인 요소를 중심적으로 고려한다.":
-            q16_weight = 0.5
-        elif q16_response == "ESG와 재무적인 요소를 모두 고려한다.":
-            q16_weight = 1
+        if q16_response == ESG_IMPORTANT:
+            q16_weight = 0.2
+        elif q16_response == BALANCED_IMPORTANCE:
+            q16_weight = 0.6
         else:
-            q16_weight = 1
+            q16_weight = 1.0
 
         user_interest = yes_interest / (q16_weight + no_esg_interest + yes_interest) * 100
         with open(user_interest_file, 'w', encoding='utf-8') as f:

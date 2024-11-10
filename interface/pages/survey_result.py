@@ -7,7 +7,6 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service  # Service 클래스 임포트
 import pandas as pd
-import streamlit as st
 from streamlit_option_menu import option_menu
 import streamlit.components.v1 as html
 import FinanceDataReader as fdr
@@ -45,7 +44,6 @@ from konlpy.tag import Okt
 from collections import Counter
 from wordcloud import WordCloud
 import unicodedata
-import matplotlib.pyplot as plt
 from pypfopt import risk_models, BlackLittermanModel, expected_returns
 import os
 import pdfkit
@@ -54,6 +52,10 @@ import tempfile
 from  streamlit_vertical_slider import vertical_slider
 import base64
 from dotenv import load_dotenv
+
+ESG_IMPORTANT = 'ESG가 재무적 측면보다 중요하다.'
+BALANCED_IMPORTANCE = 'ESG와 재무적 가치의 적절한 균형'
+FINANCIAL_IMPORTANT = '재무적 가치가 ESG보다 중요하다.'
 
 st.set_page_config(
     page_title = "설문 조사 결과",
@@ -65,23 +67,56 @@ st.set_page_config(
 # 전역 스타일 설정
 st.markdown("""
     <style>
-        /* 페이지 전체 배경 */
+        /* 페이지 전체 배경 및 기본 텍스트 색상 */
         body, div[data-testid="stApp"] {
             background-color: #ffffff !important;  /* 전체 배경을 흰색으로 설정 */
-            color: #000000 !important;            /* 텍스트를 검정색으로 설정 */
+            color: #000000 !important;             /* 텍스트를 검정색으로 설정 */
         }
-
+    
         /* 일반 텍스트, 제목, 테이블 등 다른 요소에 대한 색상 설정 */
-        h1, h2, h3, h4, h5, h6, p, table, th, td, .stButton > button, .stRadio > label, .stSlider {
-            color: #000000 !important;            /* 모든 텍스트를 검정색으로 설정 */
+        h1, h2, h3, h4, h5, h6, p, table, th, td {
+            color: #000000 !important;             /* 모든 텍스트를 검정색으로 설정 */
+            background-color: #ffffff !important;  /* 배경을 흰색으로 설정 */
         }
-
-        /* 특정 요소의 스타일 설정 */
-        .st-emotion-cache-* {
-            color: #000000 !important;
-            background-color: #ffffff !important;
+    
+        /* 슬라이더 스타일 설정 */
+        .stSlider > div, .stSlider > div div[data-testid="stSliderLabel"] {
+            color: #000000 !important;             /* 슬라이더 라벨을 검정색으로 설정 */
+            background-color: #f0f0f5 !important;   /* 슬라이더 배경을 밝은 회색으로 설정 */
+            border-radius: 5px !important;         /* 슬라이더 모서리를 둥글게 */
+            padding: 5px !important;               /* 슬라이더 패딩 추가 */
+        }
+    
+        /* 버튼 스타일 설정 */
+        .stButton > button {
+            background-color: #e0e7ff !important;   /* 버튼을 밝은 파란색 계열로 설정 */
+            color: #000000 !important;              /* 버튼 텍스트를 검정색으로 설정 */
+            border: 1px solid #cbd5e1 !important;   /* 버튼 테두리를 회색으로 설정 */
+            border-radius: 5px !important;          /* 버튼 모서리를 둥글게 */
+            padding: 10px 20px !important;          /* 버튼 패딩 */
+            font-size: 16px !important;             /* 버튼 폰트 크기 */
+        }
+    
+        .stButton > button:hover {
+            background-color: #d1d9ff !important;   /* 버튼 호버 시 약간 짙은 파란색으로 변경 */
+        }
+    
+        /* 라디오 버튼 옵션 스타일 설정 */
+        div[role="radiogroup"] label {
+            color: #000000 !important;              /* 라디오 버튼 텍스트를 검정색으로 설정 */
+            background-color: #ffffff !important;    /* 라디오 버튼 배경을 흰색으로 설정 */
+        }
+    
+        /* 텍스트 입력란 스타일 설정 */
+        .stTextInput > div, .stTextArea > div {
+            background-color: #ffffff !important;    /* 입력란 배경을 흰색으로 설정 */
+            color: #000000 !important;               /* 입력란 텍스트를 검정색으로 설정 */
+            border: 1px solid #cbd5e1 !important;    /* 입력란 테두리 설정 */
+            border-radius: 5px !important;           /* 입력란 모서리를 둥글게 */
         }
     </style>
+
+
 """, unsafe_allow_html=True)
 
 
@@ -255,47 +290,6 @@ def recommend_companies(esg_weights, df):
 
     return top_companies
 
-# 포트폴리오 비중 계산 함수 with CVXOPT
-# def calculate_portfolio_weights(top_companies):
-#     tickers = top_companies['ticker'].tolist()
-#     price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
-#     price_data = price_data.dropna(axis=1, how='any')
-#     if price_data.isnull().values.any():
-#         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
-
-#     # 일별 수익률 계산
-#     returns = price_data.pct_change().dropna()
-
-#     # 평균 수익률과 공분산 행렬
-#     mu = returns.mean().values
-#     Sigma = returns.cov().values
-
-#     # `cvxopt`에서 사용할 행렬 형식으로 변환
-#     n = len(mu)
-#     P = matrix(Sigma)
-#     q = matrix(np.zeros(n))
-#     G = matrix(-np.eye(n))
-#     h = matrix(np.zeros(n))
-#     A = matrix(1.0, (1, n))
-#     b = matrix(1.0)
-
-#     # 쿼드라틱 프로그래밍 솔버 실행
-#     sol = solvers.qp(P, q, G, h, A, b)
-
-#     # 최적 가중치 추출
-#     weights = np.array(sol['x']).flatten()
-
-#     # 포트폴리오 성과 지표 계산
-#     expected_return = np.dot(weights, mu)
-#     expected_volatility = np.sqrt(np.dot(weights.T, np.dot(Sigma, weights)))
-#     sharpe_ratio = expected_return / expected_volatility
-
-#     # 가중치 정리
-#     cleaned_weights = dict(zip(tickers, weights))
-
-#     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
-
-
 st.markdown("""
             <style>
             .st-emotion-cache-10hsuxw e1f1d6gn2{
@@ -303,7 +297,6 @@ st.markdown("""
             }
             </style>
             """,unsafe_allow_html=True)
-
 
 # 블랙리터만 모델 적용 함수
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
@@ -329,11 +322,11 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     )
 
     # 사용자 투자시 고려하는 부분에 따른 가중치 설정
-    if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
-        esg_weight_factor = 0.5
-    elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
-        esg_weight_factor = 1 
-    elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
+    if user_investment_style == FINANCIAL_IMPORTANT:
+        esg_weight_factor = 0.2
+    elif user_investment_style == BALANCED_IMPORTANCE:
+        esg_weight_factor = 0.6
+    elif user_investment_style == ESG_IMPORTANT:
         esg_weight_factor = 1
 
     # 최종 ESG 점수와 성향에 따른 조정
@@ -432,11 +425,11 @@ def display_text_on_hover(hover_text, i, origin_text):
 # col1, col2 = st.columns([1,4])
 col1, col2, col3, col4 = st.columns([1,3,1,1])
 with col1:
-    if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
+    if user_investment_style == FINANCIAL_IMPORTANT:
         esg_weight_factor = 0
-    elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
+    elif user_investment_style == BALANCED_IMPORTANCE:
         esg_weight_factor = 5
-    elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
+    elif user_investment_style == ESG_IMPORTANT:
         esg_weight_factor = 10
         
     survey_result_sum = survey_result.sum(axis=1)
@@ -532,7 +525,7 @@ with col1:
     
     # display_text_on_hover("해당 관심도 값은<br> 설문지의 결과를 바탕으로<br> 도출된 값입니다.<br> 슬라이더가 우측에 가까울수록 <br> 투자시 ESG 요소를<br> 더 고려한다는 것을<br> 의미합니다.",1,"나의 ESG 관심도")
     # esg_weight_factor = st.slider('   ',min_value=float(0),max_value=float(10),value=float(esg_weight_factor))
-    
+
     with stylable_container(key="environmental_container",css_styles="""
             {
                 border: none;
@@ -618,15 +611,6 @@ top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
 top_companies['Weight'] = top_companies['Weight'] * 100
 
 
-
-# cvxopt 적용 버전
-# portfolio_weights, portfolio_performance = calculate_portfolio_weights(top_companies)
-# industries = df_new['industry'].unique().tolist()
-    # processed_df = df_new[df_new['industry'].isin(industries)].copy()
-
-# top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
-    # top_companies['Weight'] = top_companies['ticker'].map(cleaned_weights)
-    
 with col2: # 파이차트
     st.markdown(f"""<div>
                         <h2 style="font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여 더 다양한 정보를 경험해 보세요.</h2>
