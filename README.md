@@ -78,6 +78,7 @@ In recent years, ESG has become a critical metric for assessing a company's long
 4. **View Portfolio Results**: See portfolio composition and performance metrics, including expected return and volatility.
 
 ## Project Structure
+![Architecture](https://github.com/fairyofdata/LLM.ESG.POS/blob/master/%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%84%B1%EB%8F%84.drawio.png)
 ```plaintext
 ├── data/                   # Data and ESG score tables
 ├── src/                    # Source code for ESG scoring and portfolio optimization
