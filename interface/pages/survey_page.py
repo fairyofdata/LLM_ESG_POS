@@ -233,7 +233,6 @@ with st.form('usersurvey',clear_on_submit=False):
     q16 = st.radio('               ', options=('ESG 요소를 중심적으로 고려한다.','ESG와 재무적인 요소를 모두 고려한다.','재무적인 요소를 중심적으로 고려한다.'))
     st.markdown('</div>',unsafe_allow_html=True)
     
-    st.write(q1)
     care_levels = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15]
     esg_interest = 0
     financial_interest = 0
@@ -291,7 +290,6 @@ with st.form('usersurvey',clear_on_submit=False):
                 survey_result.at['S', 'sustain'] += (0.125 * q6)
                 survey_result.at['S', 'msci'] += (0.1 * q6)
 
-                
             if q7 == 1:
                 survey_result.at['S', 'sustain'] += (0.25 * q7)
                 survey_result.at['S', 'msci'] += (0.2 * q7)
@@ -303,47 +301,31 @@ with st.form('usersurvey',clear_on_submit=False):
                 
             if q8 == 1:
                 survey_result.at['S', 'msci'] += (0.2 * q8)
-                yes_interest += 1
             elif q8 == 0.5:
                 survey_result.at['S', 'msci'] += (0.1 * q8)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q9 == 1:
                 survey_result.at['S', 'iss'] += (0.33 * q9)
                 survey_result.at['S', 'esg1'] += (1 * q9)
-                yes_interest += 1
             elif q9 == 0.5:
                 survey_result.at['S', 'iss'] += (0.165 * q9)
                 survey_result.at['S', 'esg1'] += (0.5 * q9)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q10 == 1:
                 survey_result.at['S', 'sustain'] += (0.25 * q10)
                 survey_result.at['S', 'iss'] += (0.33 * q10)
-                yes_interest += 1
             elif q10 == 0.5:
                 survey_result.at['S', 'sustain'] += (0.125 * q10)
                 survey_result.at['S', 'iss'] += (0.165 * q10)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q11 == 1:
                 survey_result.at['S', 'sustain'] += (0.25 * q11)
                 survey_result.at['S', 'msci'] += (0.2 * q11)
                 survey_result.at['S', 'sandp'] += (1 * q11)
-                yes_interest += 1
             elif q11 == 0.5:
                 survey_result.at['S', 'sustain'] += (0.125 * q11)
                 survey_result.at['S', 'msci'] += (0.1 * q11)
                 survey_result.at['S', 'sandp'] += (0.5 * q11)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q12 == 1:
                 survey_result.at['G', 'sustain'] += (0.25 * q12)
@@ -351,51 +333,35 @@ with st.form('usersurvey',clear_on_submit=False):
                 survey_result.at['G', 'iss'] += (0.2 * q12)
                 survey_result.at['G', 'sandp'] += (1 * q12)
                 survey_result.at['G', 'esg1'] += (0.2 * q12)
-                yes_interest += 1
             elif q12 == 0.5:
                 survey_result.at['G', 'sustain'] += (0.5 * q12)
                 survey_result.at['G', 'msci'] += (0.5 * q12)
                 survey_result.at['G', 'iss'] += (0.165 * q12)
                 survey_result.at['G', 'sandp'] += (0.165 * q12)
                 survey_result.at['G', 'esg1'] += (0.165 * q12)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q13 == 1:
                 survey_result.at['G', 'iss'] += (0.33 * q13)
                 survey_result.at['G', 'sandp'] += (0.33 * q13)
                 survey_result.at['G', 'esg1'] += (0.33 * q13)
-                yes_interest += 1
             elif q13 == 0.5:
                 survey_result.at['G', 'iss'] += (0.165 * q13)
                 survey_result.at['G', 'sandp'] += (0.165 * q13)
                 survey_result.at['G', 'esg1'] += (0.165 * q13)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q14 == 1:
                 survey_result.at['G', 'iss'] += (0.33 * q14)
                 survey_result.at['G', 'esg1'] += (0.33 * q14)
-                yes_interest += 1
             elif q14 == 0.5:
                 survey_result.at['G', 'iss'] += (0.165 * q14)
                 survey_result.at['G', 'esg1'] += (0.165 * q14)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
                 
             if q15 == 1:
                 survey_result.at['G', 'sandp'] += (0.33 * q15)
                 survey_result.at['G', 'esg1'] += (0.33 * q15)
-                yes_interest += 1
             elif q15 == 0.5:
                 survey_result.at['G', 'sandp'] += (0.33 * q15)
                 survey_result.at['G', 'esg1'] += (0.33 * q15)
-                yes_interest += 1
-            else:
-                no_esg_interest += 1
             
             
                 

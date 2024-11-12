@@ -4,8 +4,9 @@ import requests
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service  # Service 클래스 임포트
+from selenium.webdriver.chrome.service import Service 
 import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -31,6 +32,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
 from cvxopt import matrix, solvers
+from PIL import Image
 from streamlit_extras.stylable_container import stylable_container
 from streamlit_authenticator.utilities import (CredentialsError,
                                                ForgotError,
@@ -54,6 +56,9 @@ import tempfile
 from  streamlit_vertical_slider import vertical_slider
 import base64
 from dotenv import load_dotenv
+import pyautogui
+from fpdf import FPDF
+import pyscreenshot as ImageGrab
 
 st.set_page_config(
     page_title = "설문 조사 결과",
@@ -108,6 +113,17 @@ for key in ['environmental', 'social', 'governance']:
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
+st.markdown(
+    """
+    <style>
+        .element-container st-emotion-cache-1c12lws e1f1d6gn4{  /* Streamlit의 기본 간격 클래스 */
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 survey_result = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index_col=0)
 with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'r', encoding='utf-8') as f:
@@ -118,6 +134,8 @@ with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'r', encoding='
 
 with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'r', encoding='utf-8') as f:
     user_name = f.read().strip()
+    
+company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이터 수집 현황 + 평가기관 점수 수집 + 기업 정보 요약.xlsx")
 
 # 전처리 함수 정의
 def preprocess_data(df):
@@ -276,7 +294,7 @@ header = f"""
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             header[data-testid="stHeader"]::after {{
-                content: "{user_name}을 위한 ESG 투자 최적화 포트폴리오";
+                content: "\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0\\00a0{user_name}을 위한 ESG 투자 최적화 포트폴리오";
                 display: block;
                 font-size: 30px;
                 word-spacing: 3px;
@@ -424,7 +442,7 @@ def display_text_on_hover(hover_text, i, origin_text):
     # origin_text의 스타일을 수정하여 HTML 정의
     text_hover = f'''
         <div class="{hover_class}">
-            <a href="#hover_text" style="color: black; font-size: 20px; text-align: center; text-decoration: none;">{origin_text}&ensp;&ensp;</a>
+            <a href="#hover_text" style="color: black; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
             <div class="{tooltip_class}"></div>
             <div class="{text_popup_class}">{hover_text}</div>
         </div>
@@ -435,8 +453,6 @@ def display_text_on_hover(hover_text, i, origin_text):
 
 # st.markdown(f'''<h1 style="text-align:center;font-size:32px;padding:0px;margin:10px;">{user_name}을 위한 ESG 중심 포트폴리오 제안서 <br></h1>''',unsafe_allow_html=True)
 
-
-# col1, col2, col3, col4 = st.columns([1,3,1,1])
 col1, col2, col3 = st.columns([1,1,3])
 with col1:
     if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
@@ -471,7 +487,7 @@ with col1:
         e_value = vertical_slider(
             label = "환경", 
             key = "environmental" ,
-            height = 300, 
+            height = 350, 
             step = 0.1,
             default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -486,7 +502,7 @@ with col1:
         s_value = vertical_slider(
             label = "사회",  #Optional
             key = "social" ,
-            height = 300, #Optional - Defaults to 300
+            height = 350, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['S'].sum() *10/4.79,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -501,7 +517,7 @@ with col1:
         g_value = vertical_slider(
             label = "지배구조",  #Optional
             key = "governance" ,
-            height = 300, #Optional - Defaults to 300
+            height = 350, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['G'].sum()*10/4.16,
             min_value= 0.0, # Defaults to 0
@@ -658,21 +674,136 @@ with col2:
         height=400,
     )
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
-        
+    
+def create_pdf(e_value, s_value, g_value, fig, annual_return, volatility, sharpe_ratio, companies_df):
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+
+    # 제목 추가
+    pdf.set_font("Arial", size=16, style='B')
+    pdf.cell(200, 10, txt="당신을 위한 ESG 투자 최적화 포트폴리오", ln=True, align='C')
+    pdf.ln(10)
+
+    # 슬라이더 값 추가
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"환경 (E) 투자 비율: {e_value}%", ln=True)
+    pdf.cell(200, 10, txt=f"사회 (S) 투자 비율: {s_value}%", ln=True)
+    pdf.cell(200, 10, txt=f"지배구조 (G) 투자 비율: {g_value}%", ln=True)
+    pdf.ln(10)
+
+    # Plotly 차트 이미지를 PDF로 저장 후 추가
+    fig.write_image("pie_chart.png")
+    pdf.image("pie_chart.png", x=10, y=pdf.get_y(), w=180)
+    pdf.ln(100)  # 이미지와 내용 사이에 간격 추가
+
+    # 연간 수익률, 변동성, 샤프 비율 추가
+    pdf.set_font("Arial", size=12)
+    pdf.cell(200, 10, txt=f"연간 수익률: {annual_return}%", ln=True)
+    pdf.cell(200, 10, txt=f"변동성: {volatility}%", ln=True)
+    pdf.cell(200, 10, txt=f"샤프 비율: {sharpe_ratio}", ln=True)
+    pdf.ln(10)
+
+    # 기업명과 소개 추가
+    pdf.set_font("Arial", size=12, style='B')
+    pdf.cell(200, 10, txt="기업 목록 및 소개:", ln=True)
+    pdf.set_font("Arial", size=12)
+    for index, row in companies_df.iterrows():
+        pdf.cell(200, 10, txt=f"{row['Company Name']}: {row['Introduction']}", ln=True)
+    pdf.ln(10)
+
+    # PDF 파일 저장
+    pdf.output("esg_investment_report.pdf")
+            
 with col3:
+    company_list['종목코드'] = company_list['종목코드'].str[1:]
+    top_companies['ticker'] = top_companies['ticker'].str.replace('.KS', '')
+
     expected_return = portfolio_performance[0]
     expected_volatility = portfolio_performance[1]
     sharpe_ratio = portfolio_performance[2]   
-    
-    filtered_companies = top_companies.nlargest(5, 'Weight')
-    filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance']]
+
+    top_companies = top_companies.nlargest(5, 'Weight')
+    filtered_companies = pd.merge(company_list, top_companies, left_on='종목코드', right_on='ticker')
+    filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
     filtered_companies = filtered_companies.rename(columns={
         'Company': '종목명',
         'Weight': '제안 비중',
         'environmental': 'E',
         'social': 'S',
-        'governance': 'G'
+        'governance': 'G',
+        '종목설명' :'종목 소개'
     })
+   
+
+    html_code2 = f"""
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+        <meta charset="UTF-8">
+        <style>
+            .tooltip {{
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            }}
+            .tooltip .tooltiptext {{
+            visibility: hidden;
+            width: 200px;
+            background-color: #6c757d;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%; 
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            }}
+            .tooltip:hover .tooltiptext {{
+            visibility: visible;
+            opacity: 1;
+            }}
+            table {{
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            }}
+            th, td {{
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            width: 16.66%;
+            }}
+            th {{
+            background-color: #f2f2f2;
+            }}
+        </style>
+        </head>
+        <body>
+        <div style="font-family: Arial, sans-serif;">
+        <table>
+            <thead>
+            <tr>
+                <th class="tooltip">연간 기대 수익률
+                </th>
+                <th data-container="body">{expected_return:.2%}</th>
+                <th class="tooltip">연간 변동성
+                </th>
+                <th data-container="body">{expected_volatility:.2%}</th>
+                <th class="tooltip">샤프 비율
+                </th>
+                <th data-container="body">{sharpe_ratio:.2%}</th>
+            </tr>
+            </thead>
+        </table>
+        </div>
+        </body>
+        </html>
+    """
     
     # 상단에 기대수익률, 변동성, 샤프비율 표시
     # _,col1, col2, col3,_ = st.columns([2,3,3,3,2])
@@ -684,10 +815,76 @@ with col3:
         display_text_on_hover("해당 지표는 수익률이 얼마나 변동할 수 있는지를 나타내는 위험 지표입니다.",1,f"연간 변동성 &emsp; {expected_volatility * 100:.2f} %")
     with col3:
         display_text_on_hover("해당 지표는 포트폴리오가 위험 대비 얼마나 효과적으로 수익을 내는지를 나타내는 성과 지표입니다.",1,f"샤프 비율 &emsp;{sharpe_ratio * 100:.2f}")
+    
+    # HTML 코드에 툴팁 추가 및 두 행 구조로 변환
+    html_code = f"""
+    <div style="font-family: Arial, sans-serif; text-align:center;">
+    <style>
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            }}
+        th, td {{
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }}
+        th {{
+            background-color: #f2f2f2;
+        }}
+        </style>
+    </style>
+    <table>
+        <thead>
+        <tr>
+            <th>종목명</th>
+            <th>제안 비중</th>
+            <th>E</th>
+            <th>S</th>
+            <th>G</th>
+            <th>종목 소개</th>
+        </tr>
+        </thead>
+        <tbody>
+    """
+    
+    for _, row in filtered_companies.iterrows():
+        html_code += f"""<tr>
+        <td style="font-size=13px;">{row['종목명']}</td>
+        <td>{int(row['제안 비중'])}%</td>
+        <td>{row['E']:.1f}</td>
+        <td>{row['S']:.1f}</td>
+        <td>{row['G']:.1f}</td>
+        <td style="text-align: left;">{row['종목 소개']}</td>
+        </tr>
+        """
 
-    # 테이블 표시
-    st.dataframe(filtered_companies,width=900,hide_index=True)
+    html_code += """
+    </tbody>
+    </table>
+    </div>
+    """
+    st.markdown(html_code, unsafe_allow_html=True)
+    
+    
 
+    # create_pdf(e_value, s_value, g_value, fig, expected_return, expected_volatility, sharpe_ratio, filtered_companies)
+    
+    # # PDF 파일 다운로드
+    # with open("esg_investment_report.pdf", "rb") as f:
+    #     st.download_button(
+    #         label="PDF 파일 다운로드",
+    #         data=f,
+    #         file_name="esg_investment_report.pdf",
+    #         mime="application/pdf"
+    #     )
+    
+    # # 생성된 이미지 파일 및 PDF 삭제 (선택 사항)
+    # os.remove("pie_chart.png")
+    # os.remove("esg_investment_report.pdf")
+    
+    
     
         
 def generate_html():
@@ -815,6 +1012,10 @@ with col_1:
             if company_index < len(top_companies):
                 company_info = top_companies.iloc[company_index]
                 clicked_company = company_info['Company']
+                st.markdown(f"""<div>
+                            <h2 style="font-size: 20px; text-align:center;">{clicked_company} ESG 스코어</h2>
+                            </div>
+                """, unsafe_allow_html=True)
                 clicked_df = dummy[dummy['Company'] == clicked_company]
                 clicked_df['Year'] = clicked_df['Year'].astype(int)
                 clicked_df = clicked_df[['Year', 'environmental', 'social', 'governance']]
@@ -822,8 +1023,16 @@ with col_1:
                          value_vars=['environmental', 'social', 'governance'],
                          var_name='Category', 
                          value_name='Score')
+                
                 fig = px.line(clicked_df, x='Year', y='Score', color='Category')
-                fig.update_layout(showlegend=False)
+                fig.update_layout(showlegend=True,
+                    legend=dict(
+                        orientation='h',  # 가로 방향으로 배치
+                        yanchor='bottom',  # 범례의 y축 앵커를 하단에 맞추기
+                        y=-0.6,  # 범례를 그래프 아래로 이동, 적절한 값으로 수정
+                        xanchor='center',  # 범례의 x축 앵커를 중앙에 맞추기
+                        x=0.5  
+                    ), width=750,height=350)
                 # fig.update_xaxes(showticklabels=False, title='')
                 # fig.update_yaxes(showticklabels=False, title='') 
 
@@ -837,7 +1046,7 @@ with col_1:
 with col_2:
     if clicked_points:
         st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">&emsp;{clicked_company} &ensp;주가 그래프</h2>
+                            <h2 style="font-size: 20px; text-align:center;">&emsp;&ensp;{clicked_company} &ensp;주가 그래프</h2>
                             </div>
             """, unsafe_allow_html=True)
                 
