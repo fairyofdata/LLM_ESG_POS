@@ -1,65 +1,73 @@
+# Streamlit 및 웹 관련 라이브러리
 import streamlit as st
-from bs4 import BeautifulSoup
 import requests
-import time
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
+
+# 데이터 처리 및 분석 관련 라이브러리
 import pandas as pd
-import streamlit as st
-from streamlit_option_menu import option_menu
-import streamlit.components.v1 as html
-import FinanceDataReader as fdr
-import mplfinance as mpf
+import numpy as np
 from datetime import datetime, timedelta
 import json
 import yaml
-import streamlit_authenticator as stauth
-import numpy as np
-import requests as rq
-from streamlit_authenticator.utilities.hasher import Hasher
-import os.path
+import os
 import pickle as pkle
-from streamlit_js_eval import streamlit_js_eval
+
+# 인증 및 보안 관련 라이브러리
+import streamlit_authenticator as stauth
+from streamlit_authenticator.utilities.hasher import Hasher
+from streamlit_authenticator.utilities import (
+    CredentialsError, ForgotError, Hasher, LoginError, RegisterError,
+    ResetError, UpdateError
+)
 from passlib.context import CryptContext
+from dotenv import load_dotenv
+
+# 시각화 및 플로팅 관련 라이브러리
 import matplotlib.pyplot as plt
-from collections import Counter
-from pypfopt import EfficientFrontier, risk_models, expected_returns
-import yfinance as yf
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from streamlit_plotly_events import plotly_events
-from cvxopt import matrix, solvers
-from PIL import Image
-from streamlit_extras.stylable_container import stylable_container
-from streamlit_authenticator.utilities import (CredentialsError,
-                                               ForgotError,
-                                               Hasher,
-                                               LoginError,
-                                               RegisterError,
-                                               ResetError,
-                                               UpdateError)
-from streamlit_extras.switch_page_button import switch_page
-from pymongo import MongoClient
-from konlpy.tag import Okt
-from collections import Counter
+import mplfinance as mpf
 from wordcloud import WordCloud
-import unicodedata
-import matplotlib.pyplot as plt
-from pypfopt import risk_models, BlackLittermanModel, expected_returns
-import os
+from collections import Counter
+
+# 금융 및 최적화 관련 라이브러리
+import FinanceDataReader as fdr
+import yfinance as yf
+from pypfopt import EfficientFrontier, risk_models, expected_returns, BlackLittermanModel
+from cvxopt import matrix, solvers
+
+# 기타 유틸리티 라이브러리
+from PIL import Image
+import base64
+import tempfile
 import pdfkit
 from pdfkit.api import configuration
-import tempfile
-from  streamlit_vertical_slider import vertical_slider
-import base64
-from dotenv import load_dotenv
 import pyautogui
 from fpdf import FPDF
 import pyscreenshot as ImageGrab
+from tqdm import tqdm
+import unicodedata
+
+# 한글 텍스트 분석
+from konlpy.tag import Okt
+
+# Streamlit용 확장 기능
+from streamlit_extras.stylable_container import stylable_container
+from streamlit_extras.switch_page_button import switch_page
+from streamlit_option_menu import option_menu
+from streamlit_vertical_slider import vertical_slider
+from streamlit_plotly_events import plotly_events
+from streamlit_js_eval import streamlit_js_eval
+
+
+# CSV 파일에서 단어 빈도 데이터를 불러옴
+word_freq_df = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\company_word_frequencies.csv")
 
 st.set_page_config(
     page_title = "설문 조사 결과",
@@ -111,11 +119,11 @@ for key in ['environmental', 'social', 'governance']:
 # db = client['kwargs']
 # collection = db['kwargs']
 
-# MongoDB 연결 (11월 지헌)
-connection_string = "mongodb+srv://kwargs:57qBBuXYQel4W6oV@kwargsai.5yhiymt.mongodb.net/?retryWrites=true&w=majority&appName=kwargsai" #mongodb_url  # MongoDB 연결 문자열을 입력하세요
-client = MongoClient(connection_string)
-db = client['kwargsai']
-collection = db['test_collection']
+# # MongoDB 연결 (11월 지헌)
+# connection_string = "mongodb+srv://kwargs:57qBBuXYQel4W6oV@kwargsai.5yhiymt.mongodb.net/?retryWrites=true&w=majority&appName=kwargsai" #mongodb_url  # MongoDB 연결 문자열을 입력하세요
+# client = MongoClient(connection_string)
+# db = client['kwargsai']
+# collection = db['test_collection']
 
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
@@ -979,79 +987,72 @@ with col_2:
     else:
         st.write('')
 
+
+
+
+# 회사 이름 정규화 함수
+def normalize_company_name(name):
+    return unicodedata.normalize('NFC', name).strip()
+
+
+# word_freq_df의 'company' 컬럼 정규화
+word_freq_df['company'] = word_freq_df['company'].apply(normalize_company_name)
+
+
+# 가중 평균 워드 클라우드 생성 함수
+def generate_blended_word_cloud(top_companies, word_freq_df):
+    blended_word_freq = Counter()
+
+    # top_companies에서도 회사 이름 정규화
+    top_companies['company'] = top_companies['company'].apply(normalize_company_name)
+
+    for _, row in tqdm(top_companies.iterrows(), total=top_companies.shape[0], desc="Generating Blended Word Cloud"):
+        company_name = row['company']
+        weight = row['weight']
+
+        # 해당 회사의 단어 빈도 필터링
+        company_word_freq = word_freq_df[word_freq_df['company'] == company_name]
+
+        if company_word_freq.empty:
+            st.warning(f"{company_name}의 빈도 데이터가 없습니다.")
+            continue
+
+        # 각 단어에 대해 가중치를 곱한 빈도 계산
+        for _, word_row in company_word_freq.iterrows():
+            word = word_row['word']
+            freq = word_row['frequency']
+            blended_word_freq[word] += freq * weight
+
+    # 워드 클라우드 생성 및 반환
+    if not blended_word_freq:
+        st.warning("워드 클라우드를 생성할 데이터가 없습니다.")
+        return None
+
+    wordcloud = WordCloud(
+        background_color='white',
+        width=800,
+        height=600
+    ).generate_from_frequencies(blended_word_freq)
+
+    return wordcloud
+
+
 # Streamlit column for Word Cloud display
 with col_3:
-    if clicked_points:
-        st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
-                            </div>
-                """, unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>포트폴리오 기반 워드 클라우드</h2>", unsafe_allow_html=True)
 
-        # MongoDB 데이터 가져오기
-        try:
-            company_list = collection.distinct('Company')
-            clicked_company_normalized = unicodedata.normalize('NFC', clicked_company)
-            clicked_company = next((company for company in company_list if
-                                    unicodedata.normalize('NFC', company) == clicked_company_normalized), None)
-            titles = collection.find({'Company': clicked_company}, {'_id': 0, 'title': 1})
-            title_list = [document['title'] for document in titles if 'title' in document]
-        except Exception as e:
-            st.error(f"MongoDB 연결 중 오류가 발생했습니다: {str(e)}")
-            title_list = []
+    # 미리 선언된 top_companies를 기반으로 워드 클라우드 생성
+    wordcloud = generate_blended_word_cloud(top_companies, word_freq_df)
 
-        # title_list가 비어 있는지 확인
-        if not title_list:
-            st.warning("데이터가 없습니다. 다른 기업을 선택해 주세요.")
-        else:
-            # 형태소 분석 및 단어 목록 생성
-            try:
-                okt = Okt()
-                nouns_adj_verbs = [
-                    word for title in title_list
-                    for word, pos in okt.pos(title, stem=True)
-                    if pos in ['Noun', 'Adjective']
-                ]
-                word_counts = Counter(nouns_adj_verbs)
-                tmp_data = dict(word_counts.most_common(500))
-            except Exception as e:
-                st.error(f"형태소 분석 중 오류가 발생했습니다: {str(e)}")
-                tmp_data = {
-                    "sustainability": 100,
-                    "ESG": 80,
-                    "environment": 80,
-                    "governance": 70,
-                    "investment": 60,
-                    "responsibility": 50,
-                    "renewable": 40,
-                    "energy": 30,
-                }
+    # 워드 클라우드 출력
+    if wordcloud:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.imshow(wordcloud, interpolation='bilinear')
+        ax.axis('off')
+        st.pyplot(fig)
+    else:
+        st.info("생성할 데이터가 충분하지 않아 워드 클라우드를 표시할 수 없습니다.")
 
-            # 워드 클라우드 생성 - 폰트 경로 확인 후 설정
-            try:
-                if not tmp_data:
-                    raise ValueError("워드 클라우드를 생성할 데이터가 부족합니다.")
-
-                wordcloud = WordCloud(
-                    font_path='C:/Windows/Fonts/malgun.ttf',  # Set default font for Windows system
-                    background_color='white',
-                    width=800,
-                    height=600
-                ).generate_from_frequencies(tmp_data)
-            except ValueError as e:
-                st.error(str(e))
-                st.stop()
-            except OSError:
-                st.error("폰트 파일을 불러올 수 없습니다. 폰트 경로를 확인하거나 설치해 주세요.")
-                st.stop()
-
-            # 워드 클라우드 시각화 및 출력
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.imshow(wordcloud, interpolation='bilinear')
-            ax.axis('off')
-
-            # Streamlit에 워드 클라우드 출력
-            st.pyplot(fig)
-            
 # with col_4:
 #     if clicked_points:
 #         st.markdown(f"""<div>
