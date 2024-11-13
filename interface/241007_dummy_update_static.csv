@@ -1,0 +1,336 @@
+Company,Year,average_label,industry,environmental,social,governance,ticker
+Sample(E),2019,99,Sample,200,90,90,069500.KS
+Sample(E),2020,99,Sample,200,90,90,069500.KS
+Sample(E),2021,99,Sample,200,90,90,069500.KS
+Sample(E),2022,99,Sample,200,90,90,069500.KS
+Sample(E),2023,99,Sample,200,90,90,069500.KS
+Sample(S),2019,99,Sample,90,200,90,148020.KS
+Sample(S),2020,99,Sample,90,200,90,148020.KS
+Sample(S),2021,99,Sample,90,200,90,148020.KS
+Sample(S),2022,99,Sample,90,200,90,148020.KS
+Sample(S),2023,99,Sample,90,200,90,148020.KS
+Sample(G),2019,99,Sample,90,90,200,102110.KS
+Sample(G),2020,99,Sample,90,90,200,102110.KS
+Sample(G),2021,99,Sample,90,90,200,102110.KS
+Sample(G),2022,99,Sample,90,90,200,102110.KS
+Sample(G),2023,99,Sample,90,90,200,102110.KS
+GS리테일,2019,10,Retail & Consumer Goods,90,90,90,007070.KS
+GS리테일,2020,10,Retail & Consumer Goods,90,90,90,007070.KS
+GS리테일,2021,10,Retail & Consumer Goods,90,90,90,007070.KS
+GS리테일,2022,10,Retail & Consumer Goods,90,90,90,007070.KS
+GS리테일,2023,10,Retail & Consumer Goods,90,90,90,007070.KS
+HMM,2019,10,Automotive & Transport,90,90,90,011200.KS
+HMM,2020,10,Automotive & Transport,90,90,90,011200.KS
+HMM,2021,10,Automotive & Transport,90,90,90,011200.KS
+HMM,2022,10,Automotive & Transport,90,90,90,011200.KS
+HMM,2023,10,Automotive & Transport,90,90,90,011200.KS
+KB금융,2019,10,Finance & Insurance,90,90,90,105560.KS
+KB금융,2020,10,Finance & Insurance,90,90,90,105560.KS
+KB금융,2021,10,Finance & Insurance,90,90,90,105560.KS
+KB금융,2022,10,Finance & Insurance,90,90,90,105560.KS
+KB금융,2023,10,Finance & Insurance,90,90,90,105560.KS
+KT,2019,10,Electronics & IT,90,90,90,030200.KS
+KT,2020,10,Electronics & IT,90,90,90,030200.KS
+KT,2021,10,Electronics & IT,90,90,90,030200.KS
+KT,2022,10,Electronics & IT,90,90,90,030200.KS
+KT,2023,10,Electronics & IT,90,90,90,030200.KS
+LG디스플레이,2019,10,Electronics & IT,90,90,90,034220.KS
+LG디스플레이,2020,10,Electronics & IT,90,90,90,034220.KS
+LG디스플레이,2021,10,Electronics & IT,90,90,90,034220.KS
+LG디스플레이,2022,10,Electronics & IT,90,90,90,034220.KS
+LG디스플레이,2023,10,Electronics & IT,90,90,90,034220.KS
+LG생활건강,2019,10,Retail & Consumer Goods,90,90,90,051900.KS
+LG생활건강,2020,10,Retail & Consumer Goods,90,90,90,051900.KS
+LG생활건강,2021,10,Retail & Consumer Goods,90,90,90,051900.KS
+LG생활건강,2022,10,Retail & Consumer Goods,90,90,90,051900.KS
+LG생활건강,2023,10,Retail & Consumer Goods,90,90,90,051900.KS
+LG에너지솔루션,2019,10,Energy & Chemicals,90,90,90,373220.KS
+LG에너지솔루션,2020,10,Energy & Chemicals,90,90,90,373220.KS
+LG에너지솔루션,2021,10,Energy & Chemicals,90,90,90,373220.KS
+LG에너지솔루션,2022,10,Energy & Chemicals,90,90,90,373220.KS
+LG에너지솔루션,2023,10,Energy & Chemicals,90,90,90,373220.KS
+LG유플러스,2019,10,Electronics & IT,90,90,90,032640.KS
+LG유플러스,2020,10,Electronics & IT,90,90,90,032640.KS
+LG유플러스,2021,10,Electronics & IT,90,90,90,032640.KS
+LG유플러스,2022,10,Electronics & IT,90,90,90,032640.KS
+LG유플러스,2023,10,Electronics & IT,90,90,90,032640.KS
+LG전자,2019,10,Electronics & IT,90,90,90,066570.KS
+LG전자,2020,10,Electronics & IT,90,90,90,066570.KS
+LG전자,2021,10,Electronics & IT,90,90,90,066570.KS
+LG전자,2022,10,Electronics & IT,90,90,90,066570.KS
+LG전자,2023,10,Electronics & IT,90,90,90,066570.KS
+LG화학,2019,10,Energy & Chemicals,90,90,90,051910.KS
+LG화학,2020,10,Energy & Chemicals,90,90,90,051910.KS
+LG화학,2021,10,Energy & Chemicals,90,90,90,051910.KS
+LG화학,2022,10,Energy & Chemicals,90,90,90,051910.KS
+LG화학,2023,10,Energy & Chemicals,90,90,90,051910.KS
+NAVER,2019,10,Gaming & Internet,90,90,90,035420.KS
+NAVER,2020,10,Gaming & Internet,90,90,90,035420.KS
+NAVER,2021,10,Gaming & Internet,90,90,90,035420.KS
+NAVER,2022,10,Gaming & Internet,90,90,90,035420.KS
+NAVER,2023,10,Gaming & Internet,90,90,90,035420.KS
+POSCO홀딩스,2019,10,Materials,90,90,90,005490.KS
+POSCO홀딩스,2020,10,Materials,90,90,90,005490.KS
+POSCO홀딩스,2021,10,Materials,90,90,90,005490.KS
+POSCO홀딩스,2022,10,Materials,90,90,90,005490.KS
+POSCO홀딩스,2023,10,Materials,90,90,90,005490.KS
+S-Oil,2019,10,Energy & Chemicals,90,90,90,010950.KS
+S-Oil,2020,10,Energy & Chemicals,90,90,90,010950.KS
+S-Oil,2021,10,Energy & Chemicals,90,90,90,010950.KS
+S-Oil,2022,10,Energy & Chemicals,90,90,90,010950.KS
+S-Oil,2023,10,Energy & Chemicals,90,90,90,010950.KS
+SK네트웍스,2019,10,Conglomerates,90,90,90,001740.KS
+SK네트웍스,2020,10,Conglomerates,90,90,90,001740.KS
+SK네트웍스,2021,10,Conglomerates,90,90,90,001740.KS
+SK네트웍스,2022,10,Conglomerates,90,90,90,001740.KS
+SK네트웍스,2023,10,Conglomerates,90,90,90,001740.KS
+SK바이오사이언스,2019,10,Biotechnology & Pharmaceuticals,90,90,90,302440.KS
+SK바이오사이언스,2020,10,Biotechnology & Pharmaceuticals,90,90,90,302440.KS
+SK바이오사이언스,2021,10,Biotechnology & Pharmaceuticals,90,90,90,302440.KS
+SK바이오사이언스,2022,10,Biotechnology & Pharmaceuticals,90,90,90,302440.KS
+SK바이오사이언스,2023,10,Biotechnology & Pharmaceuticals,90,90,90,302440.KS
+SK바이오팜,2019,10,Biotechnology & Pharmaceuticals,90,90,90,326030.KS
+SK바이오팜,2020,10,Biotechnology & Pharmaceuticals,90,90,90,326030.KS
+SK바이오팜,2021,10,Biotechnology & Pharmaceuticals,90,90,90,326030.KS
+SK바이오팜,2022,10,Biotechnology & Pharmaceuticals,90,90,90,326030.KS
+SK바이오팜,2023,10,Biotechnology & Pharmaceuticals,90,90,90,326030.KS
+SK아이이테크놀로지,2019,10,Electronics & IT,90,90,90,361610.KS
+SK아이이테크놀로지,2020,10,Electronics & IT,90,90,90,361610.KS
+SK아이이테크놀로지,2021,10,Electronics & IT,90,90,90,361610.KS
+SK아이이테크놀로지,2022,10,Electronics & IT,90,90,90,361610.KS
+SK아이이테크놀로지,2023,10,Electronics & IT,90,90,90,361610.KS
+SK이노베이션,2019,10,Energy & Chemicals,90,90,90,096770.KS
+SK이노베이션,2020,10,Energy & Chemicals,90,90,90,096770.KS
+SK이노베이션,2021,10,Energy & Chemicals,90,90,90,096770.KS
+SK이노베이션,2022,10,Energy & Chemicals,90,90,90,096770.KS
+SK이노베이션,2023,10,Energy & Chemicals,90,90,90,096770.KS
+SK텔레콤,2019,10,Electronics & IT,90,90,90,017670.KS
+SK텔레콤,2020,10,Electronics & IT,90,90,90,017670.KS
+SK텔레콤,2021,10,Electronics & IT,90,90,90,017670.KS
+SK텔레콤,2022,10,Electronics & IT,90,90,90,017670.KS
+SK텔레콤,2023,10,Electronics & IT,90,90,90,017670.KS
+SK하이닉스,2019,10,Electronics & IT,90,90,90,000660.KS
+SK하이닉스,2020,10,Electronics & IT,90,90,90,000660.KS
+SK하이닉스,2021,10,Electronics & IT,90,90,90,000660.KS
+SK하이닉스,2022,10,Electronics & IT,90,90,90,000660.KS
+SK하이닉스,2023,10,Electronics & IT,90,90,90,000660.KS
+고려아연,2019,10,Energy & Chemicals,90,90,90,010130.KS
+고려아연,2020,10,Energy & Chemicals,90,90,90,010130.KS
+고려아연,2021,10,Energy & Chemicals,90,90,90,010130.KS
+고려아연,2022,10,Energy & Chemicals,90,90,90,010130.KS
+고려아연,2023,10,Energy & Chemicals,90,90,90,010130.KS
+금호석유,2019,10,Energy & Chemicals,90,90,90,011780.KS
+금호석유,2020,10,Energy & Chemicals,90,90,90,011780.KS
+금호석유,2021,10,Energy & Chemicals,90,90,90,011780.KS
+금호석유,2022,10,Energy & Chemicals,90,90,90,011780.KS
+금호석유,2023,10,Energy & Chemicals,90,90,90,011780.KS
+금호타이어,2019,10,Automotive & Transport,90,90,90,073240.KS
+금호타이어,2020,10,Automotive & Transport,90,90,90,073240.KS
+금호타이어,2021,10,Automotive & Transport,90,90,90,073240.KS
+금호타이어,2022,10,Automotive & Transport,90,90,90,073240.KS
+금호타이어,2023,10,Automotive & Transport,90,90,90,073240.KS
+기아,2019,10,Automotive & Transport,90,90,90,000270.KS
+기아,2020,10,Automotive & Transport,90,90,90,000270.KS
+기아,2021,10,Automotive & Transport,90,90,90,000270.KS
+기아,2022,10,Automotive & Transport,90,90,90,000270.KS
+기아,2023,10,Automotive & Transport,90,90,90,000270.KS
+넷마블,2019,10,Gaming & Internet,90,90,90,251270.KS
+넷마블,2020,10,Gaming & Internet,90,90,90,251270.KS
+넷마블,2021,10,Gaming & Internet,90,90,90,251270.KS
+넷마블,2022,10,Gaming & Internet,90,90,90,251270.KS
+넷마블,2023,10,Gaming & Internet,90,90,90,251270.KS
+농심,2019,10,Retail & Consumer Goods,90,90,90,004370.KS
+농심,2020,10,Retail & Consumer Goods,90,90,90,004370.KS
+농심,2021,10,Retail & Consumer Goods,90,90,90,004370.KS
+농심,2022,10,Retail & Consumer Goods,90,90,90,004370.KS
+농심,2023,10,Retail & Consumer Goods,90,90,90,004370.KS
+대한항공,2019,10,Automotive & Transport,90,90,90,003490.KS
+대한항공,2020,10,Automotive & Transport,90,90,90,003490.KS
+대한항공,2021,10,Automotive & Transport,90,90,90,003490.KS
+대한항공,2022,10,Automotive & Transport,90,90,90,003490.KS
+대한항공,2023,10,Automotive & Transport,90,90,90,003490.KS
+롯데쇼핑,2019,10,Retail & Consumer Goods,90,90,90,023530.KS
+롯데쇼핑,2020,10,Retail & Consumer Goods,90,90,90,023530.KS
+롯데쇼핑,2021,10,Retail & Consumer Goods,90,90,90,023530.KS
+롯데쇼핑,2022,10,Retail & Consumer Goods,90,90,90,023530.KS
+롯데쇼핑,2023,10,Retail & Consumer Goods,90,90,90,023530.KS
+롯데지주,2019,10,Conglomerates,90,90,90,004990.KS
+롯데지주,2020,10,Conglomerates,90,90,90,004990.KS
+롯데지주,2021,10,Conglomerates,90,90,90,004990.KS
+롯데지주,2022,10,Conglomerates,90,90,90,004990.KS
+롯데지주,2023,10,Conglomerates,90,90,90,004990.KS
+삼성SDI,2019,10,Electronics & IT,90,90,90,006400.KS
+삼성SDI,2020,10,Electronics & IT,90,90,90,006400.KS
+삼성SDI,2021,10,Electronics & IT,90,90,90,006400.KS
+삼성SDI,2022,10,Electronics & IT,90,90,90,006400.KS
+삼성SDI,2023,10,Electronics & IT,90,90,90,006400.KS
+삼성SDS,2019,10,Electronics & IT,90,90,90,018260.KS
+삼성SDS,2020,10,Electronics & IT,90,90,90,018260.KS
+삼성SDS,2021,10,Electronics & IT,90,90,90,018260.KS
+삼성SDS,2022,10,Electronics & IT,90,90,90,018260.KS
+삼성SDS,2023,10,Electronics & IT,90,90,90,018260.KS
+삼성물산,2019,10,Construction & Infrastructure,90,90,90,028260.KS
+삼성물산,2020,10,Construction & Infrastructure,90,90,90,028260.KS
+삼성물산,2021,10,Construction & Infrastructure,90,90,90,028260.KS
+삼성물산,2022,10,Construction & Infrastructure,90,90,90,028260.KS
+삼성물산,2023,10,Construction & Infrastructure,90,90,90,028260.KS
+삼성바이오로직스,2019,10,Biotechnology & Pharmaceuticals,90,90,90,207940.KS
+삼성바이오로직스,2020,10,Biotechnology & Pharmaceuticals,90,90,90,207940.KS
+삼성바이오로직스,2021,10,Biotechnology & Pharmaceuticals,90,90,90,207940.KS
+삼성바이오로직스,2022,10,Biotechnology & Pharmaceuticals,90,90,90,207940.KS
+삼성바이오로직스,2023,10,Biotechnology & Pharmaceuticals,90,90,90,207940.KS
+삼성생명,2019,10,Finance & Insurance,90,90,90,032830.KS
+삼성생명,2020,10,Finance & Insurance,90,90,90,032830.KS
+삼성생명,2021,10,Finance & Insurance,90,90,90,032830.KS
+삼성생명,2022,10,Finance & Insurance,90,90,90,032830.KS
+삼성생명,2023,10,Finance & Insurance,90,90,90,032830.KS
+삼성전기,2019,10,Electronics & IT,90,90,90,009150.KS
+삼성전기,2020,10,Electronics & IT,90,90,90,009150.KS
+삼성전기,2021,10,Electronics & IT,90,90,90,009150.KS
+삼성전기,2022,10,Electronics & IT,90,90,90,009150.KS
+삼성전기,2023,10,Electronics & IT,90,90,90,009150.KS
+삼성전자,2019,10,Electronics & IT,90,90,90,005930.KS
+삼성전자,2020,10,Electronics & IT,90,90,90,005930.KS
+삼성전자,2021,10,Electronics & IT,90,90,90,005930.KS
+삼성전자,2022,10,Electronics & IT,90,90,90,005930.KS
+삼성전자,2023,10,Electronics & IT,90,90,90,005930.KS
+삼성중공업,2019,10,Automotive & Transport,90,90,90,010140.KS
+삼성중공업,2020,10,Automotive & Transport,90,90,90,010140.KS
+삼성중공업,2021,10,Automotive & Transport,90,90,90,010140.KS
+삼성중공업,2022,10,Automotive & Transport,90,90,90,010140.KS
+삼성중공업,2023,10,Automotive & Transport,90,90,90,010140.KS
+셀트리온,2019,10,Biotechnology & Pharmaceuticals,90,90,90,068270.KS
+셀트리온,2020,10,Biotechnology & Pharmaceuticals,90,90,90,068270.KS
+셀트리온,2021,10,Biotechnology & Pharmaceuticals,90,90,90,068270.KS
+셀트리온,2022,10,Biotechnology & Pharmaceuticals,90,90,90,068270.KS
+셀트리온,2023,10,Biotechnology & Pharmaceuticals,90,90,90,068270.KS
+신한지주,2019,10,Finance & Insurance,90,90,90,055550.KS
+신한지주,2020,10,Finance & Insurance,90,90,90,055550.KS
+신한지주,2021,10,Finance & Insurance,90,90,90,055550.KS
+신한지주,2022,10,Finance & Insurance,90,90,90,055550.KS
+신한지주,2023,10,Finance & Insurance,90,90,90,055550.KS
+아모레퍼시픽,2019,10,Retail & Consumer Goods,90,90,90,090430.KS
+아모레퍼시픽,2020,10,Retail & Consumer Goods,90,90,90,090430.KS
+아모레퍼시픽,2021,10,Retail & Consumer Goods,90,90,90,090430.KS
+아모레퍼시픽,2022,10,Retail & Consumer Goods,90,90,90,090430.KS
+아모레퍼시픽,2023,10,Retail & Consumer Goods,90,90,90,090430.KS
+엔씨소프트,2019,10,Gaming & Internet,90,90,90,036570.KS
+엔씨소프트,2020,10,Gaming & Internet,90,90,90,036570.KS
+엔씨소프트,2021,10,Gaming & Internet,90,90,90,036570.KS
+엔씨소프트,2022,10,Gaming & Internet,90,90,90,036570.KS
+엔씨소프트,2023,10,Gaming & Internet,90,90,90,036570.KS
+영원무역,2019,10,Textiles,90,90,90,111770.KS
+영원무역,2020,10,Textiles,90,90,90,111770.KS
+영원무역,2021,10,Textiles,90,90,90,111770.KS
+영원무역,2022,10,Textiles,90,90,90,111770.KS
+영원무역,2023,10,Textiles,90,90,90,111770.KS
+우리금융지주,2019,10,Finance & Insurance,90,90,90,316140.KS
+우리금융지주,2020,10,Finance & Insurance,90,90,90,316140.KS
+우리금융지주,2021,10,Finance & Insurance,90,90,90,316140.KS
+우리금융지주,2022,10,Finance & Insurance,90,90,90,316140.KS
+우리금융지주,2023,10,Finance & Insurance,90,90,90,316140.KS
+이마트,2019,10,Retail & Consumer Goods,90,90,90,139480.KS
+이마트,2020,10,Retail & Consumer Goods,90,90,90,139480.KS
+이마트,2021,10,Retail & Consumer Goods,90,90,90,139480.KS
+이마트,2022,10,Retail & Consumer Goods,90,90,90,139480.KS
+이마트,2023,10,Retail & Consumer Goods,90,90,90,139480.KS
+카카오,2019,10,Gaming & Internet,90,90,90,035720.KS
+카카오,2020,10,Gaming & Internet,90,90,90,035720.KS
+카카오,2021,10,Gaming & Internet,90,90,90,035720.KS
+카카오,2022,10,Gaming & Internet,90,90,90,035720.KS
+카카오,2023,10,Gaming & Internet,90,90,90,035720.KS
+카카오뱅크,2019,10,Finance & Insurance,90,90,90,323410.KS
+카카오뱅크,2020,10,Finance & Insurance,90,90,90,323410.KS
+카카오뱅크,2021,10,Finance & Insurance,90,90,90,323410.KS
+카카오뱅크,2022,10,Finance & Insurance,90,90,90,323410.KS
+카카오뱅크,2023,10,Finance & Insurance,90,90,90,323410.KS
+카카오페이,2019,10,Finance & Insurance,90,90,90,377300.KS
+카카오페이,2020,10,Finance & Insurance,90,90,90,377300.KS
+카카오페이,2021,10,Finance & Insurance,90,90,90,377300.KS
+카카오페이,2022,10,Finance & Insurance,90,90,90,377300.KS
+카카오페이,2023,10,Finance & Insurance,90,90,90,377300.KS
+코웨이,2019,10,Retail & Consumer Goods,90,90,90,021240.KS
+코웨이,2020,10,Retail & Consumer Goods,90,90,90,021240.KS
+코웨이,2021,10,Retail & Consumer Goods,90,90,90,021240.KS
+코웨이,2022,10,Retail & Consumer Goods,90,90,90,021240.KS
+코웨이,2023,10,Retail & Consumer Goods,90,90,90,021240.KS
+크래프톤,2019,10,Gaming & Internet,90,90,90,259960.KS
+크래프톤,2020,10,Gaming & Internet,90,90,90,259960.KS
+크래프톤,2021,10,Gaming & Internet,90,90,90,259960.KS
+크래프톤,2022,10,Gaming & Internet,90,90,90,259960.KS
+크래프톤,2023,10,Gaming & Internet,90,90,90,259960.KS
+팬오션,2019,10,Automotive & Transport,90,90,90,028670.KS
+팬오션,2020,10,Automotive & Transport,90,90,90,028670.KS
+팬오션,2021,10,Automotive & Transport,90,90,90,028670.KS
+팬오션,2022,10,Automotive & Transport,90,90,90,028670.KS
+팬오션,2023,10,Automotive & Transport,90,90,90,028670.KS
+하나금융지주,2019,10,Finance & Insurance,90,90,90,086790.KS
+하나금융지주,2020,10,Finance & Insurance,90,90,90,086790.KS
+하나금융지주,2021,10,Finance & Insurance,90,90,90,086790.KS
+하나금융지주,2022,10,Finance & Insurance,90,90,90,086790.KS
+하나금융지주,2023,10,Finance & Insurance,90,90,90,086790.KS
+하림지주,2019,10,Retail & Consumer Goods,90,90,90,003380.KS
+하림지주,2020,10,Retail & Consumer Goods,90,90,90,003380.KS
+하림지주,2021,10,Retail & Consumer Goods,90,90,90,003380.KS
+하림지주,2022,10,Retail & Consumer Goods,90,90,90,003380.KS
+하림지주,2023,10,Retail & Consumer Goods,90,90,90,003380.KS
+한국가스공사,2019,10,Energy & Chemicals,90,90,90,036460.KS
+한국가스공사,2020,10,Energy & Chemicals,90,90,90,036460.KS
+한국가스공사,2021,10,Energy & Chemicals,90,90,90,036460.KS
+한국가스공사,2022,10,Energy & Chemicals,90,90,90,036460.KS
+한국가스공사,2023,10,Energy & Chemicals,90,90,90,036460.KS
+한국타이어앤테크놀로지,2019,10,Automotive & Transport,90,90,90,161390.KS
+한국타이어앤테크놀로지,2020,10,Automotive & Transport,90,90,90,161390.KS
+한국타이어앤테크놀로지,2021,10,Automotive & Transport,90,90,90,161390.KS
+한국타이어앤테크놀로지,2022,10,Automotive & Transport,90,90,90,161390.KS
+한국타이어앤테크놀로지,2023,10,Automotive & Transport,90,90,90,161390.KS
+한미약품,2019,10,Biotechnology & Pharmaceuticals,90,90,90,128940.KS
+한미약품,2020,10,Biotechnology & Pharmaceuticals,90,90,90,128940.KS
+한미약품,2021,10,Biotechnology & Pharmaceuticals,90,90,90,128940.KS
+한미약품,2022,10,Biotechnology & Pharmaceuticals,90,90,90,128940.KS
+한미약품,2023,10,Biotechnology & Pharmaceuticals,90,90,90,128940.KS
+한온시스템,2019,10,Automotive & Transport,90,90,90,018880.KS
+한온시스템,2020,10,Automotive & Transport,90,90,90,018880.KS
+한온시스템,2021,10,Automotive & Transport,90,90,90,018880.KS
+한온시스템,2022,10,Automotive & Transport,90,90,90,018880.KS
+한온시스템,2023,10,Automotive & Transport,90,90,90,018880.KS
+한화,2019,10,Conglomerates,90,90,90,000880.KS
+한화,2020,10,Conglomerates,90,90,90,000880.KS
+한화,2021,10,Conglomerates,90,90,90,000880.KS
+한화,2022,10,Conglomerates,90,90,90,000880.KS
+한화,2023,10,Conglomerates,90,90,90,000880.KS
+한화에어로스페이스,2019,10,Automotive & Transport,90,90,90,012450.KS
+한화에어로스페이스,2020,10,Automotive & Transport,90,90,90,012450.KS
+한화에어로스페이스,2021,10,Automotive & Transport,90,90,90,012450.KS
+한화에어로스페이스,2022,10,Automotive & Transport,90,90,90,012450.KS
+한화에어로스페이스,2023,10,Automotive & Transport,90,90,90,012450.KS
+현대모비스,2019,10,Automotive & Transport,90,90,90,012330.KS
+현대모비스,2020,10,Automotive & Transport,90,90,90,012330.KS
+현대모비스,2021,10,Automotive & Transport,90,90,90,012330.KS
+현대모비스,2022,10,Automotive & Transport,90,90,90,012330.KS
+현대모비스,2023,10,Automotive & Transport,90,90,90,012330.KS
+현대백화점,2019,10,Retail & Consumer Goods,90,90,90,069960.KS
+현대백화점,2020,10,Retail & Consumer Goods,90,90,90,069960.KS
+현대백화점,2021,10,Retail & Consumer Goods,90,90,90,069960.KS
+현대백화점,2022,10,Retail & Consumer Goods,90,90,90,069960.KS
+현대백화점,2023,10,Retail & Consumer Goods,90,90,90,069960.KS
+현대차,2019,10,Automotive & Transport,90,90,90,005380.KS
+현대차,2020,10,Automotive & Transport,90,90,90,005380.KS
+현대차,2021,10,Automotive & Transport,90,90,90,005380.KS
+현대차,2022,10,Automotive & Transport,90,90,90,005380.KS
+현대차,2023,10,Automotive & Transport,90,90,90,005380.KS
+효성,2019,10,Conglomerates,90,90,90,004800.KS
+효성,2020,10,Conglomerates,90,90,90,004800.KS
+효성,2021,10,Conglomerates,90,90,90,004800.KS
+효성,2022,10,Conglomerates,90,90,90,004800.KS
+효성,2023,10,Conglomerates,90,90,90,004800.KS
+BGF리테일,2019,10,Retail & Consumer Goods,90,90,90,282330.KS
+BGF리테일,2020,10,Retail & Consumer Goods,90,90,90,282330.KS
+BGF리테일,2021,10,Retail & Consumer Goods,90,90,90,282330.KS
+BGF리테일,2022,10,Retail & Consumer Goods,90,90,90,282330.KS
+BGF리테일,2023,10,Retail & Consumer Goods,90,90,90,282330.KS
+CJ제일제당,2019,10,Retail & Consumer Goods,90,90,90,097950.KS
+CJ제일제당,2020,10,Retail & Consumer Goods,90,90,90,097950.KS
+CJ제일제당,2021,10,Retail & Consumer Goods,90,90,90,097950.KS
+CJ제일제당,2022,10,Retail & Consumer Goods,90,90,90,097950.KS
+CJ제일제당,2023,10,Retail & Consumer Goods,90,90,90,097950.KS
