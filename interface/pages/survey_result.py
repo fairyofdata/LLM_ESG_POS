@@ -348,7 +348,6 @@ from pypfopt import BlackLittermanModel, expected_returns, risk_models
 # 블랙-리터만 모델을 적용하여 사용자 ESG 선호도를 반영한 포트폴리오 최적화 함수
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
-
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     tickers = df['ticker'].tolist()
     price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
@@ -542,7 +541,7 @@ with col1:
             change_percent = (change / yesterday_kospi) * 100
             
             # Streamlit metric으로 출력
-            st.metric(label="오늘의 코스피 지수", value=round(today_kospi, 2), delta=f"{round(change_percent, 2)}%")
+            st.metric(label="오늘의 코스피 지수", value=round(today_kospi, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
 
     with kosdaq:
         if not kosdaq_data.empty:
@@ -554,7 +553,7 @@ with col1:
             change_percent = (change / yesterday_kosdaq) * 100
             
             # Streamlit metric으로 출력
-            st.metric(label="오늘의 코스닥 지수", value=round(today_kosdaq, 2), delta=f"{round(change_percent, 2)}%")
+            st.metric(label="오늘의 코스닥 지수", value=round(today_kosdaq, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
     
     
     sl1, sl2, sl3= st.columns(3)
@@ -629,7 +628,6 @@ top_companies['Weight'] = top_companies['Weight'] * 100
     # processed_df = df_new[df_new['industry'].isin(industries)].copy()
 
 # top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
-    # top_companies['Weight'] = top_companies['ticker'].map(cleaned_weights)
     
 with col2:
     st.markdown(f"""<div>
