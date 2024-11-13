@@ -58,20 +58,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-font_css = """
-    <style>
-    @font-face {
-        font-family: 'CustomFont';
-        src: url('assets/Pretendard-SemiBold.otf') format('opentype');
-    }
-    html, body, [class*="css"] {
-        font-family: 'CustomFont';
-    }
-    </style>
-"""
-
-st.markdown(font_css, unsafe_allow_html=True)
-
 with st.sidebar:
     st.page_link('main_survey_introduce.py', label='홈', icon="🎯")
     st.page_link('pages/survey_page.py', label='설문', icon="📋")
