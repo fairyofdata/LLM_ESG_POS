@@ -15,7 +15,7 @@ import FinanceDataReader as fdr
 import mplfinance as mpf
 from datetime import datetime, timedelta
 import json
-import yaml
+#import yaml
 import streamlit_authenticator as stauth
 import numpy as np
 import requests as rq
@@ -25,6 +25,7 @@ import pickle as pkle
 from streamlit_js_eval import streamlit_js_eval
 from passlib.context import CryptContext
 import matplotlib.pyplot as plt
+from collections import Counter
 from pypfopt import EfficientFrontier, risk_models, expected_returns
 import yfinance as yf
 import plotly.express as px
@@ -104,11 +105,17 @@ for key in ['environmental', 'social', 'governance']:
     if key not in st.session_state['sliders']:
         st.session_state['sliders'][key] = 0
         
-# MongoDB 연결 설정
+# MongoDB 연결 설정 (8월 해리)
 # load_dotenv()
 # client = MongoClient(os.getenv("mongodb_url"))
 # db = client['kwargs']
 # collection = db['kwargs']
+
+# MongoDB 연결 (11월 지헌)
+connection_string = "mongodb+srv://kwargs:57qBBuXYQel4W6oV@kwargsai.5yhiymt.mongodb.net/?retryWrites=true&w=majority&appName=kwargsai" #mongodb_url  # MongoDB 연결 문자열을 입력하세요
+client = MongoClient(connection_string)
+db = client['kwargsai']
+collection = db['test_collection']
 
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
@@ -1077,64 +1084,79 @@ with col_2:
         
     else:
         st.write('')
-                
-# with col_3:
-#     if clicked_points:
-#         st.markdown(f"""<div>
-#                             <h2 style="font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
-#                             </div>
-#                 """, unsafe_allow_html=True)
-#         # MongoDB에서 Company 필드의 고유 값들을 불러오기
-#         company_list = collection.distinct('Company')
-            
-#         # 유니코드 정규화를 사용해 clicked_company와 company_list 값을 동일한 형식으로 변환
-#         clicked_company_normalized = unicodedata.normalize('NFC', clicked_company)
 
-#         # 리스트 내의 각 값을 정규화 후 비교
-#         clicked_company = next((company for company in company_list if unicodedata.normalize('NFC', company) == clicked_company_normalized), None)
-#         titles = collection.find({'Company': clicked_company}, {'_id': 0, 'title': 1})
+# Streamlit column for Word Cloud display
+with col_3:
+    if clicked_points:
+        st.markdown(f"""<div>
+                            <h2 style="font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
+                            </div>
+                """, unsafe_allow_html=True)
 
-# # 불러온 데이터 리스트로 저장
-#         title_list = [document['title'] for document in titles if 'title' in document]
+        # MongoDB 데이터 가져오기
+        try:
+            company_list = collection.distinct('Company')
+            clicked_company_normalized = unicodedata.normalize('NFC', clicked_company)
+            clicked_company = next((company for company in company_list if
+                                    unicodedata.normalize('NFC', company) == clicked_company_normalized), None)
+            titles = collection.find({'Company': clicked_company}, {'_id': 0, 'title': 1})
+            title_list = [document['title'] for document in titles if 'title' in document]
+        except Exception as e:
+            st.error(f"MongoDB 연결 중 오류가 발생했습니다: {str(e)}")
+            title_list = []
 
-# # title_list가 비어 있는지 확인
-#         if not title_list:
-#             st.warning("데이터가 없습니다. 다른 기업을 선택해 주세요.")
-#         else:
-#     # 형태소 분석기 설정
-#             okt = Okt()
-#             nouns_adj_verbs = []
+        # title_list가 비어 있는지 확인
+        if not title_list:
+            st.warning("데이터가 없습니다. 다른 기업을 선택해 주세요.")
+        else:
+            # 형태소 분석 및 단어 목록 생성
+            try:
+                okt = Okt()
+                nouns_adj_verbs = [
+                    word for title in title_list
+                    for word, pos in okt.pos(title, stem=True)
+                    if pos in ['Noun', 'Adjective']
+                ]
+                word_counts = Counter(nouns_adj_verbs)
+                tmp_data = dict(word_counts.most_common(500))
+            except Exception as e:
+                st.error(f"형태소 분석 중 오류가 발생했습니다: {str(e)}")
+                tmp_data = {
+                    "sustainability": 100,
+                    "ESG": 80,
+                    "environment": 80,
+                    "governance": 70,
+                    "investment": 60,
+                    "responsibility": 50,
+                    "renewable": 40,
+                    "energy": 30,
+                }
 
-#     # 명사, 형용사만 추출
-#             for title in title_list:
-#                 tokens = okt.pos(title, stem=True)
-#                 for word, pos in tokens:
-#                     if pos in ['Noun', 'Adjective']:
-#                         nouns_adj_verbs.append(word)
+            # 워드 클라우드 생성 - 폰트 경로 확인 후 설정
+            try:
+                if not tmp_data:
+                    raise ValueError("워드 클라우드를 생성할 데이터가 부족합니다.")
 
-#     # 빈도수 계산
-#             word_counts = Counter(nouns_adj_verbs)
-#             data = word_counts.most_common(500)
-#             tmp_data = dict(data)
+                wordcloud = WordCloud(
+                    font_path='C:/Windows/Fonts/malgun.ttf',  # Set default font for Windows system
+                    background_color='white',
+                    width=800,
+                    height=600
+                ).generate_from_frequencies(tmp_data)
+            except ValueError as e:
+                st.error(str(e))
+                st.stop()
+            except OSError:
+                st.error("폰트 파일을 불러올 수 없습니다. 폰트 경로를 확인하거나 설치해 주세요.")
+                st.stop()
 
-#     # 워드 클라우드 생성 - 폰트 경로 확인 후 설정
-#             try:
-#                 wordcloud = WordCloud(
-#                     font_path='C:/Windows/Fonts/malgun.ttf',  # Windows 시스템에서 사용할 기본 폰트 설정
-#                     background_color='white',
-#                     width=800,
-#                     height=600
-#                         ).generate_from_frequencies(tmp_data)
-#             except OSError:
-#                 st.error("폰트 파일을 불러올 수 없습니다. 폰트 경로를 확인하거나 설치해 주세요.")
-#                 st.stop()
+            # 워드 클라우드 시각화 및 출력
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.imshow(wordcloud, interpolation='bilinear')
+            ax.axis('off')
 
-#     # 워드 클라우드 시각화 및 출력
-#             fig, ax = plt.subplots(figsize=(10, 6))
-#             ax.imshow(wordcloud, interpolation='bilinear')
-#             ax.axis('off')
+            # Streamlit에 워드 클라우드 출력
+            st.pyplot(fig)
 
-#     # Streamlit에 워드 클라우드 출력
-#             st.pyplot(fig)
             
             
