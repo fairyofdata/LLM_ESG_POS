@@ -334,14 +334,14 @@ header = f"""
     """
 st.markdown(header, unsafe_allow_html=True)
 
+#--- 최적화 알고리즘 ---
 import numpy as np
 from scipy.optimize import minimize
 from cvxopt import matrix, solvers
 import yfinance as yf
-from pypfopt import BlackLittermanModel, expected_returns, risk_models
+from pypfopt import BlackLittermanModel, expected_returns, risk_models, CovarianceShrinkage
 
-
-# 블랙-리터만 모델을 적용하여 사용자 ESG 선호도를 반영한 포트폴리오 최적화 함수
+# 수정된 포트폴리오 비중 계산 함수 with Black-Litterman 및 공분산 행렬 축소
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
 
@@ -353,8 +353,8 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
 
     # 평균 수익률과 공분산 행렬 계산
-    mu_market = expected_returns.capm_return(price_data)  # CAPM을 통한 시장 균형 수익률 계산
-    Sigma = risk_models.sample_cov(price_data)  # 샘플 공분산 행렬
+    mu_market = expected_returns.capm_return(price_data).values.reshape(-1, 1)  # CAPM을 통한 시장 균형 수익률 계산 (Nx1 형태로 변환)
+    Sigma = CovarianceShrinkage(price_data).ledoit_wolf()  # 공분산 행렬 축소 적용
 
     # 사용자 선호도에 따른 ESG 가중치 조정 (스케일링)
     esg_weights['environmental'] *= 1 / 700
@@ -374,22 +374,20 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
         esg_weight_factor = 1.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
-        esg_weight_factor = 2.0
+        esg_weight_factor = 1.5
 
     # 최종 ESG 점수에 성향에 따른 가중치를 적용하여 조정
     df['adjusted_esg_score'] = df['final_esg_score'] * esg_weight_factor
-
-    # 시장 균형 수익률 조정 (사용자 ESG 점수 반영)
-    # 기존 문제: ESG 점수가 시장 균형 수익률에 반영되지 않아 수익률 중심으로 최적화됨
-    # 개선 방법: ESG 점수를 기반으로 시장 균형 수익률을 조정하여 최적화에 반영
-    adjusted_mu_market = mu_market + (df['adjusted_esg_score'] * 0.01)  # ESG 점수의 가중치를 더하여 수익률 조정
 
     valid_tickers = price_data.columns.tolist()
     df_valid = df[df['ticker'].isin(valid_tickers)]
 
     # 사용자 ESG 점수를 투자자의 견해로 반영 (Q: 주관적 수익률 벡터)
     P = np.eye(len(valid_tickers))
-    Q = df_valid['adjusted_esg_score'].values  # Q 벡터: 각 자산에 대한 투자자의 의견 (ESG 점수 반영)
+    Q = df_valid['adjusted_esg_score'].values.reshape(-1, 1)  # Q 벡터: 각 자산에 대한 투자자의 의견 (Nx1 형태로 변환)
+
+    # 시장 균형 수익률 조정 (사용자 ESG 점수 반영)
+    adjusted_mu_market = mu_market + (Q * 0.01)  # ESG 점수의 가중치를 더하여 수익률 조정
 
     # Black-Litterman 모델 적용
     bl = BlackLittermanModel(Sigma, pi=adjusted_mu_market, P=P, Q=Q)
@@ -399,8 +397,9 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     n = len(mu_market)
     P_opt = matrix(Sigma.values)
     q_opt = matrix(-adjusted_returns.values)
-    G = matrix(-np.eye(n))
-    h = matrix(np.zeros(n))
+    G = matrix(np.vstack([-np.eye(n), np.eye(n)]))  # 부등식 제약조건: 각 자산 가중치가 0 이상
+    h = matrix(np.hstack([np.zeros(n), np.ones(n) * 0.1]))  # 각 자산의 비중을 최대 10%로 제한
+
     A = matrix(1.0, (1, n))
     b = matrix(1.0)
 
@@ -411,20 +410,19 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     weights = np.array(sol['x']).flatten()
 
     # 포트폴리오 성과 지표 계산
-    expected_return = np.dot(weights, mu_market)
+    expected_return = np.dot(weights, mu_market.flatten())
     expected_volatility = np.sqrt(np.dot(weights.T, np.dot(Sigma.values, weights)))
     sharpe_ratio = expected_return / expected_volatility
 
     # 가중치 정리
-    cleaned_weights = dict(zip(tickers, weights))
+    cleaned_weights = dict(zip(valid_tickers, weights))
 
     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
-
 
 # 결과 출력
 # 개선된 코드에서는 사용자의 ESG 선호도가 시장 균형 수익률에 직접 반영되므로,
 # 최적화 과정에서 사용자의 ESG 선호가 명확히 드러나도록 합니다.
-# ---
+# ------
 
 def display_text_on_hover(hover_text, i, origin_text):
     # 각 텍스트 호버 영역에 고유한 클래스 이름을 생성
