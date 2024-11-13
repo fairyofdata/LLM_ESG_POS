@@ -155,6 +155,7 @@ company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이
 # 전처리 함수 정의
 def preprocess_data(df):
     # 기존 컬럼명을 사용할 수 있도록 유효성을 확인
+    df = df.copy()
     if 'environmental' in df.columns and 'social' in df.columns and 'governance' in df.columns:
         # ESG 영역 비중을 백분율로 환산
         df['env_percent'] = df['environmental'] / (df['environmental'] + df['social'] + df['governance'])
@@ -689,7 +690,10 @@ with col3:
     expected_return = portfolio_performance[0]
     expected_volatility = portfolio_performance[1]
     sharpe_ratio = portfolio_performance[2]
-
+    for company in top_companies['Company']:
+        condition = (dummy['Year'] == 2023) & (dummy['Company'] == company)
+        if condition.any():
+            top_companies.loc[top_companies['Company'] == company, ['environmental', 'social', 'governance']] = dummy.loc[condition, ['environmental', 'social', 'governance']].values
     top5_companies = top_companies.nlargest(5, 'Weight')
     filtered_companies = pd.merge(company_list, top5_companies, left_on='종목코드', right_on='ticker')
     filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
@@ -701,7 +705,6 @@ with col3:
         'governance': 'G',
         '종목설명' :'종목 소개'
     })
-
     # 상단에 기대수익률, 변동성, 샤프비율 표시
     # _,col1, col2, col3,_ = st.columns([2,3,3,3,2])
     col1, col2, col3 = st.columns(3)
@@ -726,6 +729,7 @@ with col3:
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            font-size:15px;
             font-family: Pretendard;
         }}
         th {{
@@ -734,30 +738,33 @@ with col3:
         </style>
     </style>
     <table>
-        <thead>
-        <tr>
-            <th>종목명</th>
-            <th>제안 비중</th>
-            <th>E</th>
-            <th>S</th>
-            <th>G</th>
-            <th>종목 소개</th>
-        </tr>
-        </thead>
-        <tbody>
-    """
+            <thead>
+            <tr>
+                <th rowspan='2'>종목명</th>
+                <th rowspan='2'>제안<br>비중</th>
+                <th colspan="3">2023년도 ESG 점수</th>
+                <th rowspan='2'>종목 소개</th>
+            </tr>
+            <tr>
+                <th>E</th>
+                <th>S</th>
+                <th>G</th>
+            </tr>
+            </thead>
+            <tbody>
+        """
 
     filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
     for _, row in filtered_companies.iterrows():
         html_code += f"""<tr>
-        <td style="font-size=13px;">{row['종목명']}</td>
+        <td style="font-size:13px;">{row['종목명']}</td>
         <td>{row['제안 비중']:.2f}%</td>
         <td>{row['E']:.1f}</td>
         <td>{row['S']:.1f}</td>
         <td>{row['G']:.1f}</td>
         <td style="text-align: left;">{row['종목 소개']}</td>
-        </tr>
-        """
+        </tr>"""
+
 
     html_code += """
     </tbody>
@@ -873,27 +880,43 @@ with col3:
             </div>
             <div class="detail-table-container">
                 <table class="detail-table">
+                    <thead>
                     <tr>
-                        <th>종목</th>
-                        <th>제안<br>비중</th>
+                        <th rowspan='2'>종목명</th>
+                        <th rowspan='2'>제안 비중</th>
+                        <th colspan="3">2023년도 ESG 점수</th>
+                        <th rowspan='2'>종목 소개</th>
+                    </tr>
+                    <tr>
                         <th>환경</th>
                         <th>사회</th>
                         <th>거버넌스</th>
-                        <th>종목 소개</th>
                     </tr>
+                    </thead>
         """
 
         for _, row in filtered_companies.iterrows():
             html_content += f"""<tr>
-            <td>{row['종목명']}</td>
-            <td>{row['제안 비중']:.3f}%</td>
-            <td>{row['E']:.1f}</td>
-            <td>{row['S']:.1f}</td>
-            <td>{row['G']:.1f}</td>
-            <td>{row['종목 소개']}</td>
+                <td>{row['종목명']}</td>
+                <td>{row['제안 비중']:.2f}%</td>
+                <td>{row['E']:.1f}</td>
+                <td>{row['S']:.1f}</td>
+                <td>{row['G']:.1f}</td>
+                <td style="text-align: left;">{row['종목 소개']}</td>
+                </tr>
+                """
+        html_content += """
+            <tfoot>
+            <tr>
+                <td colspan="6" style="font-size:15px; text-align: left;font-family:Pretendard;">
+                    <p>해당 차트의 환경(E), 사회(S), 거버넌스(G)의 점수는 2023년 기준 점수입니다.</p>
+                </td>
             </tr>
-            """
+            </tfoot>
+        """
+
         html_content += f"""
+                </tbody>
                 </table>
             </div>
         </body>
