@@ -29,7 +29,16 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed",
 )
-
+font_css = """
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <style>
+        html, body, [class*="css"] {{
+            font-family: Pretendard;
+        }}
+    </style>
+    """
+# Streamlit에 CSS 적용
+st.markdown(font_css, unsafe_allow_html=True)
 with st.sidebar:
     st.page_link('main_survey_introduce.py', label='홈', icon="🎯")
     st.page_link('pages/survey_page.py', label='설문', icon="📋")
@@ -58,6 +67,7 @@ with st.form('usersurvey',clear_on_submit=False):
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
                     <style>
                         div[data-testid="stForm"]{
                                 background-color:#FFFF;
@@ -86,13 +96,22 @@ with st.form('usersurvey',clear_on_submit=False):
                             border-radius: 10px; 
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
+                        p{{
+                            font-family: Pretendard;
+                        }}
                     </style>
                 </head>
                 ''',unsafe_allow_html=True)
     
 
-    
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">1. 투자할 때 기업이 탄소 배출이나 오염물질 관리 등 자연을 보호하는 데 신경 쓰는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('''
+                <style>
+                p{{
+                    font-family: Pretendard;
+                }}
+                </style>
+                ''',unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-family: Pretendard;font-weight: bold;">1. 투자할 때 기업이 탄소 배출이나 오염물질 관리 등 자연을 보호하는 데 신경 쓰는지 고려하시나요?</div>', unsafe_allow_html=True)
     q1 = st.radio('', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -101,7 +120,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
     
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">2. 투자할 때 기업이 환경 관리 시스템을 구축하는 등 기후 변화에 적극 대응하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-family: Pretendard;font-weight: bold;">2. 투자할 때 기업이 환경 관리 시스템을 구축하는 등 기후 변화에 적극 대응하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q2 = st.radio(' ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     
     st.write('')
@@ -111,7 +130,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
     
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">3. 투자할 때 기업이 생산 과정에서 친환경적으로 제품과 서비스를 제공하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">3. 투자할 때 기업이 생산 과정에서 친환경적으로 제품과 서비스를 제공하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q3 = st.radio('  ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -120,7 +139,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
     # Sustainalytics ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">4. 투자할 때 기업이 자원을 효율적으로 사용하고 배출량을 줄이는지 고려 하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">4. 투자할 때 기업이 자원을 효율적으로 사용하고 배출량을 줄이는지 고려 하시나요?</div>', unsafe_allow_html=True)
     q4 = st.radio('   ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -128,7 +147,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
     st.write('')
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">5. 투자할 때 기업이 신재생에너지를 활용하는 등 친환경적으로 활동하는지  고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">5. 투자할 때 기업이 신재생에너지를 활용하는 등 친환경적으로 활동하는지  고려하시나요?</div>', unsafe_allow_html=True)
     q5 = st.radio('    ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -137,7 +156,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">6. 투자할 때 기업이 직원의 안전을 보장하고 소비자의 권리를 보호하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">6. 투자할 때 기업이 직원의 안전을 보장하고 소비자의 권리를 보호하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q6 = st.radio('     ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -146,7 +165,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
     # MSCI ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">7. 투자할 때 기업이 지역사회와의 관계를 잘 유지하고 공정하게 운영하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">7. 투자할 때 기업이 지역사회와의 관계를 잘 유지하고 공정하게 운영하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q7 = st.radio('      ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -154,7 +173,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
     st.write('')
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">8. 투자할 때 기업이 건강과 사회에 미치는 부정적인 영향을 줄이는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">8. 투자할 때 기업이 건강과 사회에 미치는 부정적인 영향을 줄이는지 고려하시나요?</div>', unsafe_allow_html=True)
     q8 = st.radio('       ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -163,7 +182,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">9. 투자할 때 기업이 직원에게 차별 없이 워라벨을 지켜주고, 역량 개발을 지원하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">9. 투자할 때 기업이 직원에게 차별 없이 워라벨을 지켜주고, 역량 개발을 지원하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q9 = st.radio('        ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -173,7 +192,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
 
     # 한국ESG기준원 ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">10. 투자할 때 기업이 환경 보호, 직원 복지, 공정 거래 등 사회적 책임을 다하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">10. 투자할 때 기업이 환경 보호, 직원 복지, 공정 거래 등 사회적 책임을 다하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q10 = st.radio('         ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -182,7 +201,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">11. 투자할 때 기업이 개인정보 보호 등 사이버 보안을 잘 관리하는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">11. 투자할 때 기업이 개인정보 보호 등 사이버 보안을 잘 관리하는지 고려하시나요?</div>', unsafe_allow_html=True)
     q11 = st.radio('          ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -191,7 +210,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">12. 투자할 때 기업이 경영 구조를 유지하기 위해 이사회의 독립성과 전문성을 높이려는 것을 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">12. 투자할 때 기업이 경영 구조를 유지하기 위해 이사회의 독립성과 전문성을 높이려는 것을 고려하시나요?</div>', unsafe_allow_html=True)
     q12 = st.radio('           ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -201,7 +220,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
 
     # ISS ESG 기준 질문
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">13. 투자할 때 기업이 감사팀을 운영하고 회계 규정을 잘 지키는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">13. 투자할 때 기업이 감사팀을 운영하고 회계 규정을 잘 지키는지 고려하시나요?</div>', unsafe_allow_html=True)
     q13 = st.radio('            ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -210,7 +229,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">14. 투자할 때 기업이 주주의 권리를 보호하고 이익을 돌려주는지 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">14. 투자할 때 기업이 주주의 권리를 보호하고 이익을 돌려주는지 고려하시나요?</div>', unsafe_allow_html=True)
     q14 = st.radio('             ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -219,7 +238,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     st.write('')
 
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">15. 투자할 때 기업이 나라에 미치는 영향을 잘 관리하고, 새로운 경영 방식을 도입하는 것을 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">15. 투자할 때 기업이 나라에 미치는 영향을 잘 관리하고, 새로운 경영 방식을 도입하는 것을 고려하시나요?</div>', unsafe_allow_html=True)
     q15 = st.radio('              ', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
     st.write('')
@@ -229,7 +248,7 @@ with st.form('usersurvey',clear_on_submit=False):
     st.write('')
     
     # 투자 성향에 대한 질문 ()
-    st.markdown('<div class="question" style="font-size:20px;text-align:center;font-weight: bold;">16. 귀하는 투자시 무엇을 고려하시나요?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="question" style="font-family: Pretendard;font-size:20px;text-align:center;font-weight: bold;">16. 귀하는 투자시 무엇을 고려하시나요?</div>', unsafe_allow_html=True)
     q16 = st.radio('               ', options=('ESG 요소를 중심적으로 고려한다.','ESG와 재무적인 요소를 모두 고려한다.','재무적인 요소를 중심적으로 고려한다.'))
     st.markdown('</div>',unsafe_allow_html=True)
     
