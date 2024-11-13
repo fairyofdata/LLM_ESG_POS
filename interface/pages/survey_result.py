@@ -1,55 +1,73 @@
+# Streamlit 및 웹 관련 라이브러리
 import streamlit as st
-from bs4 import BeautifulSoup
 import requests
-import time
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service 
+from selenium.webdriver.chrome.service import Service
+
+# 데이터 처리 및 분석 관련 라이브러리
 import pandas as pd
-from streamlit_option_menu import option_menu
-import streamlit.components.v1 as html
-import FinanceDataReader as fdr
-import mplfinance as mpf
+import numpy as np
 from datetime import datetime, timedelta
 import json
 import yaml
-import streamlit_authenticator as stauth
-import numpy as np
-import requests as rq
-from streamlit_authenticator.utilities.hasher import Hasher
-import os.path
+import os
 import pickle as pkle
-from streamlit_js_eval import streamlit_js_eval
+
+# 인증 및 보안 관련 라이브러리
+import streamlit_authenticator as stauth
+from streamlit_authenticator.utilities.hasher import Hasher
+from streamlit_authenticator.utilities import (
+    CredentialsError, ForgotError, Hasher, LoginError, RegisterError,
+    ResetError, UpdateError
+)
 from passlib.context import CryptContext
-from pypfopt import EfficientFrontier, risk_models, expected_returns
-import yfinance as yf
+from dotenv import load_dotenv
+
+# 시각화 및 플로팅 관련 라이브러리
+import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from streamlit_plotly_events import plotly_events
-from cvxopt import matrix, solvers
-from PIL import Image
-from streamlit_extras.stylable_container import stylable_container
-from streamlit_extras.switch_page_button import switch_page
-from pymongo import MongoClient
-from konlpy.tag import Okt
-from collections import Counter
+import mplfinance as mpf
 from wordcloud import WordCloud
-import unicodedata
-import matplotlib.pyplot as plt
-from pypfopt import risk_models, BlackLittermanModel, expected_returns
-import os
+from collections import Counter
+
+# 금융 및 최적화 관련 라이브러리
+import FinanceDataReader as fdr
+import yfinance as yf
+from pypfopt import EfficientFrontier, risk_models, expected_returns, BlackLittermanModel
+from cvxopt import matrix, solvers
+
+# 기타 유틸리티 라이브러리
+from PIL import Image
+import base64
+import tempfile
 import pdfkit
 from pdfkit.api import configuration
-import tempfile
-from  streamlit_vertical_slider import vertical_slider
-import base64
-from dotenv import load_dotenv
 import pyautogui
 from fpdf import FPDF
 import pyscreenshot as ImageGrab
+from tqdm import tqdm
+import unicodedata
+
+# 한글 텍스트 분석
+from konlpy.tag import Okt
+
+# Streamlit용 확장 기능
+from streamlit_extras.stylable_container import stylable_container
+from streamlit_extras.switch_page_button import switch_page
+from streamlit_option_menu import option_menu
+from streamlit_vertical_slider import vertical_slider
+from streamlit_plotly_events import plotly_events
+from streamlit_js_eval import streamlit_js_eval
+
+
+# CSV 파일에서 단어 빈도 데이터를 불러옴
+word_freq_df = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\company_word_frequencies.csv")
 
 st.set_page_config(
     page_title = "설문 조사 결과",
@@ -95,16 +113,14 @@ for key in ['environmental', 'social', 'governance']:
     if key not in st.session_state['sliders']:
         st.session_state['sliders'][key] = 0
         
-# MongoDB 연결 설정
+# MongoDB 연결 설정 (8월 해리)
 # load_dotenv()
 # client = MongoClient(os.getenv("mongodb_url"))
 # db = client['kwargs']
 # collection = db['kwargs']
-# connection_string = mongodb_url  # MongoDB 연결 문자열을 입력하세요
-# client = MongoClient(os.getenv("mongodb_url"))
-# db = client['kwargsai']
-# collection = db['test_collection']
-# connection_string = "mongodb+srv://kwargs:57qBBuXYQel4W6oV@kwargsai.5yhiymt.mongodb.net/?retryWrites=true&w=majority&appName=kwargsai" # MongoDB 연결 문자열을 입력하세요
+
+# # MongoDB 연결 (11월 지헌)
+# connection_string = "mongodb+srv://kwargs:57qBBuXYQel4W6oV@kwargsai.5yhiymt.mongodb.net/?retryWrites=true&w=majority&appName=kwargsai" #mongodb_url  # MongoDB 연결 문자열을 입력하세요
 # client = MongoClient(connection_string)
 # db = client['kwargsai']
 # collection = db['test_collection']
@@ -133,7 +149,7 @@ with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'r', encoding='
 
 with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'r', encoding='utf-8') as f:
     user_name = f.read().strip()
-    
+
 company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이터 수집 현황 + 평가기관 점수 수집 + 기업 정보 요약.xlsx")
 
 # 전처리 함수 정의
@@ -177,7 +193,7 @@ def preprocess_data(df):
         raise KeyError("The expected columns 'environmental', 'social', and 'governance' are not present in the dataframe.")
 
 # step 1 : load the provided dataset
-file_path = r"C:\esgpage\LLM.ESG.POS\interface\241113_dummy_sample.csv"
+file_path = r"C:\esgpage\LLM.ESG.POS\interface\241007_dummy_update.csv"
 # file_path = r"interface/241007_dummy_update.csv"
 dummy = pd.read_csv(file_path, encoding='euc-kr')
 # dummy = pd.read_csv(file_path, encoding='cp949')
@@ -199,7 +215,7 @@ def load_stock_data(code, ndays, frequency='D'):
     end_date = pd.to_datetime('today')
     start_date = end_date - pd.Timedelta(days=ndays)
     data = fdr.DataReader(code, start_date, end_date)
-    
+
     if frequency == 'M':  # 월봉 설정
         data = data.resample('M').agg({
             'Open': 'first',
@@ -208,7 +224,7 @@ def load_stock_data(code, ndays, frequency='D'):
             'Close': 'last',
             'Volume': 'sum'
         }).dropna()  # 월봉 리샘플링, 결측값 제거
-    
+
     return data
 
 # 캔들차트 출력 함수
@@ -486,15 +502,46 @@ with col1:
                 </style>
                 </head>
     """, unsafe_allow_html=True)
+    
+    today = datetime.today().date()
+    yesterday = today - timedelta(days=1)
+    
+    kospi, kosdaq = st.columns(2)
+    kospi_data = fdr.DataReader('KS11', yesterday, today)
+    kosdaq_data = fdr.DataReader('KQ11', yesterday, today)
+    with kospi:
+        if not kospi_data.empty:
+            yesterday_kospi = kospi_data.iloc[0]['Close']
+            today_kospi = kospi_data.iloc[-1]['Close']
 
+            # 등락률 계산
+            change = today_kospi - yesterday_kospi
+            change_percent = (change / yesterday_kospi) * 100
+            
+            # Streamlit metric으로 출력
+            st.metric(label="오늘의 코스피 지수", value=round(today_kospi, 2), delta=f"{round(change_percent, 2)}%")
+
+    with kosdaq:
+        if not kosdaq_data.empty:
+            yesterday_kosdaq = kosdaq_data.iloc[0]['Close']
+            today_kosdaq = kosdaq_data.iloc[-1]['Close']
+            
+            # 등락률 계산
+            change = today_kosdaq - yesterday_kosdaq
+            change_percent = (change / yesterday_kosdaq) * 100
+            
+            # Streamlit metric으로 출력
+            st.metric(label="오늘의 코스닥 지수", value=round(today_kosdaq, 2), delta=f"{round(change_percent, 2)}%")
+    
+    
     sl1, sl2, sl3= st.columns(3)
     with sl1:
         origin_e = survey_result.loc['E'].sum() * 10 / 4.99
         display_text_on_hover('탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책',1,'&emsp;E')
         e_value = vertical_slider(
-            label = "환경", 
+            label = "환경",
             key = "environmental" ,
-            height = 350, 
+            height = 270,
             step = 0.1,
             default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -509,7 +556,7 @@ with col1:
         s_value = vertical_slider(
             label = "사회",  #Optional
             key = "social" ,
-            height = 350, #Optional - Defaults to 300
+            height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['S'].sum() *10/4.79,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -524,7 +571,7 @@ with col1:
         g_value = vertical_slider(
             label = "지배구조",  #Optional
             key = "governance" ,
-            height = 350, #Optional - Defaults to 300
+            height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['G'].sum()*10/4.16,
             min_value= 0.0, # Defaults to 0
@@ -607,16 +654,16 @@ with col2:
         width=250,
         height=400,
     )
-    
+
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
-            
-with col3:    
+
+with col3:
     company_list['종목코드'] = company_list['종목코드'].str[1:]
     top_companies['ticker'] = top_companies['ticker'].str.replace('.KS', '')
 
     expected_return = portfolio_performance[0]
     expected_volatility = portfolio_performance[1]
-    sharpe_ratio = portfolio_performance[2]   
+    sharpe_ratio = portfolio_performance[2]
 
     top5_companies = top_companies.nlargest(5, 'Weight')
     filtered_companies = pd.merge(company_list, top5_companies, left_on='종목코드', right_on='ticker')
@@ -628,8 +675,8 @@ with col3:
         'social': 'S',
         'governance': 'G',
         '종목설명' :'종목 소개'
-    })       
-    
+    })
+
     # 상단에 기대수익률, 변동성, 샤프비율 표시
     # _,col1, col2, col3,_ = st.columns([2,3,3,3,2])
     col1, col2, col3 = st.columns(3)
@@ -640,7 +687,7 @@ with col3:
         display_text_on_hover("해당 지표는 수익률이 얼마나 변동할 수 있는지를 나타내는 위험 지표입니다.",1,f"연간 변동성 &emsp; {expected_volatility * 100:.2f} %")
     with col3:
         display_text_on_hover("해당 지표는 포트폴리오가 위험 대비 얼마나 효과적으로 수익을 내는지를 나타내는 성과 지표입니다.",1,f"샤프 비율 &emsp;{sharpe_ratio * 100:.2f}")
-    
+
     # HTML 코드에 툴팁 추가 및 두 행 구조로 변환
     html_code = f"""
     <div style="font-family: Arial, sans-serif; text-align:center;">
@@ -674,7 +721,7 @@ with col3:
         </thead>
         <tbody>
     """
-    
+
     filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
     for _, row in filtered_companies.iterrows():
         html_code += f"""<tr>
@@ -695,10 +742,10 @@ with col3:
     st.markdown(html_code, unsafe_allow_html=True)
     
     _,_,bt1,bt2 = st.columns(4)
-    with bt1: 
+    with bt1:
         if st.button(label="포트폴리오 확인  ➡️"):
             screenshot = ImageGrab.grab(bbox=(400,420,790,830))
-            screenshot.save("pie_chart_capture.png") 
+            screenshot.save("pie_chart_capture.png")
         
     def generate_html():
         filtered_companies = pd.merge(company_list, top_companies, left_on='종목코드', right_on='ticker')
@@ -712,7 +759,7 @@ with col3:
             '종목설명' :'종목 소개'
         })
         filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
-        
+
         with open("pie_chart_capture.png", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
 
@@ -841,13 +888,13 @@ with col3:
             # HTML 파일 저장
             tmp_html.write(html_content.encode('utf-8'))
             tmp_html_path = tmp_html.name
-        
+
         # PDF 변환 파일 경로 설정
         pdf_path = tmp_html_path.replace(".html", ".pdf")
-        
+
         # PDF 변환
         pdfkit.from_file(tmp_html_path, pdf_path, configuration=config)
-        
+
         # Streamlit 다운로드 버튼 생성
         with open(pdf_path, "rb") as pdf_file:
             st.download_button(
@@ -861,12 +908,12 @@ with col3:
         html_content = generate_html()
         save_as_pdf(html_content)
 
-   
+
             
 # col_1, col_2,col_3,col_4 = st.columns(4)
 col_1, col_2, col_3 = st.columns(3)
 
-# 
+#
 with col_1:
     if clicked_points:
         clicked_point = clicked_points[0]
@@ -882,11 +929,11 @@ with col_1:
                 clicked_df = dummy[dummy['Company'] == clicked_company]
                 clicked_df['Year'] = clicked_df['Year'].astype(int)
                 clicked_df = clicked_df[['Year', 'environmental', 'social', 'governance']]
-                clicked_df = clicked_df.melt(id_vars='Year', 
+                clicked_df = clicked_df.melt(id_vars='Year',
                          value_vars=['environmental', 'social', 'governance'],
-                         var_name='Category', 
+                         var_name='Category',
                          value_name='Score')
-                
+
                 fig = px.line(clicked_df, x='Year', y='Score', color='Category')
                 fig.update_layout(showlegend=True,
                     legend=dict(
@@ -894,16 +941,16 @@ with col_1:
                         yanchor='bottom',  # 범례의 y축 앵커를 하단에 맞추기
                         y=-0.6,  # 범례를 그래프 아래로 이동, 적절한 값으로 수정
                         xanchor='center',  # 범례의 x축 앵커를 중앙에 맞추기
-                        x=0.5  
+                        x=0.5
                     ), width=750,height=350)
                 # fig.update_xaxes(showticklabels=False, title='')
-                # fig.update_yaxes(showticklabels=False, title='') 
+                # fig.update_yaxes(showticklabels=False, title='')
 
                 # 그래프 출력
                 st.plotly_chart(fig)
-                
+
     else:
-        st.write(' ')            
+        st.write(' ')
         
 with col_2:
     if clicked_points:
@@ -939,64 +986,72 @@ with col_2:
         
     else:
         st.write('')
-                
+
+
+
+
+# 회사 이름 정규화 함수
+def normalize_company_name(name):
+    return unicodedata.normalize('NFC', name).strip()
+
+
+# word_freq_df의 'company' 컬럼 정규화
+word_freq_df['company'] = word_freq_df['company'].apply(normalize_company_name)
+
+
+# 가중 평균 워드 클라우드 생성 함수
+def generate_blended_word_cloud(top_companies, word_freq_df):
+    blended_word_freq = Counter()
+
+    # top_companies에서도 회사 이름 정규화
+    top_companies['Company'] = top_companies['Company'].apply(normalize_company_name)
+
+    for _, row in tqdm(top_companies.iterrows(), total=top_companies.shape[0], desc="Generating Blended Word Cloud"):
+        company_name = row['Company']
+        weight = row['Weight']
+
+        # 해당 회사의 단어 빈도 필터링
+        company_word_freq = word_freq_df[word_freq_df['company'] == company_name]
+
+        if company_word_freq.empty:
+        #     st.warning(f"{company_name}의 빈도 데이터가 없습니다.")
+            continue
+
+        # 각 단어에 대해 가중치를 곱한 빈도 계산
+        for _, word_row in company_word_freq.iterrows():
+            word = word_row['word']
+            freq = word_row['frequency']
+            blended_word_freq[word] += freq * weight
+
+    # 워드 클라우드 생성 및 반환
+    if not blended_word_freq:
+        st.warning("워드 클라우드를 생성할 데이터가 없습니다.")
+        return None
+
+    wordcloud = WordCloud(
+        font_path='C:/Windows/Fonts/malgun.ttf',  # 한글 폰트 설정
+        background_color='white',
+        width=800,
+        height=600
+    ).generate_from_frequencies(blended_word_freq)
+
+    return wordcloud
+
+
+# Streamlit column for Word Cloud display
 with col_3:
-    if clicked_points:
-        st.markdown(f"""<div>
-                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
+    st.markdown(f"""<div>
+                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">포트폴리오 기반 워드 클라우드</h2>
                             </div>
-                """, unsafe_allow_html=True)
-        # MongoDB에서 Company 필드의 고유 값들을 불러오기
-        company_list = collection.distinct('Company')
-            
-        # 유니코드 정규화를 사용해 clicked_company와 company_list 값을 동일한 형식으로 변환
-        clicked_company_normalized = unicodedata.normalize('NFC', clicked_company)
+            """, unsafe_allow_html=True)
+    # 미리 선언된 top_companies를 기반으로 워드 클라우드 생성
+    wordcloud = generate_blended_word_cloud(top_companies, word_freq_df)
 
-        # 리스트 내의 각 값을 정규화 후 비교
-        clicked_company = next((company for company in company_list if unicodedata.normalize('NFC', company) == clicked_company_normalized), None)
-        titles = collection.find({'Company': clicked_company}, {'_id': 0, 'title': 1})
-
-# 불러온 데이터 리스트로 저장
-        title_list = [document['title'] for document in titles if 'title' in document]
-
-# title_list가 비어 있는지 확인
-        if not title_list:
-            st.warning("데이터가 없습니다. 다른 기업을 선택해 주세요.")
-        else:
-    # 형태소 분석기 설정
-            okt = Okt()
-            nouns_adj_verbs = []
-
-    # 명사, 형용사만 추출
-            for title in title_list:
-                tokens = okt.pos(title, stem=True)
-                for word, pos in tokens:
-                    if pos in ['Noun', 'Adjective']:
-                        nouns_adj_verbs.append(word)
-
-    # 빈도수 계산
-            word_counts = Counter(nouns_adj_verbs)
-            data = word_counts.most_common(500)
-            tmp_data = dict(data)
-
-    # 워드 클라우드 생성 - 폰트 경로 확인 후 설정
-            try:
-                wordcloud = WordCloud(
-                    font_path='C:/Windows/Fonts/malgun.ttf',  # Windows 시스템에서 사용할 기본 폰트 설정
-                    background_color='white',
-                    width=800,
-                    height=600
-                        ).generate_from_frequencies(tmp_data)
-            except OSError:
-                st.error("폰트 파일을 불러올 수 없습니다. 폰트 경로를 확인하거나 설치해 주세요.")
-                st.stop()
-
-    # 워드 클라우드 시각화 및 출력
-            fig, ax = plt.subplots(figsize=(10, 6))
-            ax.imshow(wordcloud, interpolation='bilinear')
-            ax.axis('off')
-
-    # Streamlit에 워드 클라우드 출력
-            st.pyplot(fig)
-            
-            
+    # 워드 클라우드 출력
+    if wordcloud:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.imshow(wordcloud, interpolation='bilinear')
+        ax.axis('off')
+        st.pyplot(fig)
+    else:
+        st.info("생성할 데이터가 충분하지 않아 워드 클라우드를 표시할 수 없습니다.")
