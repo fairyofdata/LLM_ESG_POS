@@ -1,19 +1,19 @@
 Company,Year,average_label,industry,environmental,social,governance,ticker
-Sample(E),2019,10,Sample,400,50,50,069500.KS
-Sample(E),2020,10,Sample,400,50,50,069500.KS
-Sample(E),2021,10,Sample,400,50,50,069500.KS
-Sample(E),2022,10,Sample,400,50,50,069500.KS
-Sample(E),2023,10,Sample,400,50,50,069500.KS
-Sample(S),2019,10,Sample,50,400,50,102110.KS
-Sample(S),2020,10,Sample,50,400,50,102110.KS
-Sample(S),2021,10,Sample,50,400,50,102110.KS
-Sample(S),2022,10,Sample,50,400,50,102110.KS
-Sample(S),2023,10,Sample,50,400,50,102110.KS
-Sample(G),2019,10,Sample,50,50,400,148020.KS
-Sample(G),2020,10,Sample,50,50,400,148020.KS
-Sample(G),2021,10,Sample,50,50,400,148020.KS
-Sample(G),2022,10,Sample,50,50,400,148020.KS
-Sample(G),2023,10,Sample,50,50,400,148020.KS
+Sample(E),2019,100,Sample,100,0,0,KS200
+Sample(E),2020,100,Sample,100,0,0,KS200
+Sample(E),2021,100,Sample,100,0,0,KS200
+Sample(E),2022,100,Sample,100,0,0,KS200
+Sample(E),2023,100,Sample,100,0,0,KS200
+Sample(S),2019,100,Sample,0,100,0,KQ150
+Sample(S),2020,100,Sample,0,100,0,KQ150
+Sample(S),2021,100,Sample,0,100,0,KQ150
+Sample(S),2022,100,Sample,0,100,0,KQ150
+Sample(S),2023,100,Sample,0,100,0,KQ150
+Sample(G),2019,100,Sample,0,0,100,102110.KS
+Sample(G),2020,100,Sample,0,0,100,102110.KS
+Sample(G),2021,100,Sample,0,0,100,102110.KS
+Sample(G),2022,100,Sample,0,0,100,102110.KS
+Sample(G),2023,100,Sample,0,0,100,102110.KS
 GS府抛老,2019,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
 GS府抛老,2020,2.724116731,Retail & Consumer Goods,76,88,70,007070.KS
 GS府抛老,2021,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
