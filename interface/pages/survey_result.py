@@ -193,7 +193,7 @@ def preprocess_data(df):
         raise KeyError("The expected columns 'environmental', 'social', and 'governance' are not present in the dataframe.")
 
 # step 1 : load the provided dataset
-file_path = r"C:\esgpage\LLM.ESG.POS\interface\241007_dummy_update.csv"
+file_path = r"C:\esgpage\LLM.ESG.POS\interface\241007_dummy_noharim.csv"
 # file_path = r"interface/241007_dummy_update.csv"
 dummy = pd.read_csv(file_path, encoding='euc-kr')
 # dummy = pd.read_csv(file_path, encoding='cp949')
@@ -348,61 +348,67 @@ from pypfopt import BlackLittermanModel, expected_returns, risk_models, Covarian
 # 수정된 포트폴리오 비중 계산 함수 with Black-Litterman 및 공분산 행렬 축소
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
+# 블랙리터만 모델 적용 함수
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
+    # 데이터 수집 및 전처리
     tickers = df['ticker'].tolist()
-    price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
+    price_data = yf.download(tickers, start="2019-01-01", end="2023-12-31")['Adj Close']
     price_data = price_data.dropna(axis=1)
     if price_data.isnull().values.any():
         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
-
+    
     # 평균 수익률과 공분산 행렬 계산
-    mu_market = expected_returns.capm_return(price_data).values.reshape(-1, 1)  # CAPM을 통한 시장 균형 수익률 계산 (Nx1 형태로 변환)
-    Sigma = CovarianceShrinkage(price_data).ledoit_wolf()  # 공분산 행렬 축소 적용
+    mu_market = expected_returns.capm_return(price_data)  # CAPM을 통한 시장 균형 수익률 계산
+    Sigma = risk_models.sample_cov(price_data)  # 샘플 공분산 행렬
 
-    # 사용자 선호도에 따른 ESG 가중치 조정 (스케일링)
-    esg_weights['environmental'] *= 1 / 700
-    esg_weights['social'] *= 1 / 700
-    esg_weights['governance'] *= 1 / 700
+    # 공분산 행렬 정규화: 비가역성을 방지하기 위해 작은 값 추가
+    Sigma += np.eye(Sigma.shape[0]) * 1e-6
 
-    # 사용자 선호도를 반영한 ESG 점수 계산
+    # ESG 가중치 스케일링 (비율 조정)
+    esg_weights = {key: value / 25000 for key, value in esg_weights.items()}
+
+    # 사용자 선호도와 ESG 가중치를 반영한 최종 ESG 점수 계산
     df['final_esg_score'] = (
-            esg_weights['environmental'] * df['environmental'] +
-            esg_weights['social'] * df['social'] +
-            esg_weights['governance'] * df['governance']
+        esg_weights['environmental'] * df['environmental'] +
+        esg_weights['social'] * df['social'] +
+        esg_weights['governance'] * df['governance']
     )
 
-    # 사용자 투자 성향에 따른 가중치 설정
+    # 사용자 투자 스타일에 따른 ESG 가중치 설정
     if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
         esg_weight_factor = 0.5
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
         esg_weight_factor = 1.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
-        esg_weight_factor = 1.5
+        esg_weight_factor = 2.0
+    else:
+        esg_weight_factor = 1.0  # 기본값 설정
 
-    # 최종 ESG 점수에 성향에 따른 가중치를 적용하여 조정
+    # 최종 ESG 점수에 투자 스타일 반영
     df['adjusted_esg_score'] = df['final_esg_score'] * esg_weight_factor
 
+    # Black-Litterman 모델의 투자자의 의견으로 반영할 데이터 준비
     valid_tickers = price_data.columns.tolist()
     df_valid = df[df['ticker'].isin(valid_tickers)]
+    
+    # 개선된 P 매트릭스 설정: 자산별로 더욱 다양하게 반영하여 상관관계 고려
+    P = np.zeros((len(valid_tickers), len(valid_tickers)))
+    np.fill_diagonal(P, [1.0 / len(valid_tickers)] * len(valid_tickers))
 
-    # 사용자 ESG 점수를 투자자의 견해로 반영 (Q: 주관적 수익률 벡터)
-    P = np.eye(len(valid_tickers))
-    Q = df_valid['adjusted_esg_score'].values.reshape(-1, 1)  # Q 벡터: 각 자산에 대한 투자자의 의견 (Nx1 형태로 변환)
-
-    # 시장 균형 수익률 조정 (사용자 ESG 점수 반영)
-    adjusted_mu_market = mu_market + (Q * 0.01)  # ESG 점수의 가중치를 더하여 수익률 조정
+    # Q 벡터 설정: ESG 점수를 반영한 투자자의 의견
+    Q = df_valid['adjusted_esg_score'].values
 
     # Black-Litterman 모델 적용
-    bl = BlackLittermanModel(Sigma, pi=adjusted_mu_market, P=P, Q=Q)
+    tau = 0.1  # tau 값을 적절히 조정하여 모델 안정성 확보
+    bl = BlackLittermanModel(Sigma, pi=mu_market, P=P, Q=Q, tau=tau)
     adjusted_returns = bl.bl_returns()
 
     # 최적화 문제 설정 및 최적 가중치 계산
     n = len(mu_market)
     P_opt = matrix(Sigma.values)
     q_opt = matrix(-adjusted_returns.values)
-    G = matrix(np.vstack([-np.eye(n), np.eye(n)]))  # 부등식 제약조건: 각 자산 가중치가 0 이상
-    h = matrix(np.hstack([np.zeros(n), np.ones(n) * 0.1]))  # 각 자산의 비중을 최대 10%로 제한
-
+    G = matrix(-np.eye(n))
+    h = matrix(np.zeros(n))
     A = matrix(1.0, (1, n))
     b = matrix(1.0)
 
@@ -413,7 +419,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     weights = np.array(sol['x']).flatten()
 
     # 포트폴리오 성과 지표 계산
-    expected_return = np.dot(weights, mu_market.flatten())
+    expected_return = np.dot(weights, mu_market)
     expected_volatility = np.sqrt(np.dot(weights.T, np.dot(Sigma.values, weights)))
     sharpe_ratio = expected_return / expected_volatility
 
@@ -1059,18 +1065,19 @@ def generate_blended_word_cloud(top_companies, word_freq_df):
 
 # Streamlit column for Word Cloud display
 with col_3:
-    st.markdown(f"""<div>
-                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">포트폴리오 기반 워드 클라우드</h2>
-                            </div>
-            """, unsafe_allow_html=True)
-    # 미리 선언된 top_companies를 기반으로 워드 클라우드 생성
-    wordcloud = generate_blended_word_cloud(top_companies, word_freq_df)
+    if clicked_points:
+        st.markdown(f"""<div>
+                                <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">포트폴리오 기반 워드 클라우드</h2>
+                                </div>
+                """, unsafe_allow_html=True)
+        # 미리 선언된 top_companies를 기반으로 워드 클라우드 생성
+        wordcloud = generate_blended_word_cloud(top_companies, word_freq_df)
 
-    # 워드 클라우드 출력
-    if wordcloud:
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.imshow(wordcloud, interpolation='bilinear')
-        ax.axis('off')
-        st.pyplot(fig)
-    else:
-        st.info("생성할 데이터가 충분하지 않아 워드 클라우드를 표시할 수 없습니다.")
+        # 워드 클라우드 출력
+        if wordcloud:
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.imshow(wordcloud, interpolation='bilinear')
+            ax.axis('off')
+            st.pyplot(fig)
+        else:
+            st.info("생성할 데이터가 충분하지 않아 워드 클라우드를 표시할 수 없습니다.")
