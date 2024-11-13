@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service 
+from selenium.webdriver.chrome.service import Service
 import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -15,7 +15,7 @@ import FinanceDataReader as fdr
 import mplfinance as mpf
 from datetime import datetime, timedelta
 import json
-#import yaml
+import yaml
 import streamlit_authenticator as stauth
 import numpy as np
 import requests as rq
@@ -141,7 +141,7 @@ with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'r', encoding='
 
 with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'r', encoding='utf-8') as f:
     user_name = f.read().strip()
-    
+
 company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이터 수집 현황 + 평가기관 점수 수집 + 기업 정보 요약.xlsx")
 
 # 전처리 함수 정의
@@ -202,33 +202,72 @@ def getSymbols(market='KOSPI',sort='Marcap'): # 정렬하는 기준을 시장가
     df.sort_values(by=[sort],ascending=ascending, inplace=True)
     return df[['Code','Name','Market']]
 
+# @st.cache_data
+# def load_stock_data(code, ndays):
+#     end_date = pd.to_datetime('today')
+#     start_date = end_date - pd.Timedelta(days=ndays)
+#     data = fdr.DataReader(code, start_date, end_date)
+#     return data
+
+# # 캔들차트 출력 함수
+# def plotChart(data): # 외부에서 데이터를 주면 이를 바탕으로 캔들 차트 출력
+#     if not isinstance(data.index, pd.DatetimeIndex):
+#         data.index = pd.to_datetime(data.index)
+#     chart_style = st.session_state['chart_style']
+#     marketcolors = mpf.make_marketcolors(up='red',down='blue') # 양, 음봉 선택
+#     mpf_style = mpf.make_mpf_style(base_mpf_style=chart_style,marketcolors=marketcolors)
+
+#     fig, ax = mpf.plot(
+#         data=data, # 받아온 데이터
+#         volume=st.session_state['volume'], # 거래량을 출력 여부에 대한 것
+#         type='candle', # 차트 타입
+#         style=mpf_style, # 스타일 객체
+#         figsize=(10,7),
+#         fontscale=1.1,
+#         mav=(5,10,30), # 이동평균선(5, 10, 30일 이동평균을 출력하겠다는 뜻)
+#         mavcolors=('red','green','blue'), # 각 이동평균선의 색상
+#         returnfig=True # figure 객체 반환
+#     )
+#     st.pyplot(fig)
+
 @st.cache_data
-def load_stock_data(code, ndays):
+def load_stock_data(code, ndays, frequency='D'):
     end_date = pd.to_datetime('today')
     start_date = end_date - pd.Timedelta(days=ndays)
     data = fdr.DataReader(code, start_date, end_date)
+
+    if frequency == 'M':  # 월봉 설정
+        data = data.resample('M').agg({
+            'Open': 'first',
+            'High': 'max',
+            'Low': 'min',
+            'Close': 'last',
+            'Volume': 'sum'
+        }).dropna()  # 월봉 리샘플링, 결측값 제거
+
     return data
 
 # 캔들차트 출력 함수
-def plotChart(data): # 외부에서 데이터를 주면 이를 바탕으로 캔들 차트 출력
+def plotChart(data):
     if not isinstance(data.index, pd.DatetimeIndex):
         data.index = pd.to_datetime(data.index)
     chart_style = st.session_state['chart_style']
-    marketcolors = mpf.make_marketcolors(up='red',down='blue') # 양, 음봉 선택
-    mpf_style = mpf.make_mpf_style(base_mpf_style=chart_style,marketcolors=marketcolors)
+    marketcolors = mpf.make_marketcolors(up='red', down='blue')
+    mpf_style = mpf.make_mpf_style(base_mpf_style=chart_style, marketcolors=marketcolors)
 
     fig, ax = mpf.plot(
-        data=data, # 받아온 데이터
-        volume=st.session_state['volume'], # 거래량을 출력 여부에 대한 것
-        type='candle', # 차트 타입
-        style=mpf_style, # 스타일 객체
-        figsize=(10,7),
+        data=data,
+        volume=st.session_state['volume'],
+        type='candle',
+        style=mpf_style,
+        figsize=(10, 7),
         fontscale=1.1,
-        mav=(5,10,30), # 이동평균선(5, 10, 30일 이동평균을 출력하겠다는 뜻)
-        mavcolors=('red','green','blue'), # 각 이동평균선의 색상
-        returnfig=True # figure 객체 반환 
+        mav=(5, 10, 30),
+        mavcolors=('red', 'green', 'blue'),
+        returnfig=True
     )
     st.pyplot(fig)
+
 
 # 상위 기업 선정 (esg 기반)
 def recommend_companies(esg_weights, df):
@@ -314,27 +353,6 @@ header = f"""
     </html>
     """
 st.markdown(header, unsafe_allow_html=True)
-
-# st.markdown("""
-#                 <!DOCTYPE html>
-#                 <html lang="ko">
-#                 <head>
-#                     <meta charset="UTF-8">
-#                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-#                     <style>
-#                         header[data-testid="stHeader"]::after {
-#                             content: "ESG 투자 최적화 포트폴리오";
-#                             display: block;
-#                             font-size: 30px;
-#                             word-spacing: 3px;
-#                             font-weight: bold;
-#                             color: black;
-#                             padding: 10px;
-#                         }
-#                     </style>
-#                 </head>
-#                 </html>
-#                 """,unsafe_allow_html=True)
 
 # 블랙리터만 모델 적용 함수
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
@@ -492,9 +510,9 @@ with col1:
         origin_e = survey_result.loc['E'].sum() * 10 / 4.99
         display_text_on_hover('탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책',1,'&emsp;E')
         e_value = vertical_slider(
-            label = "환경", 
+            label = "환경",
             key = "environmental" ,
-            height = 350, 
+            height = 350,
             step = 0.1,
             default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -534,77 +552,6 @@ with col1:
             thumb_color = "#FF9933",
             value_always_visible = True ,#Optional - Defaults to False
         )
-    
-    # display_text_on_hover("해당 슬라이더의 초기값은 설문지의 결과를 바탕으로 도출된 값입니다. 해당 분야는 탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책을 진행하는 것입니다.", 1,"Environmental")
-    # e_value = st.slider(' ', min_value=float(0), max_value=float(10), value=survey_result.loc['E'].sum())
-    
-    # display_text_on_hover("해당 슬라이더의 초기값은 설문지의 결과를 바탕으로 도출된 값입니다. 해당 분야는 인적 자원 관리, 고객 및 소비자 관계, 노동 관행 및 공정 고용 등과 관련된 방향을 나아가는 것 입니다.", 1,"Social")
-    # s_value = st.slider('', min_value=float(0), max_value=float(10), value=survey_result.loc['S'].sum())
-       
-    # display_text_on_hover("해당 슬라이더의 초기값은 설문지의 결과를 바탕으로 도출된 값입니다. 해당 분야는 기업 지배구조 및 이사회 운영, 주주권 보호, 정보 보안 및 사이버 보안 등과 관련된 방향성을 나아가는 것입니다.", 1,"Governance")
-    # g_value = st.slider('  ', min_value=float(0), max_value=float(10), value=survey_result.loc['G'].sum())
-        
-    
-    # display_text_on_hover("해당 관심도 값은<br> 설문지의 결과를 바탕으로<br> 도출된 값입니다.<br> 슬라이더가 우측에 가까울수록 <br> 투자시 ESG 요소를<br> 더 고려한다는 것을<br> 의미합니다.",1,"나의 ESG 관심도")
-    # esg_weight_factor = st.slider('   ',min_value=float(0),max_value=float(10),value=float(esg_weight_factor))
-    
-    # with stylable_container(key="environmental_container",css_styles="""
-    #         {
-    #             border: none;
-    #             border-radius: 0.5rem;
-    #             background-color: #e4edfb;
-    #         }
-    #         """,):
-    #     display_text_on_hover("해당 슬라이더의 초기값은 설문지의 결과를 바탕으로 도출된 값입니다. 해당 분야는 탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책을 진행하는 것입니다.", 1,"&emsp;Environmental")
-    #     e_value = st.slider(' ', min_value=float(0), max_value=float(10), value=survey_result.loc['E'].sum())
-        
-    # with stylable_container(key="social_container",css_styles="""
-    #         {
-    #             border: none;
-    #             border-radius: 0.5rem;
-    #             padding: 5px;
-    #             background-color: #e4edfb;
-    #             margin : 5px;
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         }
-    #         """,):
-    #     display_text_on_hover("해당 슬라이더의 초기값은 설문지의 결과를 바탕으로 도출된 값입니다. 해당 분야는 인적 자원 관리, 고객 및 소비자 관계, 노동 관행 및 공정 고용 등과 관련된 방향을 나아가는 것 입니다.", 1,"&emsp;Social")
-    #     s_value = st.slider('', min_value=float(0), max_value=float(10), value=survey_result.loc['S'].sum())
-        
-    # with stylable_container(key="governance_container",css_styles="""
-    #         {
-    #             border: none;
-    #             border-radius: 0.5rem;
-    #             padding: 5px;
-    #             background-color: #e4edfb;
-    #             margin : 5px;
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center; 
-    #         }
-    #         """,):           
-    #     display_text_on_hover("해당 슬라이더의 초기값은 설문지의 결과를 바탕으로 도출된 값입니다. 해당 분야는 기업 지배구조 및 이사회 운영, 주주권 보호, 정보 보안 및 사이버 보안 등과 관련된 방향성을 나아가는 것입니다.", 1,"&emsp;Governance")
-    #     g_value = st.slider('  ', min_value=float(0), max_value=float(10), value=survey_result.loc['G'].sum())
-        
-    # with stylable_container(key="esg_interest",css_styles="""
-    #         {
-    #             border: none;
-    #             border-radius: 0.5rem;
-    #             padding: 5px;
-    #             background-color: #e4edfb;
-    #             margin : 5px;
-    #             display: flex;
-    #             justify-content: center;
-    #             align-items: center;
-    #             text-align: center;
-    #         }
-    #         """,):  
-    #     display_text_on_hover("해당 관심도 값은<br> 설문지의 결과를 바탕으로<br> 도출된 값입니다.<br> 슬라이더가 우측에 가까울수록 <br> 투자시 ESG 요소를<br> 더 고려한다는 것을<br> 의미합니다.",1,"&emsp;나의 ESG 관심도")
-    #     esg_weight_factor = st.slider('   ',min_value=float(0),max_value=float(10),value=float(esg_weight_factor))    
 
 # 사용자의 ESG 선호도
 esg_weights = {'environmental': e_value, 'social': s_value, 'governance': g_value}       
@@ -680,58 +627,19 @@ with col2:
         width=250,
         height=400,
     )
+
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
-    
-def create_pdf(e_value, s_value, g_value, fig, annual_return, volatility, sharpe_ratio, companies_df):
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
 
-    # 제목 추가
-    pdf.set_font("Arial", size=16, style='B')
-    pdf.cell(200, 10, txt="당신을 위한 ESG 투자 최적화 포트폴리오", ln=True, align='C')
-    pdf.ln(10)
-
-    # 슬라이더 값 추가
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt=f"환경 (E) 투자 비율: {e_value}%", ln=True)
-    pdf.cell(200, 10, txt=f"사회 (S) 투자 비율: {s_value}%", ln=True)
-    pdf.cell(200, 10, txt=f"지배구조 (G) 투자 비율: {g_value}%", ln=True)
-    pdf.ln(10)
-
-    # Plotly 차트 이미지를 PDF로 저장 후 추가
-    fig.write_image("pie_chart.png")
-    pdf.image("pie_chart.png", x=10, y=pdf.get_y(), w=180)
-    pdf.ln(100)  # 이미지와 내용 사이에 간격 추가
-
-    # 연간 수익률, 변동성, 샤프 비율 추가
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt=f"연간 수익률: {annual_return}%", ln=True)
-    pdf.cell(200, 10, txt=f"변동성: {volatility}%", ln=True)
-    pdf.cell(200, 10, txt=f"샤프 비율: {sharpe_ratio}", ln=True)
-    pdf.ln(10)
-
-    # 기업명과 소개 추가
-    pdf.set_font("Arial", size=12, style='B')
-    pdf.cell(200, 10, txt="기업 목록 및 소개:", ln=True)
-    pdf.set_font("Arial", size=12)
-    for index, row in companies_df.iterrows():
-        pdf.cell(200, 10, txt=f"{row['Company Name']}: {row['Introduction']}", ln=True)
-    pdf.ln(10)
-
-    # PDF 파일 저장
-    pdf.output("esg_investment_report.pdf")
-            
 with col3:
     company_list['종목코드'] = company_list['종목코드'].str[1:]
     top_companies['ticker'] = top_companies['ticker'].str.replace('.KS', '')
 
     expected_return = portfolio_performance[0]
     expected_volatility = portfolio_performance[1]
-    sharpe_ratio = portfolio_performance[2]   
+    sharpe_ratio = portfolio_performance[2]
 
-    top_companies = top_companies.nlargest(5, 'Weight')
-    filtered_companies = pd.merge(company_list, top_companies, left_on='종목코드', right_on='ticker')
+    top5_companies = top_companies.nlargest(5, 'Weight')
+    filtered_companies = pd.merge(company_list, top5_companies, left_on='종목코드', right_on='ticker')
     filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
     filtered_companies = filtered_companies.rename(columns={
         'Company': '종목명',
@@ -741,77 +649,7 @@ with col3:
         'governance': 'G',
         '종목설명' :'종목 소개'
     })
-   
 
-    html_code2 = f"""
-        <!DOCTYPE html>
-        <html lang="ko">
-        <head>
-        <meta charset="UTF-8">
-        <style>
-            .tooltip {{
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            }}
-            .tooltip .tooltiptext {{
-            visibility: hidden;
-            width: 200px;
-            background-color: #6c757d;
-            color: #fff;
-            text-align: center;
-            border-radius: 5px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 150%; 
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            }}
-            .tooltip:hover .tooltiptext {{
-            visibility: visible;
-            opacity: 1;
-            }}
-            table {{
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            }}
-            th, td {{
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-            width: 16.66%;
-            }}
-            th {{
-            background-color: #f2f2f2;
-            }}
-        </style>
-        </head>
-        <body>
-        <div style="font-family: Arial, sans-serif;">
-        <table>
-            <thead>
-            <tr>
-                <th class="tooltip">연간 기대 수익률
-                </th>
-                <th data-container="body">{expected_return:.2%}</th>
-                <th class="tooltip">연간 변동성
-                </th>
-                <th data-container="body">{expected_volatility:.2%}</th>
-                <th class="tooltip">샤프 비율
-                </th>
-                <th data-container="body">{sharpe_ratio:.2%}</th>
-            </tr>
-            </thead>
-        </table>
-        </div>
-        </body>
-        </html>
-    """
-    
     # 상단에 기대수익률, 변동성, 샤프비율 표시
     # _,col1, col2, col3,_ = st.columns([2,3,3,3,2])
     col1, col2, col3 = st.columns(3)
@@ -822,7 +660,7 @@ with col3:
         display_text_on_hover("해당 지표는 수익률이 얼마나 변동할 수 있는지를 나타내는 위험 지표입니다.",1,f"연간 변동성 &emsp; {expected_volatility * 100:.2f} %")
     with col3:
         display_text_on_hover("해당 지표는 포트폴리오가 위험 대비 얼마나 효과적으로 수익을 내는지를 나타내는 성과 지표입니다.",1,f"샤프 비율 &emsp;{sharpe_ratio * 100:.2f}")
-    
+
     # HTML 코드에 툴팁 추가 및 두 행 구조로 변환
     html_code = f"""
     <div style="font-family: Arial, sans-serif; text-align:center;">
@@ -855,11 +693,12 @@ with col3:
         </thead>
         <tbody>
     """
-    
+
+    filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
     for _, row in filtered_companies.iterrows():
         html_code += f"""<tr>
         <td style="font-size=13px;">{row['종목명']}</td>
-        <td>{int(row['제안 비중'])}%</td>
+        <td>{row['제안 비중']:.2f}%</td>
         <td>{row['E']:.1f}</td>
         <td>{row['S']:.1f}</td>
         <td>{row['G']:.1f}</td>
@@ -873,144 +712,200 @@ with col3:
     </div>
     """
     st.markdown(html_code, unsafe_allow_html=True)
-    
-    
 
-    # create_pdf(e_value, s_value, g_value, fig, expected_return, expected_volatility, sharpe_ratio, filtered_companies)
-    
-    # # PDF 파일 다운로드
-    # with open("esg_investment_report.pdf", "rb") as f:
+    ready_bt = st.button(label="더 많은 정보 얻기")
+    if ready_bt:
+        screenshot = ImageGrab.grab(bbox=(400,420,790,830))
+        screenshot.save("pie_chart_capture.png")
+    # with open("pie_chart_capture.png","rb") as f:
     #     st.download_button(
-    #         label="PDF 파일 다운로드",
-    #         data=f,
-    #         file_name="esg_investment_report.pdf",
-    #         mime="application/pdf"
+    #         label = "png 다운",
+    #         data = f,
+    #         file_name = "pie_chart.png"
     #     )
-    
-    # # 생성된 이미지 파일 및 PDF 삭제 (선택 사항)
-    # os.remove("pie_chart.png")
-    # os.remove("esg_investment_report.pdf")
-    
-    
-    
         
-def generate_html():
-    # 기존 HTML 내용 생성
-    html_content = f"""
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>ESG 포트폴리오 제안서</title>
-        <style>
-            body {{
-                font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-            }}
-            h1, h2, h3, h4, h5, h6 {{
-                text-align: center;
-                font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-            }}
-            .container {{
-                width: 80%;
-                margin: auto;
-            }}
-            p {{
-                text-align: center;
-                font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-            }}
-            table {{
-                width: 100%;
-                border-collapse: collapse;
-                font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-            }}
-            th, td {{
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: center;
-            }}
-            th {{
-                background-color: #f2f2f2;
-            }}
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1 style="text-align=center;">{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
-            <h2 style="text-align=center;">포트폴리오 요약</h2>
-            <p style="text-align=center;">다음은 {user_name}의 ESG 선호도를 바탕으로 최적화된 포트폴리오 비중이 표시됩니다.</p>
-            <h2>포트폴리오 비중 상세</h2>
-            <table>
-                <tr>
-                    <th>회사</th>
-                    <th>가중치 (%)</th>
-                    <th>환경</th>
-                    <th>사회</th>
-                    <th>거버넌스</th>
-                </tr>
-    """
-    for _, row in top_companies.iterrows():
-        if round(row['Weight'], 6) == 0.0:
-            break
-        html_content += f"""
-            <tr>
-                <td>{row['Company']}</td>
-                <td>{row['Weight']:.6f}</td>
-                <td>{row['environmental']:.2f}</td>
-                <td>{row['social']:.2f}</td>
-                <td>{row['governance']:.2f}</td>
-            </tr>
+    def generate_html():
+        filtered_companies = pd.merge(company_list, top_companies, left_on='종목코드', right_on='ticker')
+        filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
+        filtered_companies = filtered_companies.rename(columns={
+            'Company': '종목명',
+            'Weight': '제안 비중',
+            'environmental': 'E',
+            'social': 'S',
+            'governance': 'G',
+            '종목설명' :'종목 소개'
+        })
+        filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
+
+        with open("pie_chart_capture.png", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+
+        # HTML 콘텐츠 생성
+        html_content = f"""
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>ESG 포트폴리오 제안서</title>
+                <style>
+                    body {{
+                        text-align: center;
+                        font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                    }}
+                    .wrapper{{
+                        display:grid;
+                        grid-template-columns:1fr 1fr 1fr 1fr;
+                        grid-template-rows: 100px;
+                        gird-gap: 10px;
+                    }}
+                    .box1{{
+                        grid-column: 1 / 3;
+                        grid-row: 1 / 3;
+                    }}
+                    .box2{{
+                        grid-column: 3 / 4;
+                        grid-row: 1 / 2;
+                    }}
+                    .box3{{
+                        grid-column: 3 / 4;
+                        grid-row: 3 / 4;
+                    }}
+                    .detail-table {{
+                        width: 100%;
+                        margin-bottom: 20px;
+                    }}
+                    .right-table{{
+                        width: 50%;
+                        margin-bottom: 20px;
+                    }}
+                    th, td {{
+                        text-align: center;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                    }}
+                    th {{
+                        background-color: #e3edfa;
+                    }}
+                    .detail-table-container {{
+                        width: 100%;
+                        margin: auto;
+                        margin-top: 40px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <h1>{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
+                <p>다음은 {user_name}의 ESG 선호도를 바탕으로 최적화된 포트폴리오 비중이 표시됩니다.</p>
+                <div class="wrapper">
+                    <div class="box1">
+                        <img src="data:image/png;base64,{encoded_string}" alt="ESG 포트폴리오 파이차트" style="width:50%;">
+                    </div>
+                    <div class="box2">
+                        <h2>관심도</h2>
+                        <table>
+                            <tr>
+                                <th>환경</th>
+                                <td>{e_value}</td>
+                            </tr>
+                            <tr>
+                                <th>사회</th>
+                                <td>{s_value}</td>
+                            </tr>
+                            <tr>
+                                <th>거버넌스</th>
+                                <td>{g_value}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="box3">
+                        <h2>포트폴리오 정보</h2>
+                        <table>
+                            <tr>
+                                <th>예상 수익률</th>
+                                <td>{expected_return:.2%}</td>
+                            </tr>
+                            <tr>
+                                <th>예상 변동성</th>
+                                <td>{expected_volatility:.2%}</td>
+                            </tr>
+                            <tr>
+                                <th>샤프 비율</th>
+                                <td>{sharpe_ratio:.2f}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="detail-table-container">
+                    <h2>포트폴리오 비중 상세</h2>
+                    <table class="detail-table">
+                        <tr>
+                            <th>종목</th>
+                            <th>제안 비중(%)</th>
+                            <th>환경</th>
+                            <th>사회</th>
+                            <th>거버넌스</th>
+                            <th>종목 소개</th>
+                        </tr>
             """
 
-    html_content += f"""
-            </table>
-        </div>
-    </body>
-    </html>
-    """
-    return html_content
-# HTML 저장 및 PDF 변환 함수
-def save_as_pdf(html_content):
-    config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
-    options = {
-        'enable-local-file-access': None,  # 로컬 파일 접근 허용
-        'encoding': "UTF-8",  # UTF-8 인코딩 설정
-        'no-pdf-compression': ''  # 폰트 압축 방지
-    }
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp_html:
-        # HTML 파일 저장
-        tmp_html.write(html_content.encode('utf-8'))
-        tmp_html_path = tmp_html.name
+        for _, row in filtered_companies.iterrows():
+            html_content += f"""<tr>
+            <td>{row['종목명']}</td>
+            <td>{row['제안 비중']:.2f}%</td>
+            <td>{row['E']:.1f}</td>
+            <td>{row['S']:.1f}</td>
+            <td>{row['G']:.1f}</td>
+            <td>{row['종목 소개']}</td>
+            </tr>
+            """
+        html_content += f"""
+                </table>
+            </div>
+        </body>
+        </html>
+        """
+        return html_content
+
+    # HTML 저장 및 PDF 변환 함수
+    def save_as_pdf(html_content):
+        config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+        options = {
+            'enable-local-file-access': None,  # 로컬 파일 접근 허용
+            'encoding': "UTF-8",  # UTF-8 인코딩 설정
+            'no-pdf-compression': ''  # 폰트 압축 방지
+        }
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp_html:
+            # HTML 파일 저장
+            tmp_html.write(html_content.encode('utf-8'))
+            tmp_html_path = tmp_html.name
+
+        # PDF 변환 파일 경로 설정
+        pdf_path = tmp_html_path.replace(".html", ".pdf")
+
+        # PDF 변환
+        pdfkit.from_file(tmp_html_path, pdf_path, configuration=config)
+
+        st.write('')
+        st.write('')
+        # Streamlit 다운로드 버튼 생성
+        with open(pdf_path, "rb") as pdf_file:
+            st.download_button(
+                label="보고서 PDF로 다운받기",
+                data=pdf_file,
+                file_name="esg_report.pdf",
+                mime="application/pdf"
+            )
     
-    # PDF 변환 파일 경로 설정
-    pdf_path = tmp_html_path.replace(".html", ".pdf")
-    
-    # PDF 변환
-    pdfkit.from_file(tmp_html_path, pdf_path, configuration=config)
-    
-    st.write('')
-    st.write('')
-    # Streamlit 다운로드 버튼 생성
-    with open(pdf_path, "rb") as pdf_file:
-        st.download_button(
-            label="보고서 PDF로 다운받기",
-            data=pdf_file,
-            file_name="esg_report.pdf",
-            mime="application/pdf"
-        )
-                
-# with col4:
-#     # mybuff = StringIO()
-#     # fig.write_html(mybuff, include_plotlyjs='cdn')
-#     # mybuff = BytesIO(mybuff.getvalue().encode())
-#     # b64 = base64.b64encode(mybuff.read()).decode()
-#     # href = f'<a href="data:text/html;charset=utf-8;base64, {b64}" download="plot.html">Download plot</a>'
-    
-#     html_content = generate_html()
-#     save_as_pdf(html_content)           
+    _,col,_ = st.columns(3)
+    with col:
+        html_content = generate_html()
+        save_as_pdf(html_content)
+
+
             
 # col_1, col_2,col_3,col_4 = st.columns(4)
 col_1, col_2, col_3 = st.columns(3)
 
-# 
+#
 with col_1:
     if clicked_points:
         clicked_point = clicked_points[0]
@@ -1026,11 +921,11 @@ with col_1:
                 clicked_df = dummy[dummy['Company'] == clicked_company]
                 clicked_df['Year'] = clicked_df['Year'].astype(int)
                 clicked_df = clicked_df[['Year', 'environmental', 'social', 'governance']]
-                clicked_df = clicked_df.melt(id_vars='Year', 
+                clicked_df = clicked_df.melt(id_vars='Year',
                          value_vars=['environmental', 'social', 'governance'],
-                         var_name='Category', 
+                         var_name='Category',
                          value_name='Score')
-                
+
                 fig = px.line(clicked_df, x='Year', y='Score', color='Category')
                 fig.update_layout(showlegend=True,
                     legend=dict(
@@ -1038,17 +933,16 @@ with col_1:
                         yanchor='bottom',  # 범례의 y축 앵커를 하단에 맞추기
                         y=-0.6,  # 범례를 그래프 아래로 이동, 적절한 값으로 수정
                         xanchor='center',  # 범례의 x축 앵커를 중앙에 맞추기
-                        x=0.5  
+                        x=0.5
                     ), width=750,height=350)
                 # fig.update_xaxes(showticklabels=False, title='')
-                # fig.update_yaxes(showticklabels=False, title='') 
+                # fig.update_yaxes(showticklabels=False, title='')
 
                 # 그래프 출력
                 st.plotly_chart(fig)
-                
+
     else:
         st.write(' ')
-            
         
 with col_2:
     if clicked_points:
@@ -1071,13 +965,13 @@ with col_2:
         chart_style = 'default'
     
         # 세션 상태 업데이트
-        st.session_state['ndays'] = 100
+        st.session_state['ndays'] = 1825
         st.session_state['code_index'] = code_index
         st.session_state['chart_style'] = chart_style
         st.session_state['volume'] = True
         
         # 선택된 종목의 주가 데이터 로드
-        data = load_stock_data(code, 100)
+        data = load_stock_data(code, 1825)
         
         # 주가 차트 시각화 함수 호출
         plotChart(data)
@@ -1157,6 +1051,12 @@ with col_3:
 
             # Streamlit에 워드 클라우드 출력
             st.pyplot(fig)
-
             
-            
+# with col_4:
+#     if clicked_points:
+#         st.markdown(f"""<div>
+#                             <h2 style="font-size: 24px; text-align:center;">ESG 점수 그래프</h2>
+#                             </div>
+#             """, unsafe_allow_html=True)
+#     else:
+#         st.write(' ')
