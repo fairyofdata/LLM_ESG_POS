@@ -14,6 +14,15 @@ from streamlit_authenticator.utilities import (CredentialsError,
                                                UpdateError)
 from streamlit_extras.switch_page_button import switch_page
 
+import os
+
+# 현재 스크립트 파일의 부모 디렉터리를 기준으로 상대 경로 설정
+current_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+# 경로 변수 정의
+user_name_file = os.path.join(current_directory, "user_name.txt")
+survey_page = 'pages/survey_page.py'
+
 st.set_page_config(
         page_title="ESG 정보 제공 플랫폼",
         page_icon=":earth_africa:",
@@ -134,14 +143,18 @@ with start_page:
                 """,unsafe_allow_html=True)
     user_name = st.text_input(" ",key="user_name")
     _,start_button,_ = st.columns(3)
+
+
+    # 버튼 클릭 시 처리
     with start_button:
         switch_page = st.button("설문 시작하기")
         if switch_page:
             if user_name:
-                with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
+                with open(user_name_file, 'w', encoding='utf-8') as f:
                     f.write(user_name + '님')
             else:
-                with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
+                with open(user_name_file, 'w', encoding='utf-8') as f:
                     f.write('당신')
+
             selected = '설문 페이지'
-            st.switch_page('pages/survey_page.py')
+            st.switch_page(survey_page)

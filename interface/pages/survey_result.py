@@ -65,9 +65,52 @@ from streamlit_vertical_slider import vertical_slider
 from streamlit_plotly_events import plotly_events
 from streamlit_js_eval import streamlit_js_eval
 
+# 현재 스크립트 파일의 위치를 기준으로 상대 경로 설정
+current_directory = os.path.dirname(__file__)
 
-# CSV 파일에서 단어 빈도 데이터를 불러옴
-word_freq_df = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\company_word_frequencies.csv")
+# 경로 변수 정의
+survey_result_file = os.path.join(current_directory, "survey_result.csv")
+user_investment_style_file = os.path.join(current_directory, "user_investment_style.txt")
+user_interest_file = os.path.join(current_directory, "user_interest.txt")
+user_name_file = os.path.join(current_directory, "user_name.txt")
+companycolletioninfo = os.path.join(current_directory, 'companycolletioninfo.csv')
+word_freq_file = os.path.join(current_directory, "company_word_frequencies.csv")
+survey_result_page = 'pages/survey_result.py'
+
+# 파일이 존재하는지 확인 후 불러오기
+if os.path.exists(survey_result_file):
+    survey_result = pd.read_csv(survey_result_file, encoding='utf-8', index_col=0)
+else:
+    # 파일이 없으면 기본값으로 빈 데이터프레임 생성
+    survey_result = pd.DataFrame()
+
+if os.path.exists(user_investment_style_file):
+    with open(user_investment_style_file, 'r', encoding='utf-8') as f:
+        user_investment_style = f.read().strip()
+else:
+    user_investment_style = ''
+
+if os.path.exists(user_interest_file):
+    with open(user_interest_file, 'r', encoding='utf-8') as f:
+        user_interest = f.read().strip()
+else:
+    user_interest = ''
+
+if os.path.exists(user_name_file):
+    with open(user_name_file, 'r', encoding='utf-8') as f:
+        user_name = f.read().strip()
+else:
+    user_name = ''
+
+if os.path.exists(companycolletioninfo):
+    companycolletion = pd.read_csv(companycolletioninfo)
+else:
+    companycolletion = pd.DataFrame()
+
+if os.path.exists(word_freq_file):
+    word_freq_df = pd.read_csv(word_freq_file)
+else:
+    word_freq_df = pd.DataFrame()
 
 st.set_page_config(
     page_title = "설문 조사 결과",
@@ -140,19 +183,8 @@ st.markdown("""
     </style>
     """,unsafe_allow_html=True)
 
-survey_result = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index_col=0)
-with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'r', encoding='utf-8') as f:
-    user_investment_style = f.read().strip()
-
-with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'r', encoding='utf-8') as f:
-    user_interest = f.read().strip()
-
-with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'r', encoding='utf-8') as f:
-    user_name = f.read().strip()
-
-company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이터 수집 현황 + 평가기관 점수 수집 + 기업 정보 요약.xlsx")
-
 # 전처리 함수 정의
+
 def preprocess_data(df):
     # 기존 컬럼명을 사용할 수 있도록 유효성을 확인
     df = df.copy()
@@ -193,14 +225,56 @@ def preprocess_data(df):
     else:
         raise KeyError("The expected columns 'environmental', 'social', and 'governance' are not present in the dataframe.")
 
-# step 1 : load the provided dataset
-file_path = r"C:\esgpage\LLM.ESG.POS\interface\241007_dummy_noharim.csv"
-# file_path = r"interface/241007_dummy_update.csv"
-dummy = pd.read_csv(file_path, encoding='euc-kr')
-# dummy = pd.read_csv(file_path, encoding='cp949')
-# dummy = pd.read_csv(file_path, encoding='utf-8')
-# dummy = pd.read_csv(file_path)
-df_new = preprocess_data(dummy)        
+
+# 현재 스크립트 파일의 부모 디렉터리로 이동하여 경로 설정
+current_directory = os.path.dirname(os.path.dirname(__file__))
+
+# 경로 변수 정의
+file_path = "241007_dummy_noharim.csv"  # 올바른 파일 경로로 설정
+dummy_file_path = os.path.join(current_directory, file_path)
+
+# 필요한 파일을 읽어오기
+if os.path.exists(dummy_file_path):
+    try:
+        # 시도 순서대로 다른 인코딩을 적용하여 파일을 읽기
+        try:
+            dummy = pd.read_csv(dummy_file_path, encoding='euc-kr')
+        except UnicodeDecodeError:
+            try:
+                dummy = pd.read_csv(dummy_file_path, encoding='cp949')
+            except UnicodeDecodeError:
+                dummy = pd.read_csv(dummy_file_path, encoding='utf-8')
+
+        # 파일이 제대로 읽혔는지 확인
+        print("데이터프레임 미리보기:")
+        print(dummy.head())
+        print(f"데이터프레임의 컬럼 목록: {dummy.columns.tolist()}")
+
+    except Exception as e:
+        print(f"파일 읽기 오류 발생: {e}")
+        dummy = pd.DataFrame()  # 오류 발생 시 기본값으로 빈 데이터프레임 사용
+else:
+    # 파일이 없을 경우 빈 데이터프레임 사용
+    print(f"파일이 존재하지 않습니다: {dummy_file_path}")
+    dummy = pd.DataFrame()
+
+# 데이터 전처리 단계 실행 (빈 데이터프레임이어도 오류 없이 실행될 수 있도록 설정)
+df_new = preprocess_data(dummy) if not dummy.empty else pd.DataFrame()
+
+# 데이터프레임 정보 출력 후 'industry' 열 확인
+if not df_new.empty:
+    print("전처리 후 데이터프레임 미리보기:")
+    print(df_new.head())
+    if 'industry' in df_new.columns:
+        industries = df_new['industry'].unique().tolist()
+        print(f"산업 목록: {industries}")
+    else:
+        print("전처리된 데이터프레임에 'industry' 열이 존재하지 않습니다.")
+        industries = []  # 기본값으로 빈 리스트 사용
+else:
+    print("전처리된 데이터프레임이 비어 있습니다.")
+    industries = []
+
 
 # 한국거래소 코스피 인덱스에 해당하는 종목 가져오기
 @st.cache_data
@@ -684,7 +758,7 @@ with col2:
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
 
 with col3:
-    company_list['종목코드'] = company_list['종목코드'].str[1:]
+    companycolletion['ticker'] = companycolletion['ticker'].str[1:]
     top_companies['ticker'] = top_companies['ticker'].str.replace('.KS', '')
 
     expected_return = portfolio_performance[0]
@@ -695,7 +769,7 @@ with col3:
         if condition.any():
             top_companies.loc[top_companies['Company'] == company, ['environmental', 'social', 'governance']] = dummy.loc[condition, ['environmental', 'social', 'governance']].values
     top5_companies = top_companies.nlargest(5, 'Weight')
-    filtered_companies = pd.merge(company_list, top5_companies, left_on='종목코드', right_on='ticker')
+    filtered_companies = pd.merge(companycolletion, top5_companies, left_on='ticker', right_on='ticker')
     filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
     filtered_companies = filtered_companies.rename(columns={
         'Company': '종목명',
@@ -780,7 +854,7 @@ with col3:
             screenshot.save("pie_chart_capture.png")
         
     def generate_html():
-        filtered_companies = pd.merge(company_list, top_companies, left_on='종목코드', right_on='ticker')
+        filtered_companies = pd.merge(companycolletion, top_companies, left_on='ticker', right_on='ticker')
         filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
         filtered_companies = filtered_companies.rename(columns={
             'Company': '종목명',
