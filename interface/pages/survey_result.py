@@ -128,17 +128,17 @@ for key in ['environmental', 'social', 'governance']:
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
-st.markdown(
-    """
+st.markdown("""
     <style>
         .element-container st-emotion-cache-1c12lws e1f1d6gn4{
             margin: 0;
             padding: 0;
         }
+        .slicetext{
+            font-family: Pretendard;
+        }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+    """,unsafe_allow_html=True)
 
 survey_result = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index_col=0)
 with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'r', encoding='utf-8') as f:
@@ -155,6 +155,7 @@ company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이
 # 전처리 함수 정의
 def preprocess_data(df):
     # 기존 컬럼명을 사용할 수 있도록 유효성을 확인
+    df = df.copy()
     if 'environmental' in df.columns and 'social' in df.columns and 'governance' in df.columns:
         # ESG 영역 비중을 백분율로 환산
         df['env_percent'] = df['environmental'] / (df['environmental'] + df['social'] + df['governance'])
@@ -193,7 +194,7 @@ def preprocess_data(df):
         raise KeyError("The expected columns 'environmental', 'social', and 'governance' are not present in the dataframe.")
 
 # step 1 : load the provided dataset
-file_path = r"C:\esgpage\LLM.ESG.POS\interface\241113_dummy_sample.csv"
+file_path = r"C:\esgpage\LLM.ESG.POS\interface\241007_dummy_noharim.csv"
 # file_path = r"interface/241007_dummy_update.csv"
 dummy = pd.read_csv(file_path, encoding='euc-kr')
 # dummy = pd.read_csv(file_path, encoding='cp949')
@@ -327,6 +328,10 @@ header = f"""
                 font-weight: bold;
                 color: black;
                 padding: 10px;
+                font-family: Pretendard;
+            }}
+            a{{
+                font-family: Pretendard;
             }}
         </style>
     </head>
@@ -334,19 +339,21 @@ header = f"""
     """
 st.markdown(header, unsafe_allow_html=True)
 
-
-# 블랙리터만 모델 적용 함수
+#--- 최적화 알고리즘 ---
 import numpy as np
-import yfinance as yf
-import matplotlib.pyplot as plt
+from scipy.optimize import minimize
 from cvxopt import matrix, solvers
-from pypfopt import BlackLittermanModel, risk_models, expected_returns
+import yfinance as yf
+from pypfopt import BlackLittermanModel, expected_returns, risk_models, CovarianceShrinkage
 
-
+# 수정된 포트폴리오 비중 계산 함수 with Black-Litterman 및 공분산 행렬 축소
+# 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
+# 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
+# 블랙리터만 모델 적용 함수
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     # 데이터 수집 및 전처리
     tickers = df['ticker'].tolist()
-    price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
+    price_data = yf.download(tickers, start="2019-01-01", end="2023-12-31")['Adj Close']
     price_data = price_data.dropna(axis=1)
     if price_data.isnull().values.any():
         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
@@ -363,16 +370,16 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
 
     # 사용자 선호도와 ESG 가중치를 반영한 최종 ESG 점수 계산
     df['final_esg_score'] = (
-            esg_weights['environmental'] * df['environmental'] +
-            esg_weights['social'] * df['social'] +
-            esg_weights['governance'] * df['governance']
+        esg_weights['environmental'] * df['environmental'] +
+        esg_weights['social'] * df['social'] +
+        esg_weights['governance'] * df['governance']
     )
 
     # 사용자 투자 스타일에 따른 ESG 가중치 설정
     if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
-        esg_weight_factor = 10.5
+        esg_weight_factor = 10.0
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
-        esg_weight_factor = 20.0
+        esg_weight_factor = 25.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
         esg_weight_factor = 100.0
     else:
@@ -422,6 +429,10 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
 
     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
 
+# 결과 출력
+# 개선된 코드에서는 사용자의 ESG 선호도가 시장 균형 수익률에 직접 반영되므로,
+# 최적화 과정에서 사용자의 ESG 선호가 명확히 드러나도록 합니다.
+# ------
 
 def display_text_on_hover(hover_text, i, origin_text):
     # 각 텍스트 호버 영역에 고유한 클래스 이름을 생성
@@ -436,6 +447,7 @@ def display_text_on_hover(hover_text, i, origin_text):
             display: block;
             cursor: pointer;
             text-align: center;
+            font-family: Pretendard;
         }}
         .{hover_class} .{tooltip_class} {{
             display: none; /* Hover to see text를 숨김 */
@@ -453,6 +465,7 @@ def display_text_on_hover(hover_text, i, origin_text):
             left: 50%;  /* 중앙 정렬을 위해 left를 50%로 설정 */
             transform: translateX(-50%);
             max-width: 200px;
+            font-family: Pretendard;
             color: #333;
             font-size: 14px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -467,7 +480,7 @@ def display_text_on_hover(hover_text, i, origin_text):
     # origin_text의 스타일을 수정하여 HTML 정의
     text_hover = f'''
         <div class="{hover_class}">
-            <a href="#hover_text" style="color: black; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
+            <a href="#hover_text" style="color: black; font-family: Pretendard; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
             <div class="{tooltip_class}"></div>
             <div class="{text_popup_class}">{hover_text}</div>
         </div>
@@ -476,7 +489,6 @@ def display_text_on_hover(hover_text, i, origin_text):
     # 동적 HTML 및 CSS를 콘텐츠 컨테이너에 작성
     st.markdown(f'<p>{text_hover}{tooltip_css}</p>', unsafe_allow_html=True)
 
-# st.markdown(f'''<h1 style="text-align:center;font-size:32px;padding:0px;margin:10px;">{user_name}을 위한 ESG 중심 포트폴리오 제안서 <br></h1>''',unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1,1,3])
 with col1:
@@ -488,22 +500,66 @@ with col1:
         esg_weight_factor = 2.0
 
     st.markdown("""
-        <style>
-            .stSlider{
-                padding:16px;
-            }
-            .element-container st-emotion-cache-1yvhuls e1f1d6gn4{
-                padding:16px;
-            }
-            .st-emotion-cache-uzeiqp e1nzilvr4{
-                height: 50px;
-                width : 100%
-            }
-            .st-dt st-d4 st-d3 st-cb st-af st-c2 st-du{
-                padding:10px;
-            }
-        </style>
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+                    <style>
+                    .stSlider{
+                        padding:16px;
+                    }
+                    .element-container st-emotion-cache-1yvhuls e1f1d6gn4{
+                        padding:16px;
+                    }
+                    .st-emotion-cache-uzeiqp e1nzilvr4{
+                        height: 50px;
+                        width : 100%
+                    }
+                    .st-dt st-d4 st-d3 st-cb st-af st-c2 st-du{
+                        padding:10px;
+                    }
+                    .label{
+                        font-family: Pretendard;
+                    }
+                    p{
+                        font-family: Pretendard;
+                    }
+                </style>
+                </head>
     """, unsafe_allow_html=True)
+
+    today = datetime.today().date()
+    yesterday = today - timedelta(days=1)
+
+    kospi, kosdaq = st.columns(2)
+    kospi_data = fdr.DataReader('KS11', yesterday, today)
+    kosdaq_data = fdr.DataReader('KQ11', yesterday, today)
+    with kospi:
+        if not kospi_data.empty:
+            yesterday_kospi = kospi_data.iloc[0]['Close']
+            today_kospi = kospi_data.iloc[-1]['Close']
+
+            # 등락률 계산
+            change = today_kospi - yesterday_kospi
+            change_percent = (change / yesterday_kospi) * 100
+
+            # Streamlit metric으로 출력
+            st.metric(label="오늘의 코스피 지수", value=round(today_kospi, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
+
+    with kosdaq:
+        if not kosdaq_data.empty:
+            yesterday_kosdaq = kosdaq_data.iloc[0]['Close']
+            today_kosdaq = kosdaq_data.iloc[-1]['Close']
+
+            # 등락률 계산
+            change = today_kosdaq - yesterday_kosdaq
+            change_percent = (change / yesterday_kosdaq) * 100
+
+            # Streamlit metric으로 출력
+            st.metric(label="오늘의 코스닥 지수", value=round(today_kosdaq, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
+
 
     sl1, sl2, sl3= st.columns(3)
     with sl1:
@@ -512,7 +568,7 @@ with col1:
         e_value = vertical_slider(
             label = "환경",
             key = "environmental" ,
-            height = 350,
+            height = 270,
             step = 0.1,
             default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -527,7 +583,7 @@ with col1:
         s_value = vertical_slider(
             label = "사회",  #Optional
             key = "social" ,
-            height = 350, #Optional - Defaults to 300
+            height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['S'].sum() *10/4.79,#Optional - Defaults to 0
             min_value= 0.0, # Defaults to 0
@@ -542,7 +598,7 @@ with col1:
         g_value = vertical_slider(
             label = "지배구조",  #Optional
             key = "governance" ,
-            height = 350, #Optional - Defaults to 300
+            height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['G'].sum()*10/4.16,
             min_value= 0.0, # Defaults to 0
@@ -577,11 +633,10 @@ top_companies['Weight'] = top_companies['Weight'] * 100
     # processed_df = df_new[df_new['industry'].isin(industries)].copy()
 
 # top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
-    # top_companies['Weight'] = top_companies['ticker'].map(cleaned_weights)
     
 with col2:
     st.markdown(f"""<div>
-                        <h2 style="font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여 더 다양한 정보를 경험해 보세요.</h2>
+                        <h2 style="font-family: Pretendard;font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여<br>더 다양한 정보를 경험해 보세요.</h2>
                     </div>
             """, unsafe_allow_html=True)
     
@@ -635,7 +690,10 @@ with col3:
     expected_return = portfolio_performance[0]
     expected_volatility = portfolio_performance[1]
     sharpe_ratio = portfolio_performance[2]
-
+    for company in top_companies['Company']:
+        condition = (dummy['Year'] == 2023) & (dummy['Company'] == company)
+        if condition.any():
+            top_companies.loc[top_companies['Company'] == company, ['environmental', 'social', 'governance']] = dummy.loc[condition, ['environmental', 'social', 'governance']].values
     top5_companies = top_companies.nlargest(5, 'Weight')
     filtered_companies = pd.merge(company_list, top5_companies, left_on='종목코드', right_on='ticker')
     filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
@@ -647,7 +705,6 @@ with col3:
         'governance': 'G',
         '종목설명' :'종목 소개'
     })
-
     # 상단에 기대수익률, 변동성, 샤프비율 표시
     # _,col1, col2, col3,_ = st.columns([2,3,3,3,2])
     col1, col2, col3 = st.columns(3)
@@ -672,6 +729,8 @@ with col3:
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            font-size:15px;
+            font-family: Pretendard;
         }}
         th {{
             background-color: #f2f2f2;
@@ -679,30 +738,33 @@ with col3:
         </style>
     </style>
     <table>
-        <thead>
-        <tr>
-            <th>종목명</th>
-            <th>제안 비중</th>
-            <th>E</th>
-            <th>S</th>
-            <th>G</th>
-            <th>종목 소개</th>
-        </tr>
-        </thead>
-        <tbody>
-    """
+            <thead>
+            <tr>
+                <th rowspan='2'>종목명</th>
+                <th rowspan='2'>제안<br>비중</th>
+                <th colspan="3">2023년도 ESG 점수</th>
+                <th rowspan='2'>종목 소개</th>
+            </tr>
+            <tr>
+                <th>E</th>
+                <th>S</th>
+                <th>G</th>
+            </tr>
+            </thead>
+            <tbody>
+        """
 
     filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
     for _, row in filtered_companies.iterrows():
         html_code += f"""<tr>
-        <td style="font-size=13px;">{row['종목명']}</td>
+        <td style="font-size:13px;">{row['종목명']}</td>
         <td>{row['제안 비중']:.2f}%</td>
-        <td>{row['E']:.1f}</td>
-        <td>{row['S']:.1f}</td>
-        <td>{row['G']:.1f}</td>
+        <td>{int(row['E'])}</td>
+        <td>{int(row['S'])}</td>
+        <td>{int(row['G'])}</td>
         <td style="text-align: left;">{row['종목 소개']}</td>
-        </tr>
-        """
+        </tr>"""
+
 
     html_code += """
     </tbody>
@@ -713,7 +775,7 @@ with col3:
     
     _,_,bt1,bt2 = st.columns(4)
     with bt1:
-        if st.button(label="포트폴리오 확인➡️"):
+        if st.button(label="포트폴리오 확인  ➡️"):
             screenshot = ImageGrab.grab(bbox=(400,420,790,830))
             screenshot.save("pie_chart_capture.png")
         
@@ -742,7 +804,7 @@ with col3:
             <style>
                 body {{
                     text-align: center;
-                    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                    font-family: Pretendard;
                 }}
                 .block {{
                     display: table;
@@ -767,6 +829,7 @@ with col3:
                     border: 1px solid #ddd;
                 }}
                 th {{
+                    font-size:15px;
                     background-color: #e3edfa;
                 }}
                 .detail-table-container {{
@@ -784,7 +847,7 @@ with col3:
                 </div>
                 <div class="box">
                     <br>
-                    <h2 style="font-size:20px;">ESG 관심도</h2>
+                    <h2 style="font-family: Pretendard;font-size:20px;">ESG 관심도</h2>
                     <table style="width: 90%;">
                         <tr>
                             <th>환경</th>
@@ -799,7 +862,7 @@ with col3:
                             <td>{g_value}</td>
                         </tr>
                     </table>
-                    <h2 style="font-size:20px;">포트폴리오 정보</h2>
+                    <h2 style="font-family: Pretendard;font-size:20px;">포트폴리오 정보</h2>
                     <table style="width: 90%;">
                         <tr>
                             <th>예상 수익률</th>
@@ -818,27 +881,43 @@ with col3:
             </div>
             <div class="detail-table-container">
                 <table class="detail-table">
+                    <thead>
                     <tr>
-                        <th>종목</th>
-                        <th>제안<br>비중</th>
-                        <th>환경</th>
-                        <th>사회</th>
-                        <th>거버넌스</th>
-                        <th>종목 소개</th>
+                        <th rowspan='2'>종목명</th>
+                        <th rowspan='2'>제안 비중</th>
+                        <th colspan="3">2023년도 ESG 점수</th>
+                        <th rowspan='2'>종목 소개</th>
                     </tr>
+                    <tr>
+                        <th>E</th>
+                        <th>S</th>
+                        <th>G</th>
+                    </tr>
+                    </thead>
         """
 
         for _, row in filtered_companies.iterrows():
             html_content += f"""<tr>
-            <td>{row['종목명']}</td>
-            <td>{row['제안 비중']:.3f}%</td>
-            <td>{row['E']:.1f}</td>
-            <td>{row['S']:.1f}</td>
-            <td>{row['G']:.1f}</td>
-            <td>{row['종목 소개']}</td>
+                <td>{row['종목명']}</td>
+                <td>{row['제안 비중']:.2f}%</td>
+                <td>{int(row['E'])}</td>
+                <td>{int(row['S'])}</td>
+                <td>{int(row['G'])}</td>
+                <td style="text-align: left;">{row['종목 소개']}</td>
+                </tr>
+                """
+        html_content += """
+            <tfoot>
+            <tr>
+                <td colspan="6" style="font-size:15px; text-align: left;font-family:Pretendard;">
+                    <p>해당 차트의 환경(E), 사회(S), 거버넌스(G)의 점수는 2023년 기준 점수입니다.</p>
+                </td>
             </tr>
-            """
+            </tfoot>
+        """
+
         html_content += f"""
+                </tbody>
                 </table>
             </div>
         </body>
@@ -893,7 +972,7 @@ with col_1:
                 company_info = top_companies.iloc[company_index]
                 clicked_company = company_info['Company']
                 st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">{clicked_company} ESG 스코어</h2>
+                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">{clicked_company} ESG 스코어</h2>
                             </div>
                 """, unsafe_allow_html=True)
                 clicked_df = dummy[dummy['Company'] == clicked_company]
@@ -925,7 +1004,7 @@ with col_1:
 with col_2:
     if clicked_points:
         st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">&emsp;&ensp;{clicked_company} &ensp;주가 그래프</h2>
+                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">&emsp;&ensp;{clicked_company} &ensp;주가 그래프</h2>
                             </div>
             """, unsafe_allow_html=True)
                 
@@ -974,17 +1053,17 @@ def generate_blended_word_cloud(top_companies, word_freq_df):
     blended_word_freq = Counter()
 
     # top_companies에서도 회사 이름 정규화
-    top_companies['company'] = top_companies['company'].apply(normalize_company_name)
+    top_companies['Company'] = top_companies['Company'].apply(normalize_company_name)
 
     for _, row in tqdm(top_companies.iterrows(), total=top_companies.shape[0], desc="Generating Blended Word Cloud"):
-        company_name = row['company']
-        weight = row['weight']
+        company_name = row['Company']
+        weight = row['Weight']
 
         # 해당 회사의 단어 빈도 필터링
         company_word_freq = word_freq_df[word_freq_df['company'] == company_name]
 
         if company_word_freq.empty:
-            st.warning(f"{company_name}의 빈도 데이터가 없습니다.")
+        #     st.warning(f"{company_name}의 빈도 데이터가 없습니다.")
             continue
 
         # 각 단어에 대해 가중치를 곱한 빈도 계산
@@ -999,6 +1078,7 @@ def generate_blended_word_cloud(top_companies, word_freq_df):
         return None
 
     wordcloud = WordCloud(
+        font_path='C:/Windows/Fonts/malgun.ttf',  # 한글 폰트 설정
         background_color='white',
         width=800,
         height=600
@@ -1009,16 +1089,19 @@ def generate_blended_word_cloud(top_companies, word_freq_df):
 
 # Streamlit column for Word Cloud display
 with col_3:
-    st.markdown("<h2 style='text-align: center;'>포트폴리오 기반 워드 클라우드</h2>", unsafe_allow_html=True)
+    if clicked_points:
+        st.markdown(f"""<div>
+                                <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">포트폴리오 기반 워드 클라우드</h2>
+                                </div>
+                """, unsafe_allow_html=True)
+        # 미리 선언된 top_companies를 기반으로 워드 클라우드 생성
+        wordcloud = generate_blended_word_cloud(top_companies, word_freq_df)
 
-    # 미리 선언된 top_companies를 기반으로 워드 클라우드 생성
-    wordcloud = generate_blended_word_cloud(top_companies, word_freq_df)
-
-    # 워드 클라우드 출력
-    if wordcloud:
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.imshow(wordcloud, interpolation='bilinear')
-        ax.axis('off')
-        st.pyplot(fig)
-    else:
-        st.info("생성할 데이터가 충분하지 않아 워드 클라우드를 표시할 수 없습니다.")
+        # 워드 클라우드 출력
+        if wordcloud:
+            fig, ax = plt.subplots(figsize=(10, 6))
+            ax.imshow(wordcloud, interpolation='bilinear')
+            ax.axis('off')
+            st.pyplot(fig)
+        else:
+            st.info("생성할 데이터가 충분하지 않아 워드 클라우드를 표시할 수 없습니다.")
