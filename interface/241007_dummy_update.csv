@@ -1,0 +1,336 @@
+Company,Year,average_label,industry,environmental,social,governance,ticker
+Sample(E),2019,9,Sample,90,50,50,069500.KS
+Sample(E),2020,9,Sample,90,50,50,069500.KS
+Sample(E),2021,9,Sample,90,50,50,069500.KS
+Sample(E),2022,9,Sample,90,50,50,069500.KS
+Sample(E),2023,9,Sample,90,50,50,069500.KS
+Sample(S),2019,9,Sample,50,90,50,102110.KS
+Sample(S),2020,9,Sample,50,90,50,102110.KS
+Sample(S),2021,9,Sample,50,90,50,102110.KS
+Sample(S),2022,9,Sample,50,90,50,102110.KS
+Sample(S),2023,9,Sample,50,90,50,102110.KS
+Sample(G),2019,9,Sample,50,50,90,148020.KS
+Sample(G),2020,9,Sample,50,50,90,148020.KS
+Sample(G),2021,9,Sample,50,50,90,148020.KS
+Sample(G),2022,9,Sample,50,50,90,148020.KS
+Sample(G),2023,9,Sample,50,50,90,148020.KS
+GS리테일,2019,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
+GS리테일,2020,2.724116731,Retail & Consumer Goods,76,88,70,007070.KS
+GS리테일,2021,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
+GS리테일,2022,1.903215127,Retail & Consumer Goods,67,93,63,007070.KS
+GS리테일,2023,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
+HMM,2019,5.733874159,Automotive & Transport,97,87,82,011200.KS
+HMM,2020,2.646901928,Automotive & Transport,95,64,85,011200.KS
+HMM,2021,5.096362688,Automotive & Transport,81,61,86,011200.KS
+HMM,2022,2.198468746,Automotive & Transport,90,75,76,011200.KS
+HMM,2023,5.733874159,Automotive & Transport,97,87,82,011200.KS
+KB금융,2019,5.016282393,Finance & Insurance,88,85,62,105560.KS
+KB금융,2020,5.109671193,Finance & Insurance,78,63,81,105560.KS
+KB금융,2021,5.996063655,Finance & Insurance,64,80,88,105560.KS
+KB금융,2022,6.966533639,Finance & Insurance,92,97,98,105560.KS
+KB금융,2023,7.012988574,Finance & Insurance,57,64,81,105560.KS
+KT,2019,2.295101533,Electronics & IT,72,64,55,030200.KS
+KT,2020,2.295101533,Electronics & IT,72,64,55,030200.KS
+KT,2021,3.59776158,Electronics & IT,56,91,51,030200.KS
+KT,2022,4.434772943,Electronics & IT,92,95,97,030200.KS
+KT,2023,5.535419067,Electronics & IT,52,83,74,030200.KS
+LG디스플레이,2019,1.213283626,Electronics & IT,80,90,79,034220.KS
+LG디스플레이,2020,1.213283626,Electronics & IT,80,90,79,034220.KS
+LG디스플레이,2021,3.257333458,Electronics & IT,82,76,92,034220.KS
+LG디스플레이,2022,1.213283626,Electronics & IT,80,90,79,034220.KS
+LG디스플레이,2023,4.452919468,Electronics & IT,52,94,68,034220.KS
+LG생활건강,2019,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
+LG생활건강,2020,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
+LG생활건강,2021,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
+LG생활건강,2022,4.287893026,Retail & Consumer Goods,92,50,78,051900.KS
+LG생활건강,2023,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
+LG에너지솔루션,2019,-0.371838647,Energy & Chemicals,55,58,76,373220.KS
+LG에너지솔루션,2020,3.441395883,Energy & Chemicals,68,80,85,373220.KS
+LG에너지솔루션,2021,1.76527976,Energy & Chemicals,55,88,93,373220.KS
+LG에너지솔루션,2022,3.441395883,Energy & Chemicals,68,80,85,373220.KS
+LG에너지솔루션,2023,3.441395883,Energy & Chemicals,68,80,85,373220.KS
+LG유플러스,2019,5.435095701,Electronics & IT,66,86,87,032640.KS
+LG유플러스,2020,5.218316177,Electronics & IT,77,92,93,032640.KS
+LG유플러스,2021,5.435095701,Electronics & IT,66,86,87,032640.KS
+LG유플러스,2022,5.435095701,Electronics & IT,66,86,87,032640.KS
+LG유플러스,2023,5.435095701,Electronics & IT,66,86,87,032640.KS
+LG전자,2019,3.88969555,Electronics & IT,64,64,66,066570.KS
+LG전자,2020,3.215077465,Electronics & IT,94,55,87,066570.KS
+LG전자,2021,2.980511547,Electronics & IT,73,95,84,066570.KS
+LG전자,2022,7.678739538,Electronics & IT,61,95,81,066570.KS
+LG전자,2023,3.88969555,Electronics & IT,64,64,66,066570.KS
+LG화학,2019,6.051125714,Energy & Chemicals,79,78,88,051910.KS
+LG화학,2020,6.051125714,Energy & Chemicals,79,78,88,051910.KS
+LG화학,2021,6.051125714,Energy & Chemicals,79,78,88,051910.KS
+LG화학,2022,6.051125714,Energy & Chemicals,79,78,88,051910.KS
+LG화학,2023,4.358876594,Energy & Chemicals,63,96,53,051910.KS
+NAVER,2019,4.815658241,Gaming & Internet,70,57,53,035420.KS
+NAVER,2020,4.797408708,Gaming & Internet,88,63,79,035420.KS
+NAVER,2021,6.733145481,Gaming & Internet,68,72,86,035420.KS
+NAVER,2022,6.642237775,Gaming & Internet,72,89,72,035420.KS
+NAVER,2023,5.643522094,Gaming & Internet,60,70,88,035420.KS
+POSCO홀딩스,2019,3.363093275,Materials,66,86,52,005490.KS
+POSCO홀딩스,2020,3.43443358,Materials,85,96,98,005490.KS
+POSCO홀딩스,2021,3.483677493,Materials,99,63,86,005490.KS
+POSCO홀딩스,2022,3.435544096,Materials,89,52,98,005490.KS
+POSCO홀딩스,2023,4.437256293,Materials,53,50,66,005490.KS
+S-Oil,2019,3.290707573,Energy & Chemicals,85,80,66,010950.KS
+S-Oil,2020,3.825437936,Energy & Chemicals,95,77,81,010950.KS
+S-Oil,2021,3.98136732,Energy & Chemicals,81,66,93,010950.KS
+S-Oil,2022,3.98136732,Energy & Chemicals,81,66,93,010950.KS
+S-Oil,2023,3.98136732,Energy & Chemicals,81,66,93,010950.KS
+SK네트웍스,2019,2.232868936,Conglomerates,63,67,72,001740.KS
+SK네트웍스,2020,0.584283887,Conglomerates,70,84,69,001740.KS
+SK네트웍스,2021,2.232868936,Conglomerates,63,67,72,001740.KS
+SK네트웍스,2022,5.520587487,Conglomerates,92,50,66,001740.KS
+SK네트웍스,2023,2.232868936,Conglomerates,63,67,72,001740.KS
+SK바이오사이언스,2019,4.318024801,Biotechnology & Pharmaceuticals,76,84,72,302440.KS
+SK바이오사이언스,2020,4.318024801,Biotechnology & Pharmaceuticals,76,84,72,302440.KS
+SK바이오사이언스,2021,3.549410571,Biotechnology & Pharmaceuticals,94,83,57,302440.KS
+SK바이오사이언스,2022,4.318024801,Biotechnology & Pharmaceuticals,76,84,72,302440.KS
+SK바이오사이언스,2023,6.871904207,Biotechnology & Pharmaceuticals,61,87,57,302440.KS
+SK바이오팜,2019,3.156523113,Biotechnology & Pharmaceuticals,52,85,82,326030.KS
+SK바이오팜,2020,4.648236835,Biotechnology & Pharmaceuticals,97,58,95,326030.KS
+SK바이오팜,2021,5.828758664,Biotechnology & Pharmaceuticals,78,53,83,326030.KS
+SK바이오팜,2022,5.828758664,Biotechnology & Pharmaceuticals,78,53,83,326030.KS
+SK바이오팜,2023,2.812885988,Biotechnology & Pharmaceuticals,66,75,81,326030.KS
+SK아이이테크놀로지,2019,4.863137046,Electronics & IT,62,61,52,361610.KS
+SK아이이테크놀로지,2020,4.863137046,Electronics & IT,62,61,52,361610.KS
+SK아이이테크놀로지,2021,0.567759174,Electronics & IT,73,96,81,361610.KS
+SK아이이테크놀로지,2022,3.272670982,Electronics & IT,61,65,71,361610.KS
+SK아이이테크놀로지,2023,4.863137046,Electronics & IT,62,61,52,361610.KS
+SK이노베이션,2019,4.97807125,Energy & Chemicals,61,80,51,096770.KS
+SK이노베이션,2020,4.97807125,Energy & Chemicals,61,80,51,096770.KS
+SK이노베이션,2021,0.0444851295,Energy & Chemicals,95,72,50,096770.KS
+SK이노베이션,2022,4.97807125,Energy & Chemicals,61,80,51,096770.KS
+SK이노베이션,2023,2.349179149,Energy & Chemicals,98,67,50,096770.KS
+SK텔레콤,2019,2.130743602,Electronics & IT,67,67,93,017670.KS
+SK텔레콤,2020,1.78653681,Electronics & IT,73,63,57,017670.KS
+SK텔레콤,2021,1.78653681,Electronics & IT,73,63,57,017670.KS
+SK텔레콤,2022,1.78653681,Electronics & IT,73,63,57,017670.KS
+SK텔레콤,2023,4.257674392,Electronics & IT,56,82,62,017670.KS
+SK하이닉스,2019,2.097431492,Electronics & IT,60,65,94,000660.KS
+SK하이닉스,2020,3.649572214,Electronics & IT,73,94,64,000660.KS
+SK하이닉스,2021,3.710508377,Electronics & IT,85,67,92,000660.KS
+SK하이닉스,2022,4.903345876,Electronics & IT,89,96,78,000660.KS
+SK하이닉스,2023,4.920477466,Electronics & IT,73,73,85,000660.KS
+고려아연,2019,5.420138417,Energy & Chemicals,94,83,75,010130.KS
+고려아연,2020,5.56777128,Energy & Chemicals,77,73,75,010130.KS
+고려아연,2021,1.500459096,Energy & Chemicals,51,71,80,010130.KS
+고려아연,2022,5.449643837,Energy & Chemicals,85,83,94,010130.KS
+고려아연,2023,7.202465905,Energy & Chemicals,59,93,71,010130.KS
+금호석유,2019,5.17884262,Energy & Chemicals,90,53,93,011780.KS
+금호석유,2020,4.265868881,Energy & Chemicals,96,88,94,011780.KS
+금호석유,2021,5.105380303,Energy & Chemicals,79,57,93,011780.KS
+금호석유,2022,4.162206929,Energy & Chemicals,65,85,70,011780.KS
+금호석유,2023,5.17884262,Energy & Chemicals,90,53,93,011780.KS
+금호타이어,2019,1.951981963,Automotive & Transport,73,50,51,073240.KS
+금호타이어,2020,0.699046944,Automotive & Transport,77,93,69,073240.KS
+금호타이어,2021,0.699046944,Automotive & Transport,77,93,69,073240.KS
+금호타이어,2022,3.322418999,Automotive & Transport,80,57,69,073240.KS
+금호타이어,2023,1.963862826,Automotive & Transport,86,74,59,073240.KS
+기아,2019,1.796560178,Automotive & Transport,52,75,62,000270.KS
+기아,2020,1.301239397,Automotive & Transport,71,74,81,000270.KS
+기아,2021,2.05840037,Automotive & Transport,51,94,56,000270.KS
+기아,2022,1.960287968,Automotive & Transport,73,90,71,000270.KS
+기아,2023,2.774900444,Automotive & Transport,93,78,77,000270.KS
+넷마블,2019,1.763932548,Gaming & Internet,93,83,96,251270.KS
+넷마블,2020,3.848369212,Gaming & Internet,60,55,82,251270.KS
+넷마블,2021,2.166229066,Gaming & Internet,96,93,80,251270.KS
+넷마블,2022,2.166229066,Gaming & Internet,96,93,80,251270.KS
+넷마블,2023,5.810401199,Gaming & Internet,83,61,52,251270.KS
+농심,2019,4.109775617,Retail & Consumer Goods,69,62,51,004370.KS
+농심,2020,5.018190361,Retail & Consumer Goods,75,60,85,004370.KS
+농심,2021,4.209125197,Retail & Consumer Goods,56,61,66,004370.KS
+농심,2022,2.611273191,Retail & Consumer Goods,91,63,57,004370.KS
+농심,2023,2.611273191,Retail & Consumer Goods,91,63,57,004370.KS
+대한항공,2019,1.230109302,Automotive & Transport,64,68,95,003490.KS
+대한항공,2020,2.815403048,Automotive & Transport,79,83,56,003490.KS
+대한항공,2021,2.495793823,Automotive & Transport,78,53,62,003490.KS
+대한항공,2022,2.276608945,Automotive & Transport,53,62,89,003490.KS
+대한항공,2023,1.230109302,Automotive & Transport,64,68,95,003490.KS
+롯데쇼핑,2019,3.200288264,Retail & Consumer Goods,55,58,81,023530.KS
+롯데쇼핑,2020,4.337867367,Retail & Consumer Goods,94,91,76,023530.KS
+롯데쇼핑,2021,4.979752551,Retail & Consumer Goods,55,54,64,023530.KS
+롯데쇼핑,2022,4.979752551,Retail & Consumer Goods,55,54,64,023530.KS
+롯데쇼핑,2023,4.979752551,Retail & Consumer Goods,55,54,64,023530.KS
+롯데지주,2019,3.881995871,Conglomerates,74,84,71,004990.KS
+롯데지주,2020,3.881995871,Conglomerates,74,84,71,004990.KS
+롯데지주,2021,2.034037678,Conglomerates,70,58,69,004990.KS
+롯데지주,2022,3.881995871,Conglomerates,74,84,71,004990.KS
+롯데지주,2023,4.624363418,Conglomerates,98,95,58,004990.KS
+삼성SDI,2019,4.350136635,Electronics & IT,79,64,51,006400.KS
+삼성SDI,2020,4.419508022,Electronics & IT,87,94,91,006400.KS
+삼성SDI,2021,4.213434694,Electronics & IT,51,50,94,006400.KS
+삼성SDI,2022,4.739212611,Electronics & IT,70,74,55,006400.KS
+삼성SDI,2023,4.776359654,Electronics & IT,82,56,77,006400.KS
+삼성SDS,2019,3.105336694,Electronics & IT,82,87,73,018260.KS
+삼성SDS,2020,3.105336694,Electronics & IT,82,87,73,018260.KS
+삼성SDS,2021,4.021453605,Electronics & IT,53,91,74,018260.KS
+삼성SDS,2022,3.105336694,Electronics & IT,82,87,73,018260.KS
+삼성SDS,2023,7.107008539,Electronics & IT,65,57,93,018260.KS
+삼성물산,2019,3.249006117,Construction & Infrastructure,61,58,77,028260.KS
+삼성물산,2020,4.275316022,Construction & Infrastructure,71,73,93,028260.KS
+삼성물산,2021,4.703797548,Construction & Infrastructure,93,50,93,028260.KS
+삼성물산,2022,4.477483781,Construction & Infrastructure,74,93,69,028260.KS
+삼성물산,2023,4.80101287,Construction & Infrastructure,98,57,79,028260.KS
+삼성바이오로직스,2019,2.390249481,Biotechnology & Pharmaceuticals,76,73,60,207940.KS
+삼성바이오로직스,2020,3.275905473,Biotechnology & Pharmaceuticals,91,60,77,207940.KS
+삼성바이오로직스,2021,2.203564622,Biotechnology & Pharmaceuticals,77,66,74,207940.KS
+삼성바이오로직스,2022,2.277997693,Biotechnology & Pharmaceuticals,65,57,88,207940.KS
+삼성바이오로직스,2023,1.842112555,Biotechnology & Pharmaceuticals,64,84,82,207940.KS
+삼성생명,2019,1.86910591,Finance & Insurance,96,84,50,032830.KS
+삼성생명,2020,3.027083955,Finance & Insurance,93,82,76,032830.KS
+삼성생명,2021,4.745852489,Finance & Insurance,52,54,62,032830.KS
+삼성생명,2022,4.388640729,Finance & Insurance,86,91,90,032830.KS
+삼성생명,2023,2.771990113,Finance & Insurance,56,88,52,032830.KS
+삼성전기,2019,3.768936673,Electronics & IT,58,77,79,009150.KS
+삼성전기,2020,1.787567693,Electronics & IT,53,74,53,009150.KS
+삼성전기,2021,3.768936673,Electronics & IT,58,77,79,009150.KS
+삼성전기,2022,3.768936673,Electronics & IT,58,77,79,009150.KS
+삼성전기,2023,3.768936673,Electronics & IT,58,77,79,009150.KS
+삼성전자,2019,4.22591294,Electronics & IT,70,90,88,005930.KS
+삼성전자,2020,5.421560571,Electronics & IT,58,77,55,005930.KS
+삼성전자,2021,5.118523775,Electronics & IT,88,56,57,005930.KS
+삼성전자,2022,4.94836241,Electronics & IT,67,58,76,005930.KS
+삼성전자,2023,5.915539943,Electronics & IT,53,57,58,005930.KS
+삼성중공업,2019,0.792016229,Automotive & Transport,90,79,68,010140.KS
+삼성중공업,2020,2.923467994,Automotive & Transport,52,67,64,010140.KS
+삼성중공업,2021,2.923467994,Automotive & Transport,52,67,64,010140.KS
+삼성중공업,2022,4.517470985,Automotive & Transport,81,92,83,010140.KS
+삼성중공업,2023,4.494035955,Automotive & Transport,57,93,86,010140.KS
+셀트리온,2019,2.846862905,Biotechnology & Pharmaceuticals,74,61,86,068270.KS
+셀트리온,2020,2.165245576,Biotechnology & Pharmaceuticals,63,83,82,068270.KS
+셀트리온,2021,1.668775881,Biotechnology & Pharmaceuticals,99,82,91,068270.KS
+셀트리온,2022,0.632931175,Biotechnology & Pharmaceuticals,58,97,93,068270.KS
+셀트리온,2023,0.620856895,Biotechnology & Pharmaceuticals,75,72,73,068270.KS
+신한지주,2019,5.687662951,Finance & Insurance,51,73,64,055550.KS
+신한지주,2020,5.470094015,Finance & Insurance,69,86,81,055550.KS
+신한지주,2021,5.464047814,Finance & Insurance,77,84,81,055550.KS
+신한지주,2022,5.390044619,Finance & Insurance,96,93,73,055550.KS
+신한지주,2023,5.971607106,Finance & Insurance,56,89,90,055550.KS
+아모레퍼시픽,2019,8.232404731,Retail & Consumer Goods,70,64,64,090430.KS
+아모레퍼시픽,2020,8.232404731,Retail & Consumer Goods,70,64,64,090430.KS
+아모레퍼시픽,2021,4.02022651,Retail & Consumer Goods,84,81,93,090430.KS
+아모레퍼시픽,2022,8.232404731,Retail & Consumer Goods,70,64,64,090430.KS
+아모레퍼시픽,2023,8.232404731,Retail & Consumer Goods,70,64,64,090430.KS
+엔씨소프트,2019,4.788812526,Gaming & Internet,71,59,72,036570.KS
+엔씨소프트,2020,2.010161455,Gaming & Internet,52,79,65,036570.KS
+엔씨소프트,2021,4.788812526,Gaming & Internet,71,59,72,036570.KS
+엔씨소프트,2022,0.670715927,Gaming & Internet,60,65,97,036570.KS
+엔씨소프트,2023,4.788812526,Gaming & Internet,71,59,72,036570.KS
+영원무역,2019,4.103923904,Textiles,88,69,60,111770.KS
+영원무역,2020,2.415417684,Textiles,62,62,80,111770.KS
+영원무역,2021,2.415417684,Textiles,62,62,80,111770.KS
+영원무역,2022,2.415417684,Textiles,62,62,80,111770.KS
+영원무역,2023,3.164645591,Textiles,52,74,76,111770.KS
+우리금융지주,2019,7.075149861,Finance & Insurance,66,54,90,316140.KS
+우리금융지주,2020,7.075149861,Finance & Insurance,66,54,90,316140.KS
+우리금융지주,2021,3.969073677,Finance & Insurance,98,62,95,316140.KS
+우리금융지주,2022,5.627428227,Finance & Insurance,82,75,97,316140.KS
+우리금융지주,2023,2.994108162,Finance & Insurance,64,59,82,316140.KS
+이마트,2019,4.325717722,Retail & Consumer Goods,96,58,86,139480.KS
+이마트,2020,2.780554081,Retail & Consumer Goods,91,68,59,139480.KS
+이마트,2021,3.204860702,Retail & Consumer Goods,53,60,97,139480.KS
+이마트,2022,2.797713009,Retail & Consumer Goods,59,50,77,139480.KS
+이마트,2023,2.780554081,Retail & Consumer Goods,91,68,59,139480.KS
+카카오,2019,3.34576507,Gaming & Internet,93,71,98,035720.KS
+카카오,2020,3.933447609,Gaming & Internet,57,76,98,035720.KS
+카카오,2021,4.670167664,Gaming & Internet,96,84,61,035720.KS
+카카오,2022,5.936381677,Gaming & Internet,84,50,88,035720.KS
+카카오,2023,4.776292306,Gaming & Internet,63,84,51,035720.KS
+카카오뱅크,2019,2.404798558,Finance & Insurance,52,55,78,323410.KS
+카카오뱅크,2020,3.922595063,Finance & Insurance,95,73,71,323410.KS
+카카오뱅크,2021,1.058762929,Finance & Insurance,97,93,55,323410.KS
+카카오뱅크,2022,2.404798558,Finance & Insurance,52,55,78,323410.KS
+카카오뱅크,2023,3.112005192,Finance & Insurance,57,95,84,323410.KS
+카카오페이,2019,5.879090772,Finance & Insurance,82,63,87,377300.KS
+카카오페이,2020,3.531870671,Finance & Insurance,58,70,55,377300.KS
+카카오페이,2021,3.531870671,Finance & Insurance,58,70,55,377300.KS
+카카오페이,2022,3.531870671,Finance & Insurance,58,70,55,377300.KS
+카카오페이,2023,5.040822022,Finance & Insurance,77,84,95,377300.KS
+코웨이,2019,3.283764261,Retail & Consumer Goods,72,70,73,021240.KS
+코웨이,2020,3.283764261,Retail & Consumer Goods,72,70,73,021240.KS
+코웨이,2021,3.283764261,Retail & Consumer Goods,72,70,73,021240.KS
+코웨이,2022,4.772790713,Retail & Consumer Goods,95,88,55,021240.KS
+코웨이,2023,3.283764261,Retail & Consumer Goods,72,70,73,021240.KS
+크래프톤,2019,4.119154111,Gaming & Internet,95,64,66,259960.KS
+크래프톤,2020,4.163573496,Gaming & Internet,82,96,94,259960.KS
+크래프톤,2021,4.163573496,Gaming & Internet,82,96,94,259960.KS
+크래프톤,2022,3.141998796,Gaming & Internet,72,70,53,259960.KS
+크래프톤,2023,2.947954211,Gaming & Internet,57,88,69,259960.KS
+팬오션,2019,3.536248904,Automotive & Transport,63,85,84,028670.KS
+팬오션,2020,3.536248904,Automotive & Transport,63,85,84,028670.KS
+팬오션,2021,3.536248904,Automotive & Transport,63,85,84,028670.KS
+팬오션,2022,5.844605979,Automotive & Transport,93,59,64,028670.KS
+팬오션,2023,3.536248904,Automotive & Transport,63,85,84,028670.KS
+하나금융지주,2019,1.273854035,Finance & Insurance,55,55,74,086790.KS
+하나금융지주,2020,3.752896183,Finance & Insurance,65,84,90,086790.KS
+하나금융지주,2021,1.979687451,Finance & Insurance,58,66,67,086790.KS
+하나금융지주,2022,3.411274776,Finance & Insurance,84,74,70,086790.KS
+하나금융지주,2023,1.979687451,Finance & Insurance,58,66,67,086790.KS
+하림지주,2019,3.382550846,Retail & Consumer Goods,73,71,66,003380.KS
+하림지주,2020,2.744819842,Retail & Consumer Goods,63,69,81,003380.KS
+하림지주,2021,2.744819842,Retail & Consumer Goods,63,69,81,003380.KS
+하림지주,2022,4.055901701,Retail & Consumer Goods,79,80,56,003380.KS
+하림지주,2023,2.654363924,Retail & Consumer Goods,60,76,68,003380.KS
+한국가스공사,2019,0.670646122,Energy & Chemicals,83,80,51,036460.KS
+한국가스공사,2020,0.670646122,Energy & Chemicals,83,80,51,036460.KS
+한국가스공사,2021,0.670646122,Energy & Chemicals,83,80,51,036460.KS
+한국가스공사,2022,2.477693083,Energy & Chemicals,86,77,84,036460.KS
+한국가스공사,2023,2.613784591,Energy & Chemicals,90,81,82,036460.KS
+한국타이어앤테크놀로지,2019,1.969915239,Automotive & Transport,60,61,72,161390.KS
+한국타이어앤테크놀로지,2020,1.969915239,Automotive & Transport,60,61,72,161390.KS
+한국타이어앤테크놀로지,2021,3.868242555,Automotive & Transport,91,50,83,161390.KS
+한국타이어앤테크놀로지,2022,2.462188997,Automotive & Transport,52,85,92,161390.KS
+한국타이어앤테크놀로지,2023,2.029778996,Automotive & Transport,53,58,76,161390.KS
+한미약품,2019,0.645947405,Biotechnology & Pharmaceuticals,86,53,79,128940.KS
+한미약품,2020,3.956275223,Biotechnology & Pharmaceuticals,84,70,72,128940.KS
+한미약품,2021,4.175230864,Biotechnology & Pharmaceuticals,77,63,97,128940.KS
+한미약품,2022,4.077329739,Biotechnology & Pharmaceuticals,71,68,85,128940.KS
+한미약품,2023,1.704566754,Biotechnology & Pharmaceuticals,53,54,86,128940.KS
+한온시스템,2019,1.068276565,Automotive & Transport,89,50,64,018880.KS
+한온시스템,2020,1.068276565,Automotive & Transport,89,50,64,018880.KS
+한온시스템,2021,3.516661625,Automotive & Transport,73,69,88,018880.KS
+한온시스템,2022,4.729262238,Automotive & Transport,52,80,59,018880.KS
+한온시스템,2023,4.659392146,Automotive & Transport,70,89,67,018880.KS
+한화,2019,3.786407964,Conglomerates,52,51,60,000880.KS
+한화,2020,2.035259529,Conglomerates,52,88,59,000880.KS
+한화,2021,6.918257961,Conglomerates,98,69,77,000880.KS
+한화,2022,5.124267028,Conglomerates,61,82,84,000880.KS
+한화,2023,5.124267028,Conglomerates,61,82,84,000880.KS
+한화에어로스페이스,2019,4.194986701,Automotive & Transport,77,82,59,012450.KS
+한화에어로스페이스,2020,1.3829114,Automotive & Transport,96,74,66,012450.KS
+한화에어로스페이스,2021,1.803971895,Automotive & Transport,60,81,84,012450.KS
+한화에어로스페이스,2022,3.472520935,Automotive & Transport,66,94,78,012450.KS
+한화에어로스페이스,2023,4.194986701,Automotive & Transport,77,82,59,012450.KS
+현대모비스,2019,0.538835028,Automotive & Transport,51,54,98,012330.KS
+현대모비스,2020,1.86927716,Automotive & Transport,55,75,51,012330.KS
+현대모비스,2021,1.215651679,Automotive & Transport,91,63,51,012330.KS
+현대모비스,2022,1.194248632,Automotive & Transport,53,88,77,012330.KS
+현대모비스,2023,1.688000447,Automotive & Transport,78,76,72,012330.KS
+현대백화점,2019,3.366144253,Retail & Consumer Goods,73,89,55,069960.KS
+현대백화점,2020,3.366144253,Retail & Consumer Goods,73,89,55,069960.KS
+현대백화점,2021,6.341077669,Retail & Consumer Goods,69,94,54,069960.KS
+현대백화점,2022,3.366144253,Retail & Consumer Goods,73,89,55,069960.KS
+현대백화점,2023,3.366144253,Retail & Consumer Goods,73,89,55,069960.KS
+현대차,2019,1.757339189,Automotive & Transport,67,58,86,005380.KS
+현대차,2020,1.671592968,Automotive & Transport,75,64,81,005380.KS
+현대차,2021,1.222234593,Automotive & Transport,93,64,82,005380.KS
+현대차,2022,1.381262622,Automotive & Transport,83,75,50,005380.KS
+현대차,2023,2.590014748,Automotive & Transport,59,91,68,005380.KS
+효성,2019,3.446095129,Conglomerates,94,87,54,004800.KS
+효성,2020,5.961315579,Conglomerates,77,66,96,004800.KS
+효성,2021,3.446095129,Conglomerates,94,87,54,004800.KS
+효성,2022,3.446095129,Conglomerates,94,87,54,004800.KS
+효성,2023,5.017792883,Conglomerates,74,74,68,004800.KS
+BGF리테일,2019,5.239505614,Retail & Consumer Goods,56,92,85,282330.KS
+BGF리테일,2020,3.410173792,Retail & Consumer Goods,87,55,55,282330.KS
+BGF리테일,2021,3.410173792,Retail & Consumer Goods,87,55,55,282330.KS
+BGF리테일,2022,3.410173792,Retail & Consumer Goods,87,55,55,282330.KS
+BGF리테일,2023,5.048533824,Retail & Consumer Goods,56,96,53,282330.KS
+CJ제일제당,2019,3.911564631,Retail & Consumer Goods,80,63,67,097950.KS
+CJ제일제당,2020,2.505174614,Retail & Consumer Goods,72,65,86,097950.KS
+CJ제일제당,2021,3.459659413,Retail & Consumer Goods,82,88,55,097950.KS
+CJ제일제당,2022,5.496811202,Retail & Consumer Goods,74,54,60,097950.KS
+CJ제일제당,2023,5.496811202,Retail & Consumer Goods,74,54,60,097950.KS
