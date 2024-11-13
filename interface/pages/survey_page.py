@@ -96,21 +96,13 @@ with st.form('usersurvey',clear_on_submit=False):
                             border-radius: 10px; 
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
-                        p{{
+                        p{
                             font-family: Pretendard;
-                        }}
+                        }
                     </style>
                 </head>
                 ''',unsafe_allow_html=True)
     
-
-    st.markdown('''
-                <style>
-                p{{
-                    font-family: Pretendard;
-                }}
-                </style>
-                ''',unsafe_allow_html=True)
     st.markdown('<div class="question" style="font-size:20px;text-align:center;font-family: Pretendard;font-weight: bold;">1. 투자할 때 기업이 탄소 배출이나 오염물질 관리 등 자연을 보호하는 데 신경 쓰는지 고려하시나요?</div>', unsafe_allow_html=True)
     q1 = st.radio('', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
