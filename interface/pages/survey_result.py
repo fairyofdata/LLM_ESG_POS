@@ -112,17 +112,17 @@ for key in ['environmental', 'social', 'governance']:
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
-st.markdown(
-    """
+st.markdown("""
     <style>
         .element-container st-emotion-cache-1c12lws e1f1d6gn4{
             margin: 0;
             padding: 0;
         }
+        .slicetext{
+            font-family: Pretendard;
+        }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+    """,unsafe_allow_html=True)
 
 survey_result = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index_col=0)
 with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'r', encoding='utf-8') as f:
@@ -311,6 +311,10 @@ header = f"""
                 font-weight: bold;
                 color: black;
                 padding: 10px;
+                font-family: Pretendard;
+            }}
+            a{{
+                font-family: Pretendard;
             }}
         </style>
     </head>
@@ -400,6 +404,7 @@ def display_text_on_hover(hover_text, i, origin_text):
             display: block;
             cursor: pointer;
             text-align: center;
+            font-family: Pretendard;
         }}
         .{hover_class} .{tooltip_class} {{
             display: none; /* Hover to see text를 숨김 */
@@ -417,6 +422,7 @@ def display_text_on_hover(hover_text, i, origin_text):
             left: 50%;  /* 중앙 정렬을 위해 left를 50%로 설정 */
             transform: translateX(-50%);
             max-width: 200px;
+            font-family: Pretendard;
             color: #333;
             font-size: 14px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -431,7 +437,7 @@ def display_text_on_hover(hover_text, i, origin_text):
     # origin_text의 스타일을 수정하여 HTML 정의
     text_hover = f'''
         <div class="{hover_class}">
-            <a href="#hover_text" style="color: black; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
+            <a href="#hover_text" style="color: black; font-family: Pretendard; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
             <div class="{tooltip_class}"></div>
             <div class="{text_popup_class}">{hover_text}</div>
         </div>
@@ -440,7 +446,6 @@ def display_text_on_hover(hover_text, i, origin_text):
     # 동적 HTML 및 CSS를 콘텐츠 컨테이너에 작성
     st.markdown(f'<p>{text_hover}{tooltip_css}</p>', unsafe_allow_html=True)
 
-# st.markdown(f'''<h1 style="text-align:center;font-size:32px;padding:0px;margin:10px;">{user_name}을 위한 ESG 중심 포트폴리오 제안서 <br></h1>''',unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1,1,3])
 with col1:
@@ -452,21 +457,34 @@ with col1:
         esg_weight_factor = 2.0
 
     st.markdown("""
-        <style>
-            .stSlider{
-                padding:16px;
-            }
-            .element-container st-emotion-cache-1yvhuls e1f1d6gn4{
-                padding:16px;
-            }
-            .st-emotion-cache-uzeiqp e1nzilvr4{
-                height: 50px;
-                width : 100%
-            }
-            .st-dt st-d4 st-d3 st-cb st-af st-c2 st-du{
-                padding:10px;
-            }
-        </style>
+                <!DOCTYPE html>
+                <html lang="ko">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+                    <style>
+                    .stSlider{
+                        padding:16px;
+                    }
+                    .element-container st-emotion-cache-1yvhuls e1f1d6gn4{
+                        padding:16px;
+                    }
+                    .st-emotion-cache-uzeiqp e1nzilvr4{
+                        height: 50px;
+                        width : 100%
+                    }
+                    .st-dt st-d4 st-d3 st-cb st-af st-c2 st-du{
+                        padding:10px;
+                    }
+                    .label{
+                        font-family: Pretendard;
+                    }
+                    p{
+                        font-family: Pretendard;
+                    }
+                </style>
+                </head>
     """, unsafe_allow_html=True)
 
     sl1, sl2, sl3= st.columns(3)
@@ -545,7 +563,7 @@ top_companies['Weight'] = top_companies['Weight'] * 100
     
 with col2:
     st.markdown(f"""<div>
-                        <h2 style="font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여 더 다양한 정보를 경험해 보세요.</h2>
+                        <h2 style="font-family: Pretendard;font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여<br>더 다양한 정보를 경험해 보세요.</h2>
                     </div>
             """, unsafe_allow_html=True)
     
@@ -636,6 +654,7 @@ with col3:
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
+            font-family: Pretendard;
         }}
         th {{
             background-color: #f2f2f2;
@@ -677,7 +696,7 @@ with col3:
     
     _,_,bt1,bt2 = st.columns(4)
     with bt1: 
-        if st.button(label="포트폴리오 확인➡️"):
+        if st.button(label="포트폴리오 확인  ➡️"):
             screenshot = ImageGrab.grab(bbox=(400,420,790,830))
             screenshot.save("pie_chart_capture.png") 
         
@@ -706,7 +725,7 @@ with col3:
             <style>
                 body {{
                     text-align: center;
-                    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+                    font-family: Pretendard;
                 }}
                 .block {{
                     display: table;
@@ -748,7 +767,7 @@ with col3:
                 </div>
                 <div class="box">
                     <br>
-                    <h2 style="font-size:20px;">ESG 관심도</h2>
+                    <h2 style="font-family: Pretendard;font-size:20px;">ESG 관심도</h2>
                     <table style="width: 90%;">
                         <tr>
                             <th>환경</th>
@@ -763,7 +782,7 @@ with col3:
                             <td>{g_value}</td>
                         </tr>
                     </table>
-                    <h2 style="font-size:20px;">포트폴리오 정보</h2>
+                    <h2 style="font-family: Pretendard;font-size:20px;">포트폴리오 정보</h2>
                     <table style="width: 90%;">
                         <tr>
                             <th>예상 수익률</th>
@@ -857,7 +876,7 @@ with col_1:
                 company_info = top_companies.iloc[company_index]
                 clicked_company = company_info['Company']
                 st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">{clicked_company} ESG 스코어</h2>
+                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">{clicked_company} ESG 스코어</h2>
                             </div>
                 """, unsafe_allow_html=True)
                 clicked_df = dummy[dummy['Company'] == clicked_company]
@@ -889,7 +908,7 @@ with col_1:
 with col_2:
     if clicked_points:
         st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">&emsp;&ensp;{clicked_company} &ensp;주가 그래프</h2>
+                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">&emsp;&ensp;{clicked_company} &ensp;주가 그래프</h2>
                             </div>
             """, unsafe_allow_html=True)
                 
@@ -924,7 +943,7 @@ with col_2:
 with col_3:
     if clicked_points:
         st.markdown(f"""<div>
-                            <h2 style="font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
+                            <h2 style="font-family: Pretendard;font-size: 20px; text-align:center;">{clicked_company}&ensp;워드 클라우드</h2>
                             </div>
                 """, unsafe_allow_html=True)
         # MongoDB에서 Company 필드의 고유 값들을 불러오기
