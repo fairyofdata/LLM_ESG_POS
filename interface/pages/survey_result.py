@@ -759,9 +759,9 @@ with col3:
         html_code += f"""<tr>
         <td style="font-size:13px;">{row['종목명']}</td>
         <td>{row['제안 비중']:.2f}%</td>
-        <td>{row['E']:.1f}</td>
-        <td>{row['S']:.1f}</td>
-        <td>{row['G']:.1f}</td>
+        <td>{int(row['E'])}</td>
+        <td>{int(row['S'])}</td>
+        <td>{int(row['G'])}</td>
         <td style="text-align: left;">{row['종목 소개']}</td>
         </tr>"""
 
@@ -829,6 +829,7 @@ with col3:
                     border: 1px solid #ddd;
                 }}
                 th {{
+                    font-size:15px;
                     background-color: #e3edfa;
                 }}
                 .detail-table-container {{
@@ -888,9 +889,9 @@ with col3:
                         <th rowspan='2'>종목 소개</th>
                     </tr>
                     <tr>
-                        <th>환경</th>
-                        <th>사회</th>
-                        <th>거버넌스</th>
+                        <th>E</th>
+                        <th>S</th>
+                        <th>G</th>
                     </tr>
                     </thead>
         """
@@ -899,9 +900,9 @@ with col3:
             html_content += f"""<tr>
                 <td>{row['종목명']}</td>
                 <td>{row['제안 비중']:.2f}%</td>
-                <td>{row['E']:.1f}</td>
-                <td>{row['S']:.1f}</td>
-                <td>{row['G']:.1f}</td>
+                <td>{int(row['E'])}</td>
+                <td>{int(row['S'])}</td>
+                <td>{int(row['G'])}</td>
                 <td style="text-align: left;">{row['종목 소개']}</td>
                 </tr>
                 """
