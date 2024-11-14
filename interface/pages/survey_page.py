@@ -94,7 +94,7 @@ with st.sidebar:
     st.page_link('pages/recent_news.py', label='최신 뉴스',icon="🆕")
     st.page_link('pages/esg_introduce.py', label='ESG 소개 / 투자 방법', icon="🧩")
     
-st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
+st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center; align-items: center; } </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
 
@@ -118,9 +118,10 @@ with st.form('usersurvey',clear_on_submit=False):
                     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
                     <style>
                         div[data-testid="stForm"]{
-                                background-color:#FFFF;
+                            background-color:#555555;
                             }
                         div[class="question"]{
+                            background-color:#666666;
                             margin: auto; 
                             padding: 40px; 
                             border-radius: 10px; 
