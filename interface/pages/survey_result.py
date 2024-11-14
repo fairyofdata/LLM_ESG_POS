@@ -104,7 +104,7 @@ if os.path.exists(user_name_file):
     with open(user_name_file, 'r', encoding='utf-8') as f:
         user_name = f.read().strip()
 else:
-    user_name = ''
+    user_name = '당신'
 
 if os.path.exists(word_freq_file):
     word_freq_df = pd.read_csv(word_freq_file)
@@ -359,7 +359,7 @@ header = f"""
                 font-size: 30px;
                 word-spacing: 3px;
                 font-weight: bold;
-                color: black;
+                color: #666666;
                 padding: 10px;
                 font-family: Pretendard;
             }}
@@ -511,7 +511,7 @@ def display_text_on_hover(hover_text, i, origin_text):
     # origin_text의 스타일을 수정하여 HTML 정의
     text_hover = f'''
         <div class="{hover_class}">
-            <a href="#hover_text" style="color: black; font-family: Pretendard; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
+            <a href="#hover_text" style="color: #999999; font-family: Pretendard; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
             <div class="{tooltip_class}"></div>
             <div class="{text_popup_class}">{hover_text}</div>
         </div>
@@ -555,6 +555,7 @@ with col1:
                         font-family: Pretendard;
                     }
                     p{
+                        text-color: #999999;
                         font-family: Pretendard;
                     }
                 </style>
@@ -601,9 +602,9 @@ with col1:
             key = "environmental" ,
             height = 270,
             step = 0.1,
-            default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
+            default_value=survey_result.loc['E'].sum() * 1/ 4.99,#Optional - Defaults to 0
             min_value= 0.01, # Defaults to 0
-            max_value= 10.0, # Defaults to 10
+            max_value= 1.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
             thumb_color = "#FF9933",
@@ -616,9 +617,9 @@ with col1:
             key = "social" ,
             height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
-            default_value=survey_result.loc['S'].sum() *10/4.79,#Optional - Defaults to 0
+            default_value=survey_result.loc['S'].sum() *1/4.79,#Optional - Defaults to 0
             min_value= 0.01, # Defaults to 0
-            max_value= 10.0, # Defaults to 10
+            max_value= 1.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
             thumb_color = "#FF9933",
@@ -631,9 +632,9 @@ with col1:
             key = "governance" ,
             height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
-            default_value=survey_result.loc['G'].sum()*10/4.16,
+            default_value=survey_result.loc['G'].sum()*1/4.16,
             min_value= 0.01, # Defaults to 0
-            max_value= 10.0, # Defaults to 10
+            max_value= 1.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
             thumb_color = "#FF9933",
@@ -764,16 +765,16 @@ with col3:
             font-family: Pretendard;
         }}
         th {{
-            background-color: #f2f2f2;
+            text-color:#666666;
         }}
         </style>
     </style>
     <table>
             <thead>
             <tr>
-                <th rowspan='2'>종목명</th>
+                <th rowspan='2'>종목</th>
                 <th rowspan='2'>제안<br>비중</th>
-                <th colspan="3">2023년도 ESG 점수</th>
+                <th colspan="3">ESG Score<br>(2023)</th>
                 <th rowspan='2'>종목 소개</th>
             </tr>
             <tr>
@@ -813,13 +814,6 @@ with col3:
     # 현재 스크립트 파일의 디렉토리 경로를 기준으로 상대 경로 설정
     current_directory = os.path.dirname(os.path.abspath(__file__))
     image_file_path = os.path.join(current_directory, "pie_chart_capture.png")
-
-    # 버튼을 눌러 스크린샷 저장
-    with bt1:
-        # 버튼에 고유한 key를 추가하여 중복 오류를 방지
-        if st.button(label="포트폴리오 확인  ➡️", key="portfolio_button_1"):
-            screenshot = ImageGrab.grab(bbox=(400, 420, 790, 830))
-            screenshot.save("pie_chart_capture.png")
 
 
     # HTML 생성 함수
@@ -884,7 +878,7 @@ with col3:
             </style>
         </head>
         <body>
-            <h1>{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
+            <h1 style="color: #999999;">{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
             <p>다음은 {user_name}의 ESG 선호도를 바탕으로 최적화된 포트폴리오 비중입니다.</p>
             <div class="block">
                 <div class="box">
