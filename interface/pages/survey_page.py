@@ -31,7 +31,7 @@ survey_result_file = os.path.join(current_directory, "survey_result.csv")
 user_investment_style_file = os.path.join(current_directory, "user_investment_style.txt")
 user_interest_file = os.path.join(current_directory, "user_interest.txt")
 user_name_file = os.path.join(current_directory, "user_name.txt")
-company_list_file = os.path.join(current_directory, 'companycolletioninfo.csv')
+company_list_file = os.path.join(current_directory, 'company_collection.csv')
 word_freq_file = os.path.join(current_directory, "company_word_frequencies.csv")
 survey_result_page = 'pages/survey_result.py'
 

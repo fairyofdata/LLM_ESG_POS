@@ -73,7 +73,7 @@ survey_result_file = os.path.join(current_directory, "survey_result.csv")
 user_investment_style_file = os.path.join(current_directory, "user_investment_style.txt")
 user_interest_file = os.path.join(current_directory, "user_interest.txt")
 user_name_file = os.path.join(current_directory, "user_name.txt")
-companycolletioninfo = os.path.join(current_directory, 'companycolletioninfo.csv')
+company_colletion_file = os.path.join(current_directory, 'company_collection.csv')
 word_freq_file = os.path.join(current_directory, "company_word_frequencies.csv")
 survey_result_page = 'pages/survey_result.py'
 
@@ -83,6 +83,10 @@ if os.path.exists(survey_result_file):
 else:
     # 파일이 없으면 기본값으로 빈 데이터프레임 생성
     survey_result = pd.DataFrame()
+
+company_colletion = pd.read_csv(company_colletion_file, encoding='utf-8', index_col=0)
+company_colletion.columns = company_colletion.columns.astype(str).str.strip()
+company_colletion.reset_index(inplace=True)
 
 if os.path.exists(user_investment_style_file):
     with open(user_investment_style_file, 'r', encoding='utf-8') as f:
@@ -101,11 +105,6 @@ if os.path.exists(user_name_file):
         user_name = f.read().strip()
 else:
     user_name = ''
-
-if os.path.exists(companycolletioninfo):
-    companycolletion = pd.read_csv(companycolletioninfo)
-else:
-    companycolletion = pd.DataFrame()
 
 if os.path.exists(word_freq_file):
     word_freq_df = pd.read_csv(word_freq_file)
@@ -126,7 +125,7 @@ with st.sidebar:
     st.page_link('pages/recent_news.py', label='최신 뉴스',icon="🆕")
     st.page_link('pages/esg_introduce.py', label='ESG 소개 / 투자 방법', icon="🧩")
 
-os.environ['JAVA_HOME'] = 'C:\Program Files\Java\jdk-23' 
+os.environ['JAVA_HOME'] = 'C:\Program Files\Java\jdk-23'
 
 if 'ndays' not in st.session_state: 
     st.session_state['ndays'] = 100
@@ -338,46 +337,6 @@ def recommend_companies(esg_weights, df):
 
     return top_companies
 
-# 포트폴리오 비중 계산 함수 with CVXOPT
-# def calculate_portfolio_weights(top_companies):
-#     tickers = top_companies['ticker'].tolist()
-#     price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
-#     price_data = price_data.dropna(axis=1, how='any')
-#     if price_data.isnull().values.any():
-#         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
-
-#     # 일별 수익률 계산
-#     returns = price_data.pct_change().dropna()
-
-#     # 평균 수익률과 공분산 행렬
-#     mu = returns.mean().values
-#     Sigma = returns.cov().values
-
-#     # `cvxopt`에서 사용할 행렬 형식으로 변환
-#     n = len(mu)
-#     P = matrix(Sigma)
-#     q = matrix(np.zeros(n))
-#     G = matrix(-np.eye(n))
-#     h = matrix(np.zeros(n))
-#     A = matrix(1.0, (1, n))
-#     b = matrix(1.0)
-
-#     # 쿼드라틱 프로그래밍 솔버 실행
-#     sol = solvers.qp(P, q, G, h, A, b)
-
-#     # 최적 가중치 추출
-#     weights = np.array(sol['x']).flatten()
-
-#     # 포트폴리오 성과 지표 계산
-#     expected_return = np.dot(weights, mu)
-#     expected_volatility = np.sqrt(np.dot(weights.T, np.dot(Sigma, weights)))
-#     sharpe_ratio = expected_return / expected_volatility
-
-#     # 가중치 정리
-#     cleaned_weights = dict(zip(tickers, weights))
-
-#     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
-
 
 st.markdown("""
             <style>
@@ -424,10 +383,12 @@ from pypfopt import BlackLittermanModel, expected_returns, risk_models, Covarian
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
 # 블랙리터만 모델 적용 함수
+
+
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     # 데이터 수집 및 전처리
     tickers = df['ticker'].tolist()
-    price_data = yf.download(tickers, start="2019-01-01", end="2023-12-31")['Adj Close']
+    price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
     price_data = price_data.dropna(axis=1)
     if price_data.isnull().values.any():
         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
@@ -440,7 +401,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     Sigma += np.eye(Sigma.shape[0]) * 1e-6
 
     # ESG 가중치 스케일링 (비율 조정)
-    esg_weights = {key: value / 700 for key, value in esg_weights.items()}
+    esg_weights = {key: value / 25000 for key, value in esg_weights.items()}
 
     # 사용자 선호도와 ESG 가중치를 반영한 최종 ESG 점수 계산
     df['final_esg_score'] = (
@@ -453,7 +414,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
         esg_weight_factor = 10.0
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
-        esg_weight_factor = 25.0
+        esg_weight_factor = 20.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
         esg_weight_factor = 100.0
     else:
@@ -503,10 +464,6 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
 
     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
 
-# 결과 출력
-# 개선된 코드에서는 사용자의 ESG 선호도가 시장 균형 수익률에 직접 반영되므로,
-# 최적화 과정에서 사용자의 ESG 선호가 명확히 드러나도록 합니다.
-# ------
 
 def display_text_on_hover(hover_text, i, origin_text):
     # 각 텍스트 호버 영역에 고유한 클래스 이름을 생성
@@ -645,7 +602,7 @@ with col1:
             height = 270,
             step = 0.1,
             default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
-            min_value= 0.0, # Defaults to 0
+            min_value= 0.01, # Defaults to 0
             max_value= 10.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
@@ -660,7 +617,7 @@ with col1:
             height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['S'].sum() *10/4.79,#Optional - Defaults to 0
-            min_value= 0.0, # Defaults to 0
+            min_value= 0.01, # Defaults to 0
             max_value= 10.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
@@ -675,7 +632,7 @@ with col1:
             height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['G'].sum()*10/4.16,
-            min_value= 0.0, # Defaults to 0
+            min_value= 0.01, # Defaults to 0
             max_value= 10.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
@@ -758,7 +715,7 @@ with col2:
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
 
 with col3:
-    companycolletion['ticker'] = companycolletion['ticker'].str[1:]
+    company_colletion['ticker'] = company_colletion['ticker'].str[1:]
     top_companies['ticker'] = top_companies['ticker'].str.replace('.KS', '')
 
     expected_return = portfolio_performance[0]
@@ -769,7 +726,7 @@ with col3:
         if condition.any():
             top_companies.loc[top_companies['Company'] == company, ['environmental', 'social', 'governance']] = dummy.loc[condition, ['environmental', 'social', 'governance']].values
     top5_companies = top_companies.nlargest(5, 'Weight')
-    filtered_companies = pd.merge(companycolletion, top5_companies, left_on='ticker', right_on='ticker')
+    filtered_companies = pd.merge(company_colletion, top5_companies, left_on='ticker', right_on='ticker')
     filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
     filtered_companies = filtered_companies.rename(columns={
         'Company': '종목명',
@@ -852,17 +809,31 @@ with col3:
         if st.button(label="포트폴리오 확인  ➡️"):
             screenshot = ImageGrab.grab(bbox=(400,420,790,830))
             screenshot.save("pie_chart_capture.png")
-        
+
+    # 현재 스크립트 파일의 디렉토리 경로를 기준으로 상대 경로 설정
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    image_file_path = os.path.join(current_directory, "pie_chart_capture.png")
+
+    # 버튼을 눌러 스크린샷 저장
+    with bt1:
+        # 버튼에 고유한 key를 추가하여 중복 오류를 방지
+        if st.button(label="포트폴리오 확인  ➡️", key="portfolio_button_1"):
+            screenshot = ImageGrab.grab(bbox=(400, 420, 790, 830))
+            screenshot.save("pie_chart_capture.png")
+
+
+    # HTML 생성 함수
     def generate_html():
-        filtered_companies = pd.merge(companycolletion, top_companies, left_on='ticker', right_on='ticker')
-        filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
+        # 데이터프레임 필터링 및 컬럼 이름 변경
+        filtered_companies = pd.merge(company_colletion, top_companies, left_on='ticker', right_on='ticker')
+        filtered_companies = filtered_companies[['Company', 'Weight', 'environmental', 'social', 'governance', '종목설명']]
         filtered_companies = filtered_companies.rename(columns={
             'Company': '종목명',
             'Weight': '제안 비중',
             'environmental': 'E',
             'social': 'S',
             'governance': 'G',
-            '종목설명' :'종목 소개'
+            '종목설명': '종목 소개'
         })
         filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
 
@@ -959,7 +930,7 @@ with col3:
                     <tr>
                         <th rowspan='2'>종목명</th>
                         <th rowspan='2'>제안 비중</th>
-                        <th colspan="3">2023년도 ESG 점수</th>
+                        <th colspan="3">2023 ESG 점수</th>
                         <th rowspan='2'>종목 소개</th>
                     </tr>
                     <tr>
