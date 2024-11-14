@@ -359,7 +359,7 @@ header = f"""
                 font-size: 30px;
                 word-spacing: 3px;
                 font-weight: bold;
-                color: #666666;
+                color: #999999;
                 padding: 10px;
                 font-family: Pretendard;
             }}
@@ -878,7 +878,7 @@ with col3:
             </style>
         </head>
         <body>
-            <h1 style="color: #999999;">{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
+            <h1 style="color: #666666;">{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
             <p>다음은 {user_name}의 ESG 선호도를 바탕으로 최적화된 포트폴리오 비중입니다.</p>
             <div class="block">
                 <div class="box">

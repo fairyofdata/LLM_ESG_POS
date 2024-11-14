@@ -51,7 +51,7 @@ st.markdown(font_css, unsafe_allow_html=True)
 
 st.markdown('''
             <div>
-                <h2 style="font-size:40px; text-align:center; font-family: Pretendard;">ESG 선호도 설문</h2>
+                <h2 style="font-size:40px; text-align:center; color:#666666; font-family: Pretendard;">ESG 선호도 설문</h2>
             </div>
             ''',unsafe_allow_html=True)
 _,start_page,_ = st.columns([1,2,1])
@@ -67,6 +67,7 @@ with start_page:
                         div[data-testid="stHeadingWithActionElements"]{
                             font-size: 40px;
                             font-family: Pretendard;
+                            text-color: #555555;
                         }
                         div[data-testid="stApp"]{
                             background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
@@ -86,7 +87,7 @@ with start_page:
                             padding: 10px;
                         }
                         button[data-testid="baseButton-secondary"]{
-                            background-color: #e7f6ff;
+                            background-color: #666666;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
@@ -98,13 +99,15 @@ with start_page:
                             max-width: 800px;
                             margin: auto;
                             padding: 20px;
-                            background-color: #e7f6ff;
+                            background-color: #888888;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
                         h1 {
                             text-align: center;
                             font-family: Pretendard;
+                        h2 {
+                            text-color: 999999;
                         }
                         p {
                             font-size: 18px;
@@ -113,7 +116,7 @@ with start_page:
                         .btn-start {
                             display: block;
                             width: 100%;
-                            background-color: #4CAF50;
+                            background-color: #222222;
                             color: white;
                             padding: 15px;
                             text-align: center;
