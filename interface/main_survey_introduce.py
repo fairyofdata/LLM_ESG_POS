@@ -14,6 +14,15 @@ from streamlit_authenticator.utilities import (CredentialsError,
                                                UpdateError)
 from streamlit_extras.switch_page_button import switch_page
 
+import os
+
+# 현재 스크립트 파일의 부모 디렉터리를 기준으로 상대 경로 설정
+current_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+# 경로 변수 정의
+user_name_file = os.path.join(current_directory, "user_name.txt")
+survey_page = 'pages/survey_page.py'
+
 st.set_page_config(
         page_title="ESG 정보 제공 플랫폼",
         page_icon=":earth_africa:",
@@ -42,7 +51,7 @@ st.markdown(font_css, unsafe_allow_html=True)
 
 st.markdown('''
             <div>
-                <h2 style="font-size:40px; text-align:center; font-family: Pretendard;">ESG 선호도 설문</h2>
+                <h2 style="font-size:40px; text-align:center; color:#666666; font-family: Pretendard;">ESG 선호도 설문</h2>
             </div>
             ''',unsafe_allow_html=True)
 _,start_page,_ = st.columns([1,2,1])
@@ -58,6 +67,7 @@ with start_page:
                         div[data-testid="stHeadingWithActionElements"]{
                             font-size: 40px;
                             font-family: Pretendard;
+                            text-color: #555555;
                         }
                         div[data-testid="stApp"]{
                             background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
@@ -77,7 +87,7 @@ with start_page:
                             padding: 10px;
                         }
                         button[data-testid="baseButton-secondary"]{
-                            background-color: #e7f6ff;
+                            background-color: #666666;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
@@ -89,13 +99,15 @@ with start_page:
                             max-width: 800px;
                             margin: auto;
                             padding: 20px;
-                            background-color: #e7f6ff;
+                            background-color: #888888;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
                         h1 {
                             text-align: center;
                             font-family: Pretendard;
+                        h2 {
+                            text-color: 999999;
                         }
                         p {
                             font-size: 18px;
@@ -104,7 +116,7 @@ with start_page:
                         .btn-start {
                             display: block;
                             width: 100%;
-                            background-color: #4CAF50;
+                            background-color: #222222;
                             color: white;
                             padding: 15px;
                             text-align: center;
@@ -134,14 +146,18 @@ with start_page:
                 """,unsafe_allow_html=True)
     user_name = st.text_input(" ",key="user_name")
     _,start_button,_ = st.columns(3)
+
+
+    # 버튼 클릭 시 처리
     with start_button:
         switch_page = st.button("설문 시작하기")
         if switch_page:
             if user_name:
-                with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
+                with open(user_name_file, 'w', encoding='utf-8') as f:
                     f.write(user_name + '님')
             else:
-                with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'w', encoding='utf-8') as f:
+                with open(user_name_file, 'w', encoding='utf-8') as f:
                     f.write('당신')
+
             selected = '설문 페이지'
-            st.switch_page('pages/survey_page.py')
+            st.switch_page(survey_page)

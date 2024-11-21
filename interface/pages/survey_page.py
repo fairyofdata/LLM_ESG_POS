@@ -23,6 +23,54 @@ from streamlit_authenticator.utilities import (CredentialsError,
                                                UpdateError)
 from streamlit_extras.switch_page_button import switch_page
 
+# 현재 스크립트 파일의 위치를 기준으로 상대 경로 설정
+current_directory = os.path.dirname(__file__)
+
+# 경로 변수 정의
+survey_result_file = os.path.join(current_directory, "survey_result.csv")
+user_investment_style_file = os.path.join(current_directory, "user_investment_style.txt")
+user_interest_file = os.path.join(current_directory, "user_interest.txt")
+user_name_file = os.path.join(current_directory, "user_name.txt")
+company_list_file = os.path.join(current_directory, 'company_collection.csv')
+word_freq_file = os.path.join(current_directory, "company_word_frequencies.csv")
+survey_result_page = 'pages/survey_result.py'
+
+# 파일이 존재하는지 확인 후 불러오기
+if os.path.exists(survey_result_file):
+    survey_result = pd.read_csv(survey_result_file, encoding='utf-8', index_col=0)
+else:
+    # 파일이 없으면 기본값으로 빈 데이터프레임 생성
+    survey_result = pd.DataFrame()
+
+if os.path.exists(user_investment_style_file):
+    with open(user_investment_style_file, 'r', encoding='utf-8') as f:
+        user_investment_style = f.read().strip()
+else:
+    user_investment_style = ''
+
+if os.path.exists(user_interest_file):
+    with open(user_interest_file, 'r', encoding='utf-8') as f:
+        user_interest = f.read().strip()
+else:
+    user_interest = ''
+
+if os.path.exists(user_name_file):
+    with open(user_name_file, 'r', encoding='utf-8') as f:
+        user_name = f.read().strip()
+else:
+    user_name = ''
+
+if os.path.exists(company_list_file):
+    company_list = pd.read_csv(company_list_file)
+else:
+    company_list = pd.DataFrame()
+
+if os.path.exists(word_freq_file):
+    word_freq_df = pd.read_csv(word_freq_file)
+else:
+    word_freq_df = pd.DataFrame()
+
+
 st.set_page_config(
     page_title = "설문 조사",
     page_icon=":earth_africa:",
@@ -46,6 +94,7 @@ with st.sidebar:
     st.page_link('pages/recent_news.py', label='최신 뉴스',icon="🆕")
     st.page_link('pages/esg_introduce.py', label='ESG 소개 / 투자 방법', icon="🧩")
     
+<<<<<<< HEAD
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 # st.markdown('''
@@ -56,6 +105,10 @@ st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;pa
 #             </style>
 #             }}
             # ''',unsafe_allow_html=True)
+=======
+#st.markdown('<style>div.row-widget.stRadio > div{display: flex; justify-content: center; color: #55FF00; align-items: center;} </style>', unsafe_allow_html=True)
+st.markdown('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-right:2px;}</style>', unsafe_allow_html=True)
+>>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
 
 def evaluate_care_level(response):
@@ -77,10 +130,12 @@ with st.form('usersurvey',clear_on_submit=False):
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
                     <style>
+                        div.row-widget.stRadio > div{display: flex; justify-content: center; background-color: #00FF00; align-items: center;}
                         div[data-testid="stForm"]{
-                                background-color:#FFFF;
+                            background-color:#555555;
                             }
                         div[class="question"]{
+                            background-color:#666666;
                             margin: auto; 
                             padding: 40px; 
                             border-radius: 10px; 
@@ -107,9 +162,19 @@ with st.form('usersurvey',clear_on_submit=False):
                         p{
                             font-family: Pretendard;
                         }
+                        
                     </style>
                 </head>
                 ''',unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <style>
+        
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     
     st.markdown('<div class="question" style="font-size:20px;text-align:center;font-family: Pretendard;font-weight: bold;">1. 투자할 때 기업이 탄소 배출이나 오염물질 관리 등 자연을 보호하는 데 신경 쓰는지 고려하시나요?</div>', unsafe_allow_html=True)
     q1 = st.radio('', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
@@ -261,6 +326,8 @@ with st.form('usersurvey',clear_on_submit=False):
     _,survey_submitted, _ = st.columns([3,1,3])
     with survey_submitted:
         submitted = st.form_submit_button('설문 완료')
+
+
     
     if submitted:
         try:
@@ -381,28 +448,22 @@ with st.form('usersurvey',clear_on_submit=False):
             elif q15 == 0.5:
                 survey_result.at['G', 'sandp'] += (0.33 * q15)
                 survey_result.at['G', 'esg1'] += (0.33 * q15)
-            
-            
-                
-        finally:
-            survey_result.to_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index=True)
 
-            with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'w', encoding='utf-8') as f:
+        finally:
+            # 상대 경로로 파일 저장하기
+            survey_result.to_csv(survey_result_file, encoding='utf-8', index=True)
+            with open(user_investment_style_file, 'w', encoding='utf-8') as f:
                 f.write(q16)
-                
             if q16 == "재무적인 요소를 중심적으로 고려한다.":
                 q16 = 0.5
             elif q16 == "ESG와 재무적인 요소를 모두 고려한다.":
-                q16 = 1 
+                q16 = 1
             elif q16 == "ESG 요소를 중심적으로 고려한다.":
                 q16 = 1
-                
             user_interest = yes_interest / (q16 + no_esg_interest + yes_interest) * 100
-            with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'w', encoding='utf-8') as f:
+            with open(user_interest_file, 'w', encoding='utf-8') as f:
                 f.write(str(user_interest))
-                
-            st.switch_page('pages/survey_result.py')
-            
+            st.switch_page(survey_result_page)
 
 # elif selected == 'ESG 소개':
 #     col1,_,_ = st.columns([1,2,1])
