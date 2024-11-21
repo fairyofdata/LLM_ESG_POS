@@ -48,6 +48,14 @@ with st.sidebar:
     
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
+# st.markdown('''
+#             <style>
+#             .st-af st-bz st-c0 st-c1 st-c2 st-c3 st-c4 st-c5{{
+#                 flex-direction:row;
+#                 justify-content:center;
+#             </style>
+#             }}
+            # ''',unsafe_allow_html=True)
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
 
 def evaluate_care_level(response):

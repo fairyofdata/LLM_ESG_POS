@@ -349,15 +349,14 @@ from pypfopt import BlackLittermanModel, expected_returns, risk_models, Covarian
 # 수정된 포트폴리오 비중 계산 함수 with Black-Litterman 및 공분산 행렬 축소
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
-# 블랙리터만 모델 적용 함수
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     # 데이터 수집 및 전처리
     tickers = df['ticker'].tolist()
-    price_data = yf.download(tickers, start="2019-01-01", end="2023-12-31")['Adj Close']
+    price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
     price_data = price_data.dropna(axis=1)
     if price_data.isnull().values.any():
         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
-    
+
     # 평균 수익률과 공분산 행렬 계산
     mu_market = expected_returns.capm_return(price_data)  # CAPM을 통한 시장 균형 수익률 계산
     Sigma = risk_models.sample_cov(price_data)  # 샘플 공분산 행렬
@@ -366,7 +365,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     Sigma += np.eye(Sigma.shape[0]) * 1e-6
 
     # ESG 가중치 스케일링 (비율 조정)
-    esg_weights = {key: value / 25000 for key, value in esg_weights.items()}
+    esg_weights = {key: value / 30000 for key, value in esg_weights.items()}
 
     # 사용자 선호도와 ESG 가중치를 반영한 최종 ESG 점수 계산
     df['final_esg_score'] = (
@@ -381,7 +380,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
         esg_weight_factor = 1.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
-        esg_weight_factor = 2.0
+        esg_weight_factor = 2.5
     else:
         esg_weight_factor = 1.0  # 기본값 설정
 
@@ -391,7 +390,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     # Black-Litterman 모델의 투자자의 의견으로 반영할 데이터 준비
     valid_tickers = price_data.columns.tolist()
     df_valid = df[df['ticker'].isin(valid_tickers)]
-    
+
     # 개선된 P 매트릭스 설정: 자산별로 더욱 다양하게 반영하여 상관관계 고려
     P = np.zeros((len(valid_tickers), len(valid_tickers)))
     np.fill_diagonal(P, [1.0 / len(valid_tickers)] * len(valid_tickers))
@@ -428,6 +427,62 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     cleaned_weights = dict(zip(valid_tickers, weights))
 
     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
+
+# 최종 가중치를 optimized_weights로 적용
+def calculate_adjusted_weights(df, optimized_weights, esg_weights,performance_metrics):
+    environmental_scores = df['environmental']
+    social_scores = df['social']
+    governance_scores = df['governance']
+
+    # Calculate ESG-based adjustment
+    esg_adjustment = (
+        (environmental_scores * esg_weights['environmental']) +
+        (social_scores * esg_weights['social']) +
+        (governance_scores * esg_weights['governance'])
+    ) / 3
+
+    esg_adjustment_normalized = esg_adjustment / esg_adjustment.sum()
+    if isinstance(optimized_weights, dict):
+        adjusted_weights = {ticker: 0.5 * optimized_weights[ticker] + 0.5 * esg_adjustment_normalized[i]
+                            for i, ticker in enumerate(optimized_weights.keys())}
+    else:
+        adjusted_weights = 0.2 * adjusted_weights + 0.8 * esg_adjustment_normalized
+
+    # Normalize adjusted weights to sum to 1
+    if isinstance(adjusted_weights, dict):
+        total_weight = sum(adjusted_weights.values())
+        adjusted_weights = {ticker: weight / total_weight for ticker, weight in adjusted_weights.items()}
+    else:
+        adjusted_weights /= adjusted_weights.sum()
+
+    return adjusted_weights, performance_metrics
+    # # Normalize ESG adjustment to have the same range as optimized_weights
+    # esg_adjustment_normalized = esg_adjustment / esg_adjustment.sum()
+
+    # # Adjust the weights: 50% original weight + 50% ESG-adjusted weight
+    # adjusted_weights = 0.5 * optimized_weights + 0.5 * esg_adjustment_normalized
+
+    # # Normalize adjusted weights to sum to 1
+    # adjusted_weights /= adjusted_weights.sum()
+
+
+
+
+    # 최적화 후 가중치 조정: 각 영역별 점수를 반영하여 가중치 수정
+    # for ticker in cleaned_weights:
+    #     company_data = df_valid[df_valid['ticker'] == ticker]
+    #     if not company_data.empty:
+    #         environmental_score = company_data['environmental'].values[0]
+    #         social_score = company_data['social'].values[0]
+    #         governance_score = company_data['governance'].values[0]
+    #         cleaned_weights[ticker] = (cleaned_weights[ticker] * 0.5) + (
+    #             (environmental_score * esg_weights['environmental'] +
+    #              social_score * esg_weights['social'] +
+    #              governance_score * esg_weights['governance']) * 0.5
+    #         )
+
+    # return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
+
 
 # 결과 출력
 # 개선된 코드에서는 사용자의 ESG 선호도가 시장 균형 수익률에 직접 반영되므로,
@@ -619,11 +674,14 @@ st.write('')
 # 블랙리터만 적용 버전
 industries = df_new['industry'].unique().tolist()
 processed_df = df_new[df_new['industry'].isin(industries)].copy()
-portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights,user_investment_style) # cleaned_weights:각 자산에 할당된 최적의 투자 비율, performance:최적화된 포트폴리오의 성과 지표
+portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights, user_investment_style)
+# portfolio_weights, portfolio_performance = calculate_adjusted_weights(processed_df, portfolio_weights, esg_weights,portfolio_performance)
+# portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights,user_investment_style) # cleaned_weights:각 자산에 할당된 최적의 투자 비율, performance:최적화된 포트폴리오의 성과 지표
 top_companies = df_new[df_new['ticker'].isin(portfolio_weights)].copy()
 # ticker 열과 portfolio_weights를 매핑하여 새로운 top_companies 데이터프레임 생성_ 블랙리터만 모델 버전
 # portfolio_weights의 값을 'Weight' 컬럼으로 추가
 total_weight = sum(portfolio_weights.values())
+# total_weight =  sum(portfolio_weights.values)
 top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
 top_companies['Weight'] = top_companies['Weight'] * 100
 
@@ -740,9 +798,9 @@ with col3:
     <table>
             <thead>
             <tr>
-                <th rowspan='2'>종목명</th>
+                <th rowspan='2'>종목</th>
                 <th rowspan='2'>제안<br>비중</th>
-                <th colspan="3">2023년도 ESG 점수</th>
+                <th colspan="3">ESG Score<br>(2023)</th>
                 <th rowspan='2'>종목 소개</th>
             </tr>
             <tr>
@@ -775,7 +833,8 @@ with col3:
     
     _,_,bt1,bt2 = st.columns(4)
     with bt1:
-        if st.button(label="포트폴리오 확인  ➡️"):
+        check = st.button(label="포트폴리오 확인  ➡️")
+        if check:
             screenshot = ImageGrab.grab(bbox=(400,420,790,830))
             screenshot.save("pie_chart_capture.png")
         
@@ -883,9 +942,9 @@ with col3:
                 <table class="detail-table">
                     <thead>
                     <tr>
-                        <th rowspan='2'>종목명</th>
+                        <th rowspan='2'>종목</th>
                         <th rowspan='2'>제안 비중</th>
-                        <th colspan="3">2023년도 ESG 점수</th>
+                        <th colspan="3">ESG Score<br>(2023)</th>
                         <th rowspan='2'>종목 소개</th>
                     </tr>
                     <tr>
@@ -895,8 +954,21 @@ with col3:
                     </tr>
                     </thead>
         """
-
+        percent = 0
         for _, row in filtered_companies.iterrows():
+            if float(f"{row['제안 비중']:.2f}") == 0.00:
+                percent = 100 - percent
+                html_content += f"""<tr>
+                    <td>{row['종목명']}</td>
+                    <td>{percent:.2f}%</td>
+                    <td>{int(row['E'])}</td>
+                    <td>{int(row['S'])}</td>
+                    <td>{int(row['G'])}</td>
+                    <td style="text-align: left;">{row['종목 소개']}</td>
+                    </tr>
+                    """
+                break
+                
             html_content += f"""<tr>
                 <td>{row['종목명']}</td>
                 <td>{row['제안 비중']:.2f}%</td>
@@ -906,6 +978,8 @@ with col3:
                 <td style="text-align: left;">{row['종목 소개']}</td>
                 </tr>
                 """
+            percent += float(f"{row['제안 비중']:.2f}")
+            
         html_content += """
             <tfoot>
             <tr>
@@ -953,9 +1027,10 @@ with col3:
                 mime="application/pdf"
             )
     
-    with bt2:
-        html_content = generate_html()
-        save_as_pdf(html_content)
+    if check:
+        with bt2:
+            html_content = generate_html()
+            save_as_pdf(html_content)
 
 
             
