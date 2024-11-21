@@ -65,9 +65,51 @@ from streamlit_vertical_slider import vertical_slider
 from streamlit_plotly_events import plotly_events
 from streamlit_js_eval import streamlit_js_eval
 
+# 현재 스크립트 파일의 위치를 기준으로 상대 경로 설정
+current_directory = os.path.dirname(__file__)
 
-# CSV 파일에서 단어 빈도 데이터를 불러옴
-word_freq_df = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\company_word_frequencies.csv")
+# 경로 변수 정의
+survey_result_file = os.path.join(current_directory, "survey_result.csv")
+user_investment_style_file = os.path.join(current_directory, "user_investment_style.txt")
+user_interest_file = os.path.join(current_directory, "user_interest.txt")
+user_name_file = os.path.join(current_directory, "user_name.txt")
+company_colletion_file = os.path.join(current_directory, 'company_collection.csv')
+word_freq_file = os.path.join(current_directory, "company_word_frequencies.csv")
+survey_result_page = 'pages/survey_result.py'
+
+# 파일이 존재하는지 확인 후 불러오기
+if os.path.exists(survey_result_file):
+    survey_result = pd.read_csv(survey_result_file, encoding='utf-8', index_col=0)
+else:
+    # 파일이 없으면 기본값으로 빈 데이터프레임 생성
+    survey_result = pd.DataFrame()
+
+company_colletion = pd.read_csv(company_colletion_file, encoding='utf-8', index_col=0)
+company_colletion.columns = company_colletion.columns.astype(str).str.strip()
+company_colletion.reset_index(inplace=True)
+
+if os.path.exists(user_investment_style_file):
+    with open(user_investment_style_file, 'r', encoding='utf-8') as f:
+        user_investment_style = f.read().strip()
+else:
+    user_investment_style = ''
+
+if os.path.exists(user_interest_file):
+    with open(user_interest_file, 'r', encoding='utf-8') as f:
+        user_interest = f.read().strip()
+else:
+    user_interest = ''
+
+if os.path.exists(user_name_file):
+    with open(user_name_file, 'r', encoding='utf-8') as f:
+        user_name = f.read().strip()
+else:
+    user_name = '당신'
+
+if os.path.exists(word_freq_file):
+    word_freq_df = pd.read_csv(word_freq_file)
+else:
+    word_freq_df = pd.DataFrame()
 
 st.set_page_config(
     page_title = "설문 조사 결과",
@@ -83,7 +125,7 @@ with st.sidebar:
     st.page_link('pages/recent_news.py', label='최신 뉴스',icon="🆕")
     st.page_link('pages/esg_introduce.py', label='ESG 소개 / 투자 방법', icon="🧩")
 
-os.environ['JAVA_HOME'] = 'C:\Program Files\Java\jdk-23' 
+os.environ['JAVA_HOME'] = 'C:\Program Files\Java\jdk-23'
 
 if 'ndays' not in st.session_state: 
     st.session_state['ndays'] = 100
@@ -140,19 +182,8 @@ st.markdown("""
     </style>
     """,unsafe_allow_html=True)
 
-survey_result = pd.read_csv(r"C:\esgpage\LLM.ESG.POS\interface\survey_result.csv", encoding='utf-8', index_col=0)
-with open(r"C:\esgpage\LLM.ESG.POS\interface\user_investment_style.txt", 'r', encoding='utf-8') as f:
-    user_investment_style = f.read().strip()
-
-with open(r"C:\esgpage\LLM.ESG.POS\interface\user_interest.txt", 'r', encoding='utf-8') as f:
-    user_interest = f.read().strip()
-
-with open(r"C:\esgpage\LLM.ESG.POS\interface\user_name.txt", 'r', encoding='utf-8') as f:
-    user_name = f.read().strip()
-
-company_list = pd.read_excel(r"C:\esgpage\LLM.ESG.POS\interface\텍스트 데이터 수집 현황 + 평가기관 점수 수집 + 기업 정보 요약.xlsx")
-
 # 전처리 함수 정의
+
 def preprocess_data(df):
     # 기존 컬럼명을 사용할 수 있도록 유효성을 확인
     df = df.copy()
@@ -193,14 +224,56 @@ def preprocess_data(df):
     else:
         raise KeyError("The expected columns 'environmental', 'social', and 'governance' are not present in the dataframe.")
 
-# step 1 : load the provided dataset
-file_path = r"C:\esgpage\LLM.ESG.POS\interface\241007_dummy_noharim.csv"
-# file_path = r"interface/241007_dummy_update.csv"
-dummy = pd.read_csv(file_path, encoding='euc-kr')
-# dummy = pd.read_csv(file_path, encoding='cp949')
-# dummy = pd.read_csv(file_path, encoding='utf-8')
-# dummy = pd.read_csv(file_path)
-df_new = preprocess_data(dummy)        
+
+# 현재 스크립트 파일의 부모 디렉터리로 이동하여 경로 설정
+current_directory = os.path.dirname(os.path.dirname(__file__))
+
+# 경로 변수 정의
+file_path = "241007_dummy_noharim.csv"  # 올바른 파일 경로로 설정
+dummy_file_path = os.path.join(current_directory, file_path)
+
+# 필요한 파일을 읽어오기
+if os.path.exists(dummy_file_path):
+    try:
+        # 시도 순서대로 다른 인코딩을 적용하여 파일을 읽기
+        try:
+            dummy = pd.read_csv(dummy_file_path, encoding='euc-kr')
+        except UnicodeDecodeError:
+            try:
+                dummy = pd.read_csv(dummy_file_path, encoding='cp949')
+            except UnicodeDecodeError:
+                dummy = pd.read_csv(dummy_file_path, encoding='utf-8')
+
+        # 파일이 제대로 읽혔는지 확인
+        print("데이터프레임 미리보기:")
+        print(dummy.head())
+        print(f"데이터프레임의 컬럼 목록: {dummy.columns.tolist()}")
+
+    except Exception as e:
+        print(f"파일 읽기 오류 발생: {e}")
+        dummy = pd.DataFrame()  # 오류 발생 시 기본값으로 빈 데이터프레임 사용
+else:
+    # 파일이 없을 경우 빈 데이터프레임 사용
+    print(f"파일이 존재하지 않습니다: {dummy_file_path}")
+    dummy = pd.DataFrame()
+
+# 데이터 전처리 단계 실행 (빈 데이터프레임이어도 오류 없이 실행될 수 있도록 설정)
+df_new = preprocess_data(dummy) if not dummy.empty else pd.DataFrame()
+
+# 데이터프레임 정보 출력 후 'industry' 열 확인
+if not df_new.empty:
+    print("전처리 후 데이터프레임 미리보기:")
+    print(df_new.head())
+    if 'industry' in df_new.columns:
+        industries = df_new['industry'].unique().tolist()
+        print(f"산업 목록: {industries}")
+    else:
+        print("전처리된 데이터프레임에 'industry' 열이 존재하지 않습니다.")
+        industries = []  # 기본값으로 빈 리스트 사용
+else:
+    print("전처리된 데이터프레임이 비어 있습니다.")
+    industries = []
+
 
 # 한국거래소 코스피 인덱스에 해당하는 종목 가져오기
 @st.cache_data
@@ -264,46 +337,6 @@ def recommend_companies(esg_weights, df):
 
     return top_companies
 
-# 포트폴리오 비중 계산 함수 with CVXOPT
-# def calculate_portfolio_weights(top_companies):
-#     tickers = top_companies['ticker'].tolist()
-#     price_data = yf.download(tickers, start="2019-01-01", end="2023-01-01")['Adj Close']
-#     price_data = price_data.dropna(axis=1, how='any')
-#     if price_data.isnull().values.any():
-#         return "일부 데이터가 누락되었습니다. 다른 기업을 선택해 주세요.", None
-
-#     # 일별 수익률 계산
-#     returns = price_data.pct_change().dropna()
-
-#     # 평균 수익률과 공분산 행렬
-#     mu = returns.mean().values
-#     Sigma = returns.cov().values
-
-#     # `cvxopt`에서 사용할 행렬 형식으로 변환
-#     n = len(mu)
-#     P = matrix(Sigma)
-#     q = matrix(np.zeros(n))
-#     G = matrix(-np.eye(n))
-#     h = matrix(np.zeros(n))
-#     A = matrix(1.0, (1, n))
-#     b = matrix(1.0)
-
-#     # 쿼드라틱 프로그래밍 솔버 실행
-#     sol = solvers.qp(P, q, G, h, A, b)
-
-#     # 최적 가중치 추출
-#     weights = np.array(sol['x']).flatten()
-
-#     # 포트폴리오 성과 지표 계산
-#     expected_return = np.dot(weights, mu)
-#     expected_volatility = np.sqrt(np.dot(weights.T, np.dot(Sigma, weights)))
-#     sharpe_ratio = expected_return / expected_volatility
-
-#     # 가중치 정리
-#     cleaned_weights = dict(zip(tickers, weights))
-
-#     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
-
 
 st.markdown("""
             <style>
@@ -326,7 +359,7 @@ header = f"""
                 font-size: 30px;
                 word-spacing: 3px;
                 font-weight: bold;
-                color: black;
+                color: #999999;
                 padding: 10px;
                 font-family: Pretendard;
             }}
@@ -349,6 +382,12 @@ from pypfopt import BlackLittermanModel, expected_returns, risk_models, Covarian
 # 수정된 포트폴리오 비중 계산 함수 with Black-Litterman 및 공분산 행렬 축소
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
+<<<<<<< HEAD
+=======
+# 블랙리터만 모델 적용 함수
+
+
+>>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     # 데이터 수집 및 전처리
     tickers = df['ticker'].tolist()
@@ -376,11 +415,15 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
 
     # 사용자 투자 스타일에 따른 ESG 가중치 설정
     if user_investment_style == "재무적인 요소를 중심적으로 고려한다.":
-        esg_weight_factor = 0.5
+        esg_weight_factor = 10.0
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
-        esg_weight_factor = 1.0
+        esg_weight_factor = 20.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
+<<<<<<< HEAD
         esg_weight_factor = 2.5
+=======
+        esg_weight_factor = 100.0
+>>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
     else:
         esg_weight_factor = 1.0  # 기본값 설정
 
@@ -428,6 +471,7 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
 
     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
 
+<<<<<<< HEAD
 # 최종 가중치를 optimized_weights로 적용
 def calculate_adjusted_weights(df, optimized_weights, esg_weights,performance_metrics):
     environmental_scores = df['environmental']
@@ -488,6 +532,8 @@ def calculate_adjusted_weights(df, optimized_weights, esg_weights,performance_me
 # 개선된 코드에서는 사용자의 ESG 선호도가 시장 균형 수익률에 직접 반영되므로,
 # 최적화 과정에서 사용자의 ESG 선호가 명확히 드러나도록 합니다.
 # ------
+=======
+>>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
 
 def display_text_on_hover(hover_text, i, origin_text):
     # 각 텍스트 호버 영역에 고유한 클래스 이름을 생성
@@ -535,7 +581,7 @@ def display_text_on_hover(hover_text, i, origin_text):
     # origin_text의 스타일을 수정하여 HTML 정의
     text_hover = f'''
         <div class="{hover_class}">
-            <a href="#hover_text" style="color: black; font-family: Pretendard; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
+            <a href="#hover_text" style="color: #999999; font-family: Pretendard; font-size: 20px; text-align: center; text-decoration: none;font-weight:bold;">{origin_text}&ensp;&ensp;</a>
             <div class="{tooltip_class}"></div>
             <div class="{text_popup_class}">{hover_text}</div>
         </div>
@@ -579,15 +625,16 @@ with col1:
                         font-family: Pretendard;
                     }
                     p{
+                        text-color: #999999;
                         font-family: Pretendard;
                     }
                 </style>
                 </head>
     """, unsafe_allow_html=True)
-    
+
     today = datetime.today().date()
     yesterday = today - timedelta(days=1)
-    
+
     kospi, kosdaq = st.columns(2)
     kospi_data = fdr.DataReader('KS11', yesterday, today)
     kosdaq_data = fdr.DataReader('KQ11', yesterday, today)
@@ -599,7 +646,7 @@ with col1:
             # 등락률 계산
             change = today_kospi - yesterday_kospi
             change_percent = (change / yesterday_kospi) * 100
-            
+
             # Streamlit metric으로 출력
             st.metric(label="오늘의 코스피 지수", value=round(today_kospi, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
 
@@ -607,15 +654,15 @@ with col1:
         if not kosdaq_data.empty:
             yesterday_kosdaq = kosdaq_data.iloc[0]['Close']
             today_kosdaq = kosdaq_data.iloc[-1]['Close']
-            
+
             # 등락률 계산
             change = today_kosdaq - yesterday_kosdaq
             change_percent = (change / yesterday_kosdaq) * 100
-            
+
             # Streamlit metric으로 출력
             st.metric(label="오늘의 코스닥 지수", value=round(today_kosdaq, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
-    
-    
+
+
     sl1, sl2, sl3= st.columns(3)
     with sl1:
         origin_e = survey_result.loc['E'].sum() * 10 / 4.99
@@ -625,9 +672,9 @@ with col1:
             key = "environmental" ,
             height = 270,
             step = 0.1,
-            default_value=survey_result.loc['E'].sum() * 10 / 4.99,#Optional - Defaults to 0
-            min_value= 0.0, # Defaults to 0
-            max_value= 10.0, # Defaults to 10
+            default_value=survey_result.loc['E'].sum() * 1/ 4.99,#Optional - Defaults to 0
+            min_value= 0.01, # Defaults to 0
+            max_value= 1.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
             thumb_color = "#FF9933",
@@ -640,9 +687,9 @@ with col1:
             key = "social" ,
             height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
-            default_value=survey_result.loc['S'].sum() *10/4.79,#Optional - Defaults to 0
-            min_value= 0.0, # Defaults to 0
-            max_value= 10.0, # Defaults to 10
+            default_value=survey_result.loc['S'].sum() *1/4.79,#Optional - Defaults to 0
+            min_value= 0.01, # Defaults to 0
+            max_value= 1.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
             thumb_color = "#FF9933",
@@ -655,9 +702,9 @@ with col1:
             key = "governance" ,
             height = 270, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
-            default_value=survey_result.loc['G'].sum()*10/4.16,
-            min_value= 0.0, # Defaults to 0
-            max_value= 10.0, # Defaults to 10
+            default_value=survey_result.loc['G'].sum()*1/4.16,
+            min_value= 0.01, # Defaults to 0
+            max_value= 1.0, # Defaults to 10
             track_color = "#f0f0f0", #Optional - Defaults to #D3D3D3
             slider_color = '#006699', #Optional - Defaults to #29B5E8
             thumb_color = "#FF9933",
@@ -742,7 +789,7 @@ with col2:
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
 
 with col3:
-    company_list['종목코드'] = company_list['종목코드'].str[1:]
+    company_colletion['ticker'] = company_colletion['ticker'].str[1:]
     top_companies['ticker'] = top_companies['ticker'].str.replace('.KS', '')
 
     expected_return = portfolio_performance[0]
@@ -753,7 +800,7 @@ with col3:
         if condition.any():
             top_companies.loc[top_companies['Company'] == company, ['environmental', 'social', 'governance']] = dummy.loc[condition, ['environmental', 'social', 'governance']].values
     top5_companies = top_companies.nlargest(5, 'Weight')
-    filtered_companies = pd.merge(company_list, top5_companies, left_on='종목코드', right_on='ticker')
+    filtered_companies = pd.merge(company_colletion, top5_companies, left_on='ticker', right_on='ticker')
     filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
     filtered_companies = filtered_companies.rename(columns={
         'Company': '종목명',
@@ -791,7 +838,7 @@ with col3:
             font-family: Pretendard;
         }}
         th {{
-            background-color: #f2f2f2;
+            text-color:#666666;
         }}
         </style>
     </style>
@@ -837,17 +884,24 @@ with col3:
         if check:
             screenshot = ImageGrab.grab(bbox=(400,420,790,830))
             screenshot.save("pie_chart_capture.png")
-        
+
+    # 현재 스크립트 파일의 디렉토리 경로를 기준으로 상대 경로 설정
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    image_file_path = os.path.join(current_directory, "pie_chart_capture.png")
+
+
+    # HTML 생성 함수
     def generate_html():
-        filtered_companies = pd.merge(company_list, top_companies, left_on='종목코드', right_on='ticker')
-        filtered_companies = filtered_companies[['Company','Weight','environmental','social','governance','종목설명']]
+        # 데이터프레임 필터링 및 컬럼 이름 변경
+        filtered_companies = pd.merge(company_colletion, top_companies, left_on='ticker', right_on='ticker')
+        filtered_companies = filtered_companies[['Company', 'Weight', 'environmental', 'social', 'governance', '종목설명']]
         filtered_companies = filtered_companies.rename(columns={
             'Company': '종목명',
             'Weight': '제안 비중',
             'environmental': 'E',
             'social': 'S',
             'governance': 'G',
-            '종목설명' :'종목 소개'
+            '종목설명': '종목 소개'
         })
         filtered_companies = filtered_companies.sort_values(by='제안 비중', ascending=False)
 
@@ -898,7 +952,7 @@ with col3:
             </style>
         </head>
         <body>
-            <h1>{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
+            <h1 style="color: #666666;">{user_name}을 위한 ESG 중심 포트폴리오 제안서</h1>
             <p>다음은 {user_name}의 ESG 선호도를 바탕으로 최적화된 포트폴리오 비중입니다.</p>
             <div class="block">
                 <div class="box">
@@ -944,7 +998,11 @@ with col3:
                     <tr>
                         <th rowspan='2'>종목</th>
                         <th rowspan='2'>제안 비중</th>
+<<<<<<< HEAD
                         <th colspan="3">ESG Score<br>(2023)</th>
+=======
+                        <th colspan="3">2023 ESG 점수</th>
+>>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
                         <th rowspan='2'>종목 소개</th>
                     </tr>
                     <tr>

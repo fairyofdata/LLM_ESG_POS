@@ -1,19 +1,4 @@
 Company,Year,average_label,industry,environmental,social,governance,ticker
-Sample(E),2019,9,Sample,90,50,50,069500.KS
-Sample(E),2020,9,Sample,90,50,50,069500.KS
-Sample(E),2021,9,Sample,90,50,50,069500.KS
-Sample(E),2022,9,Sample,90,50,50,069500.KS
-Sample(E),2023,9,Sample,90,50,50,069500.KS
-Sample(S),2019,9,Sample,50,90,50,102110.KS
-Sample(S),2020,9,Sample,50,90,50,102110.KS
-Sample(S),2021,9,Sample,50,90,50,102110.KS
-Sample(S),2022,9,Sample,50,90,50,102110.KS
-Sample(S),2023,9,Sample,50,90,50,102110.KS
-Sample(G),2019,9,Sample,50,50,90,148020.KS
-Sample(G),2020,9,Sample,50,50,90,148020.KS
-Sample(G),2021,9,Sample,50,50,90,148020.KS
-Sample(G),2022,9,Sample,50,50,90,148020.KS
-Sample(G),2023,9,Sample,50,50,90,148020.KS
 GS리테일,2019,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
 GS리테일,2020,2.724116731,Retail & Consumer Goods,76,88,70,007070.KS
 GS리테일,2021,5.627671594,Retail & Consumer Goods,68,51,86,007070.KS
@@ -39,10 +24,10 @@ LG디스플레이,2020,1.213283626,Electronics & IT,80,90,79,034220.KS
 LG디스플레이,2021,3.257333458,Electronics & IT,82,76,92,034220.KS
 LG디스플레이,2022,1.213283626,Electronics & IT,80,90,79,034220.KS
 LG디스플레이,2023,4.452919468,Electronics & IT,52,94,68,034220.KS
-LG생활건강,2019,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
-LG생활건강,2020,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
-LG생활건강,2021,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
-LG생활건강,2022,4.287893026,Retail & Consumer Goods,92,50,78,051900.KS
+LG생활건강,2019,3.861003581,Retail & Consumer Goods,70,94,67,051900.KS
+LG생활건강,2020,3.861003581,Retail & Consumer Goods,70,94,67,051900.KS
+LG생활건강,2021,3.861003581,Retail & Consumer Goods,70,94,67,051900.KS
+LG생활건강,2022,4.287893026,Retail & Consumer Goods,92,94,78,051900.KS
 LG생활건강,2023,3.861003581,Retail & Consumer Goods,70,52,67,051900.KS
 LG에너지솔루션,2019,-0.371838647,Energy & Chemicals,55,58,76,373220.KS
 LG에너지솔루션,2020,3.441395883,Energy & Chemicals,68,80,85,373220.KS
