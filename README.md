@@ -6,9 +6,9 @@ This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service
 
 ## About 
 **KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
-- **Adviser**: 조민수 교수 (Department of Information Convergence at KWU)
-- **Affiliated company**: 빌리언스랩 (표수진 박사)
-- **Contributer**: Team KWargs (백지헌(PM), 김나연, 장한재)
+- **Adviser**: Professor Cho Min-soo (Department of Information Convergence at Kwangwoon Univ.)
+- **Applied company**: Billions Lab (Dr. Soo-jin Pyo)
+- **Contributor**: Team KWargs (Baek Ji-heon (PM), Kim Na-yeon, Jang Han-jae)
 
 ## Project Introduce focused on UI/UX
 **If you want to watch UI/UX introducing Video, Click the below ![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white) video Thumbnail.**
