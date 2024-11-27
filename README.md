@@ -1,3 +1,6 @@
+**🌐 Available Versions:**  
+[🇰🇷 한국어 (Korean)](https://github.com/fairyofdata/LLM_ESG_POS/blob/master/README_KR.md) | [🇯🇵 日本語 (Japanese)](https://github.com/fairyofdata/LLM_ESG_POS/blob/master/README_JP.md)  
+
 # LLM-based ESG-Focused Portfolio Optimization Service📊🌱
 This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
 
