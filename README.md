@@ -1,14 +1,13 @@
-**🌐 Available Versions:**  
-[🇰🇷 한국어 (Korean)](https://github.com/fairyofdata/LLM_ESG_POS/blob/master/README_KR.md) | [🇯🇵 日本語 (Japanese)](https://github.com/fairyofdata/LLM_ESG_POS/blob/master/README_JP.md)  
+**🌐 Available Versions:**  [🇰🇷 한국어 (Korean)](/README_KR.md) | [🇯🇵 日本語 (Japanese)](/README_JP.md)  
+
+---
 
 # LLM-based ESG-Focused Portfolio Optimization Service📊🌱
-This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
 
-## About 
-**KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
-- **Adviser**: Professor Cho Min-soo (Department of Information Convergence at Kwangwoon Univ.)
-- **Applied company**: Billions Lab (Dr. Soo-jin Pyo)
-- **Contributor**: Team KWargs (Baek Ji-heon (PM), Kim Na-yeon, Jang Han-jae)
+> 🏆🥈Excellence Award (2nd place) at the 8th Industry-Academia Software Project Exhibition of Kwangwoon University </br>
+> 🏆🥈Excellence Award (2nd place) at the 2024 Graduation Exhibition of Kwangwoon University College of AI Convergence
+
+This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
 
 ## Project Introduce focused on UI/UX
 **If you want to watch UI/UX introducing Video, Click the below ![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white) video Thumbnail.**
@@ -101,3 +100,9 @@ In recent years, ESG has become a critical metric for assessing a company's long
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## About 
+**KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
+- **Adviser**: Professor Cho Min-soo (Department of Information Convergence at Kwangwoon Univ.)
+- **Applied company**: Billions Lab (Dr. Soo-jin Pyo)
+- **Contributor**: Team KWargs (Baek Ji-heon (PM), Kim Na-yeon, Jang Han-jae)
