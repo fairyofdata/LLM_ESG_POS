@@ -1,4 +1,4 @@
-**🌐 Available Versions:**  [🇰🇷 英語(English)](/README.md) | [🇯🇵 韓国語(Korean)](/README_KR.md)  
+**🌐 Available Versions:**  [🇰🇷 英語(English)](/README.md) | [🇯🇵 한국어(Korean)](/README_KR.md)  
 
 ---
 
