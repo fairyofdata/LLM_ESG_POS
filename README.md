@@ -4,8 +4,8 @@
 
 # LLM-based ESG-Focused Portfolio Optimization Service📊🌱
 
-> 🏆🥈Excellence Award (2nd place) at the 8th Industry-Academia Software Project Exhibition of Kwangwoon University </br>
-> 🏆🥈Excellence Award (2nd place) at the 2024 Graduation Exhibition of Kwangwoon University College of AI Convergence
+> 🏆🥈Excellence Award(2nd) at the 8th Industry-Academia Software Project Exhibition of Kwangwoon University </br>
+> 🏆🥈Excellence Award(2nd) at the 2024 Graduation Exhibition of Kwangwoon University College of AI Convergence
 
 This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
 
