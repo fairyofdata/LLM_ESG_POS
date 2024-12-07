@@ -55,7 +55,13 @@ st.markdown('''
             </div>
             ''',unsafe_allow_html=True)
 _,start_page,_ = st.columns([1,2,1])
-
+# div[data-testid="stApp"]{
+#                             background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
+#                         }
+#                         header[data-testid="stHeader"]{
+#                             background-color: #b2ddf7;
+#                             padding-left:80px;
+#                         }
 with start_page:
     st.markdown("""
                 <!DOCTYPE html>
@@ -69,15 +75,8 @@ with start_page:
                             font-family: Pretendard;
                             text-color: #555555;
                         }
-                        div[data-testid="stApp"]{
-                            background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
-                        }
-                        header[data-testid="stHeader"]{
-                            background-color: #b2ddf7;
-                            padding-left:80px;
-                        }
                         header[data-testid="stHeader"]::after {
-                            content: "Kwargs";
+                            content: "\\00a0\\00a0Kwargs";
                             font-family: Pretendard;
                             display: block;
                             font-size: 30px;
@@ -87,7 +86,7 @@ with start_page:
                             padding: 10px;
                         }
                         button[data-testid="baseButton-secondary"]{
-                            background-color: #666666;
+                            background-color:#BBBBBB;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
@@ -99,7 +98,7 @@ with start_page:
                             max-width: 800px;
                             margin: auto;
                             padding: 20px;
-                            background-color: #888888;
+                            background-color: #BBBBBB;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }

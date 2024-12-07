@@ -94,7 +94,6 @@ with st.sidebar:
     st.page_link('pages/recent_news.py', label='최신 뉴스',icon="🆕")
     st.page_link('pages/esg_introduce.py', label='ESG 소개 / 투자 방법', icon="🧩")
     
-<<<<<<< HEAD
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>', unsafe_allow_html=True)
 # st.markdown('''
@@ -105,10 +104,10 @@ st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;pa
 #             </style>
 #             }}
             # ''',unsafe_allow_html=True)
-=======
+
 #st.markdown('<style>div.row-widget.stRadio > div{display: flex; justify-content: center; color: #55FF00; align-items: center;} </style>', unsafe_allow_html=True)
 st.markdown('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-right:2px;}</style>', unsafe_allow_html=True)
->>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
+
 values = {'msci': 0, 'iss': 0, 'sustain': 0, 'sandp': 0, 'esg1': 0}
 
 def evaluate_care_level(response):
@@ -130,12 +129,8 @@ with st.form('usersurvey',clear_on_submit=False):
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
                     <style>
-                        div.row-widget.stRadio > div{display: flex; justify-content: center; background-color: #00FF00; align-items: center;}
-                        div[data-testid="stForm"]{
-                            background-color:#555555;
-                            }
+                        div.row-widget.stRadio > div{display: flex; justify-content: center;align-items: center;border-radius: 10px;}
                         div[class="question"]{
-                            background-color:#666666;
                             margin: auto; 
                             padding: 40px; 
                             border-radius: 10px; 
@@ -148,34 +143,23 @@ with st.form('usersurvey',clear_on_submit=False):
                         div[class="st-ay st-az st-b0 st-b1 st-b2 st-b3 st-b4 st-ae st-b5 st-b6 st-b7 st-b8 st-b9 st-ba st-bb st-bc st-bd st-be st-bf st-bg"] {
                             transform: scale(2.5);
                             margin-right: 10px;
-                            background-color:#070B19;
                         }
                         div[class="st-ay st-c1 st-b0 st-b1 st-b2 st-b3 st-b4 st-ae st-b5 st-b6 st-b7 st-b8 st-b9 st-ba st-bb st-bc st-bd st-be st-bf st-bg"]{
                             transform: scale(1.5);
                             margin-right: 10px;
-                            background-color:#070B19;
                         }
                         button[data-testid="baseButton-secondaryFormSubmit"]{
+                            background-color: #AAAAAA;
                             border-radius: 10px; 
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
                         p{
                             font-family: Pretendard;
                         }
-                        
                     </style>
                 </head>
                 ''',unsafe_allow_html=True)
 
-    st.markdown(
-        """
-        <style>
-        
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    
     st.markdown('<div class="question" style="font-size:20px;text-align:center;font-family: Pretendard;font-weight: bold;">1. 투자할 때 기업이 탄소 배출이나 오염물질 관리 등 자연을 보호하는 데 신경 쓰는지 고려하시나요?</div>', unsafe_allow_html=True)
     q1 = st.radio('', options=('신경 쓴다.','보통이다.','신경 쓰지 않는다.'))
     st.write('')
