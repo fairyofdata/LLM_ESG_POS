@@ -150,6 +150,9 @@ if 'clicked_points' not in st.session_state:
     
 if 'sliders' not in st.session_state:
     st.session_state['sliders'] = {}
+    
+if 'selected_companies' not in st.session_state:
+    st.session_state['selected_companies'] = []
 
 for key in ['environmental', 'social', 'governance']:
     if key not in st.session_state['sliders']:
@@ -382,12 +385,7 @@ from pypfopt import BlackLittermanModel, expected_returns, risk_models, Covarian
 # 수정된 포트폴리오 비중 계산 함수 with Black-Litterman 및 공분산 행렬 축소
 # 기존 방식: 사용자의 ESG 선호도가 시장 수익률과 별개로 반영되어 최적화 과정에서 영향력이 미비함
 # 개선 방식: ESG 선호도를 반영하여 시장 균형 수익률 자체를 조정하고, 이를 최적화에 반영
-<<<<<<< HEAD
-=======
 # 블랙리터만 모델 적용 함수
-
-
->>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
 def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     # 데이터 수집 및 전처리
     tickers = df['ticker'].tolist()
@@ -419,11 +417,8 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
     elif user_investment_style == "ESG와 재무적인 요소를 모두 고려한다.":
         esg_weight_factor = 20.0
     elif user_investment_style == "ESG 요소를 중심적으로 고려한다.":
-<<<<<<< HEAD
-        esg_weight_factor = 2.5
-=======
+        # esg_weight_factor = 2.5
         esg_weight_factor = 100.0
->>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
     else:
         esg_weight_factor = 1.0  # 기본값 설정
 
@@ -471,7 +466,6 @@ def calculate_portfolio_weights(df, esg_weights, user_investment_style):
 
     return cleaned_weights, (expected_return, expected_volatility, sharpe_ratio)
 
-<<<<<<< HEAD
 # 최종 가중치를 optimized_weights로 적용
 def calculate_adjusted_weights(df, optimized_weights, esg_weights,performance_metrics):
     environmental_scores = df['environmental']
@@ -531,10 +525,6 @@ def calculate_adjusted_weights(df, optimized_weights, esg_weights,performance_me
 # 결과 출력
 # 개선된 코드에서는 사용자의 ESG 선호도가 시장 균형 수익률에 직접 반영되므로,
 # 최적화 과정에서 사용자의 ESG 선호가 명확히 드러나도록 합니다.
-# ------
-=======
->>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
-
 def display_text_on_hover(hover_text, i, origin_text):
     # 각 텍스트 호버 영역에 고유한 클래스 이름을 생성
     hover_class = f'hoverable_{i}'
@@ -662,15 +652,14 @@ with col1:
             # Streamlit metric으로 출력
             st.metric(label="오늘의 코스닥 지수", value=round(today_kosdaq, 2), delta=f"{round(change_percent, 2)}%",delta_color="inverse")
 
-
     sl1, sl2, sl3= st.columns(3)
     with sl1:
         origin_e = survey_result.loc['E'].sum() * 10 / 4.99
-        display_text_on_hover('탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책',1,'&emsp;E')
+        display_text_on_hover('-탄소 관리<br>-폐기물 관리<br>-기후 변화 전략',1,'&emsp;E')
         e_value = vertical_slider(
             label = "환경",
             key = "environmental" ,
-            height = 270,
+            height = 195,
             step = 0.1,
             default_value=survey_result.loc['E'].sum() * 1/ 4.99,#Optional - Defaults to 0
             min_value= 0.01, # Defaults to 0
@@ -681,11 +670,11 @@ with col1:
             value_always_visible = True ,#Optional - Defaults to False
         )
     with sl2:
-        display_text_on_hover('탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책',1,'&emsp;S')
+        display_text_on_hover('-사회적 기회<br>-지역사회 관계<br>-인적 자원',1,'&emsp;S')
         s_value = vertical_slider(
             label = "사회",  #Optional
             key = "social" ,
-            height = 270, #Optional - Defaults to 300
+            height = 195, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['S'].sum() *1/4.79,#Optional - Defaults to 0
             min_value= 0.01, # Defaults to 0
@@ -696,11 +685,11 @@ with col1:
             value_always_visible = True ,#Optional - Defaults to False
         )
     with sl3:
-        display_text_on_hover('탄소 관리, 오염물질 및 폐기물 관리, 기후 변화 전략 등과 관련된 정책',1,'&emsp;G')
+        display_text_on_hover('-주주권 보호<br>-기업이사회운영<br>',1,'&emsp;G')
         g_value = vertical_slider(
             label = "지배구조",  #Optional
             key = "governance" ,
-            height = 270, #Optional - Defaults to 300
+            height = 195, #Optional - Defaults to 300
             step = 0.1, #Optional - Defaults to 1
             default_value=survey_result.loc['G'].sum()*1/4.16,
             min_value= 0.01, # Defaults to 0
@@ -710,7 +699,32 @@ with col1:
             thumb_color = "#FF9933",
             value_always_visible = True ,#Optional - Defaults to False
         )
+    # 사용자의 ESG 선호도
+    esg_weights = {'environmental': e_value, 'social': s_value, 'governance': g_value}            
+    # 블랙리터만 적용 버전
+    industries = df_new['industry'].unique().tolist()
+    processed_df = df_new[df_new['industry'].isin(industries)].copy()
+    portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights, user_investment_style)
+    # portfolio_weights, portfolio_performance = calculate_adjusted_weights(processed_df, portfolio_weights, esg_weights,portfolio_performance)
+    # portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights,user_investment_style) # cleaned_weights:각 자산에 할당된 최적의 투자 비율, performance:최적화된 포트폴리오의 성과 지표
+    top_companies = df_new[df_new['ticker'].isin(portfolio_weights)].copy()
+    # ticker 열과 portfolio_weights를 매핑하여 새로운 top_companies 데이터프레임 생성_ 블랙리터만 모델 버전
+    # portfolio_weights의 값을 'Weight' 컬럼으로 추가
+    total_weight = sum(portfolio_weights.values())
+    # total_weight =  sum(portfolio_weights.values)
+    top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
+    top_companies['Weight'] = top_companies['Weight'] * 100
+    # Weight를 기준으로 내림차순 정렬
+    top_companies = top_companies.sort_values(by='Weight', ascending=False)
+    selected_companies = st.multiselect(
+        "",
+        top_companies['Company'],
+        placeholder="제외하고 싶은 기업을 선택"
+    )
 
+    if selected_companies:
+        top_companies = top_companies[~top_companies['Company'].isin(selected_companies)]
+        
 # 사용자의 ESG 선호도
 esg_weights = {'environmental': e_value, 'social': s_value, 'governance': g_value}       
 st.write('')
@@ -719,18 +733,18 @@ st.write('')
 # top_companies = recommend_companies(esg_weights,df_new)
 
 # 블랙리터만 적용 버전
-industries = df_new['industry'].unique().tolist()
-processed_df = df_new[df_new['industry'].isin(industries)].copy()
-portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights, user_investment_style)
-# portfolio_weights, portfolio_performance = calculate_adjusted_weights(processed_df, portfolio_weights, esg_weights,portfolio_performance)
-# portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights,user_investment_style) # cleaned_weights:각 자산에 할당된 최적의 투자 비율, performance:최적화된 포트폴리오의 성과 지표
-top_companies = df_new[df_new['ticker'].isin(portfolio_weights)].copy()
-# ticker 열과 portfolio_weights를 매핑하여 새로운 top_companies 데이터프레임 생성_ 블랙리터만 모델 버전
-# portfolio_weights의 값을 'Weight' 컬럼으로 추가
-total_weight = sum(portfolio_weights.values())
-# total_weight =  sum(portfolio_weights.values)
-top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
-top_companies['Weight'] = top_companies['Weight'] * 100
+# industries = df_new['industry'].unique().tolist()
+# processed_df = df_new[df_new['industry'].isin(industries)].copy()
+# portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights, user_investment_style)
+# # portfolio_weights, portfolio_performance = calculate_adjusted_weights(processed_df, portfolio_weights, esg_weights,portfolio_performance)
+# # portfolio_weights, portfolio_performance = calculate_portfolio_weights(processed_df, esg_weights,user_investment_style) # cleaned_weights:각 자산에 할당된 최적의 투자 비율, performance:최적화된 포트폴리오의 성과 지표
+# top_companies = df_new[df_new['ticker'].isin(portfolio_weights)].copy()
+# # ticker 열과 portfolio_weights를 매핑하여 새로운 top_companies 데이터프레임 생성_ 블랙리터만 모델 버전
+# # portfolio_weights의 값을 'Weight' 컬럼으로 추가
+# total_weight = sum(portfolio_weights.values())
+# # total_weight =  sum(portfolio_weights.values)
+# top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
+# top_companies['Weight'] = top_companies['Weight'] * 100
 
 # cvxopt 적용 버전
 # portfolio_weights, portfolio_performance = calculate_portfolio_weights(top_companies)
@@ -740,6 +754,9 @@ top_companies['Weight'] = top_companies['Weight'] * 100
 # top_companies['Weight'] = top_companies['ticker'].map(portfolio_weights)
     
 with col2:
+
+    if selected_companies:
+        top_companies = top_companies[~top_companies['Company'].isin(selected_companies)]
     st.markdown(f"""<div>
                         <h2 style="font-family: Pretendard;font-size: 13px; text-align:center; text-decoration: none;">차트에서 여러분의 관심 회사 이름을 클릭하여<br>더 다양한 정보를 경험해 보세요.</h2>
                     </div>
@@ -750,8 +767,6 @@ with col2:
     # Weight 기준으로 최소 비율 이하의 회사 필터링
     # top_companies = top_companies[top_companies['Weight'] / total_weight * 100 >= 5.0]
     
-    # Weight를 기준으로 내림차순 정렬
-    top_companies = top_companies.sort_values(by='Weight', ascending=False)
     
     # 파이 차트 생성
     fig = px.pie(
@@ -787,6 +802,7 @@ with col2:
     )
 
     clicked_points = plotly_events(fig, click_event=True,key="company_click")
+    
 
 with col3:
     company_colletion['ticker'] = company_colletion['ticker'].str[1:]
@@ -882,7 +898,7 @@ with col3:
     with bt1:
         check = st.button(label="포트폴리오 확인  ➡️")
         if check:
-            screenshot = ImageGrab.grab(bbox=(400,420,790,830))
+            screenshot = ImageGrab.grab(bbox=(400, 430, 790, 840))
             screenshot.save("pie_chart_capture.png")
 
     # 현재 스크립트 파일의 디렉토리 경로를 기준으로 상대 경로 설정
@@ -998,11 +1014,7 @@ with col3:
                     <tr>
                         <th rowspan='2'>종목</th>
                         <th rowspan='2'>제안 비중</th>
-<<<<<<< HEAD
                         <th colspan="3">ESG Score<br>(2023)</th>
-=======
-                        <th colspan="3">2023 ESG 점수</th>
->>>>>>> 42102c403a0beb366c4c1fc61f4de44a6f37604c
                         <th rowspan='2'>종목 소개</th>
                     </tr>
                     <tr>
@@ -1095,7 +1107,6 @@ with col3:
 # col_1, col_2,col_3,col_4 = st.columns(4)
 col_1, col_2, col_3 = st.columns(3)
 
-#
 with col_1:
     if clicked_points:
         clicked_point = clicked_points[0]
