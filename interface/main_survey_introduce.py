@@ -55,13 +55,7 @@ st.markdown('''
             </div>
             ''',unsafe_allow_html=True)
 _,start_page,_ = st.columns([1,2,1])
-# div[data-testid="stApp"]{
-#                             background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
-#                         }
-#                         header[data-testid="stHeader"]{
-#                             background-color: #b2ddf7;
-#                             padding-left:80px;
-#                         }
+
 with start_page:
     st.markdown("""
                 <!DOCTYPE html>
@@ -75,8 +69,15 @@ with start_page:
                             font-family: Pretendard;
                             text-color: #555555;
                         }
+                        div[data-testid="stApp"]{
+                            background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
+                        }
+                        header[data-testid="stHeader"]{
+                            background-color: #b2ddf7;
+                            padding-left:80px;
+                        }
                         header[data-testid="stHeader"]::after {
-                            content: "\\00a0\\00a0Kwargs";
+                            content: "Kwargs";
                             font-family: Pretendard;
                             display: block;
                             font-size: 30px;
@@ -86,7 +87,7 @@ with start_page:
                             padding: 10px;
                         }
                         button[data-testid="baseButton-secondary"]{
-                            background-color:#BBBBBB;
+                            background-color: #666666;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
@@ -98,7 +99,7 @@ with start_page:
                             max-width: 800px;
                             margin: auto;
                             padding: 20px;
-                            background-color: #BBBBBB;
+                            background-color: #888888;
                             border-radius: 10px;
                             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                         }
@@ -133,7 +134,7 @@ with start_page:
                 </head>
                 <body>
                 <div class="container">
-                    <p style="text-align:center; text-color:#0000; font-family: Pretendard;">환영합니다!</p>
+                    <p style="text-align:center; text-color:#0000; font-family: Pretendard;">환영합니다</p>
                     <p style="font-family: Pretendard;">해당 설문은 귀하의 <strong>ESG(환경, 사회, 지배구조)</strong> 투자 관점과 가치에 대한 이해를 돕기 위해 마련되었습니다. 귀하의 선호도를 반영하여 보다 개인화된 투자 분석과 포트폴리오 제안을 제공하기 위해, 간단한 질문에 응답해 주세요.&ensp;설문 결과를 반영하여 보다 신뢰할 수 있는 투자 정보를 제공하며, 사회적 책임과 환경적 가치를 고려한 맞춤형 포트폴리오를 설계합니다.</p>
                     <h2 style="font-size:22px; text-align:center;text-color:#0000;font-family: Pretendard;">소요 시간</h2>
                     <p style="text-align:center;text-color:#0000;font-family: Pretendard;">약 <strong>3분</strong>정도 소요됩니다.</p>
