@@ -1,3 +1,7 @@
+**🌐 Available Versions:**  [🇰🇷 한국어 (Korean)](/README_KR.md) | [🇯🇵 日本語 (Japanese)](/README_JP.md)  
+
+---
+
 # LLM-based ESG-Focused Portfolio Optimization Service📊🌱
 
 > 🏆🥈Excellence Award(2nd) at the 8th Industry-Academia Software Project Exhibition of Kwangwoon University  
