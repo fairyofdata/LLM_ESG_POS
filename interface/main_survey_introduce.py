@@ -16,10 +16,10 @@ from streamlit_extras.switch_page_button import switch_page
 
 import os
 
-# 현재 스크립트 파일의 부모 디렉터리를 기준으로 상대 경로 설정
+# Set your relative path based on the parent directory of the current script file
 current_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-# 경로 변수 정의
+#Referral variable definition
 user_name_file = os.path.join(current_directory, "user_name.txt")
 survey_page = 'pages/survey_page.py'
 
@@ -46,7 +46,7 @@ font_css = """
         }}
     </style>
     """
-# Streamlit에 CSS 적용
+# Apply CSS to Streamlit
 st.markdown(font_css, unsafe_allow_html=True)
 
 st.markdown('''
@@ -55,13 +55,13 @@ st.markdown('''
             </div>
             ''',unsafe_allow_html=True)
 _,start_page,_ = st.columns([1,2,1])
-# div[data-testid="stApp"]{
-#                             background-image: linear-gradient(rgb(178,221,247),rgb(231,246,255))
-#                         }
-#                         header[data-testid="stHeader"]{
-#                             background-color: #b2ddf7;
-#                             padding-left:80px;
-#                         }
+# DIV [Data-TestID = "StapP"] {
+# Background-IMAGE: Linear-Gradient (RGB (178,221,247), RGB (231,246,255))
+#}
+# Header [Data-TestID = "StHeader"] {
+# BACKGROUND-COLOR: # B2DDF7;
+# Padding-Left: 80px;
+#}
 with start_page:
     st.markdown("""
                 <!DOCTYPE html>
@@ -147,7 +147,7 @@ with start_page:
     _,start_button,_ = st.columns(3)
 
 
-    # 버튼 클릭 시 처리
+    #Hicing when clicking the button
     with start_button:
         switch_page = st.button("설문 시작하기")
         if switch_page:
