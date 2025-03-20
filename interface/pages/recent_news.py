@@ -54,7 +54,7 @@ st.set_page_config(
         initial_sidebar_state="collapsed",
     )
 
-# 크롤링  필요한 함수 정의
+# Crawling required function definition
 def setup_webdriver():
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -63,14 +63,14 @@ def setup_webdriver():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     
-    # 서비스 객체를 사용하여 드라이버 초기화
+    # Initialize the driver using the service object
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     driver.implicitly_wait(3)
     
     return driver
 
-# URL 생성 함수 정의
+# URL creation function definition
 def makePgNum(num):
     return 1 + 10 * (num - 1)
 
@@ -79,7 +79,7 @@ def makeUrl(search, page):
     url = f"https://search.naver.com/search.naver?where=news&sm=tab_pge&query={search}&start={page_num}"
     return url
 
-# 뉴스 크롤링 함수 추가
+# Add news crawling function
 def crawl_naver_news(search):
     driver = setup_webdriver()
 
@@ -143,7 +143,7 @@ st.markdown('''
 st.markdown('''
             <h1 style="font-size:15px;text-align:center;">궁금한 키워드를 검색해보세요.</h1>
             ''', unsafe_allow_html=True)
-# 버튼 클릭 시 크롤링 시작
+# Start crawling when clicking the button
 
 search = st.text_input(" ")
 _,col,_ = st.columns([5,1,5])
@@ -154,7 +154,7 @@ if search_button:
         st.markdown(f'''<p style="text-align:center;font-size:17px;">{search}관련 기사를 검색 중입니다...</p>''',unsafe_allow_html=True)
         news_list = crawl_naver_news(search)
         if news_list:
-            # st.write(f"수집된 기사 수: {len(news_list)}개")
+            # St.write (F "Number of Knights collected: {LEN (News_list)} dog")
             for title, link in news_list:
                 st.markdown(f"- [{title}]({link})")
         else:
