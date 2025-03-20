@@ -95,8 +95,7 @@
 4. **ポートフォリオ結果の表示**: 期待リターンとボラティリティを含むポートフォリオ構成とパフォーマンス指標を確認します。
 
 ## プロジェクト構造
-![構造図](https://github.com/fairyofdata/LLM.ESG.POS/blob/master/%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%84%B1%EB%8F%84.drawio.png)
-
+![Structrue](LEPOS_Structrue.png)
 ```plaintext
 ├── data/                   # データおよびESGスコアテーブル
 ├── src/                    # ESGスコアリングとポートフォリオ最適化のためのソースコード
