@@ -159,18 +159,6 @@ for key in ['environmental', 'social', 'governance']:
     if key not in st.session_state['sliders']:
         st.session_state['sliders'][key] = 0
 
-# MongoDB connection settings (leagcy)
-# load_dotenv()
-# client = MongoClient(os.getenv("mongodb_url"))
-# db = client['kwargs']
-# collection = db['kwargs']
-
-# # MongoDB connection
-# connection_string = "mongodb+srv://kwargs:57qBBuXYQel4W6oV@kwargsai.5yhiymt.mongodb.net/?retryWrites=true&w=majority&appName=kwargsai" #mongodb_url  # MongoDB connection string
-# client = MongoClient(connection_string)
-# db = client['kwargsai']
-# collection = db['test_collection']
-
 st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>',
          unsafe_allow_html=True)
 st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;}</style>',
