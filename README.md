@@ -1,164 +1,163 @@
-**🌐 Available Versions:**  [🇰🇷 한국어 (Korean)](/README_KR.md) | [🇯🇵 日本語 (Japanese)](/README_JP.md)  
+**🌐 Available Versions:** [🇰🇷 한국어 (Korean)](/README_KR.md) | [🇯🇵 日本語 (Japanese)](/README_JP.md)
 
 ---
 
-# LLM-based ESG-Focused Portfolio Optimization Service📊🌱
+# LEPOS: LLM-based ESG-Focused Portfolio Optimization Service 📊🌱
 
-> 🏆🥈Excellence Award(2nd) at the 8th Industry-Academia Software Project Exhibition of Kwangwoon University  
-> 🏆🥈Excellence Award(2nd) at the 2024 Graduation Exhibition of Kwangwoon University College of AI Convergence
+> 🏆🥈 Excellence Award (2nd) — 8th Industry-Academia SW Project Exhibition, Kwangwoon University
+> 🏆🥈 Excellence Award (2nd) — 2024 Graduation Exhibition, Kwangwoon University College of SW Convergence
 
-![Status](https://img.shields.io/badge/status-active-success)
-![Release](https://img.shields.io/badge/release-v2.0-blue)
-![Python](https://img.shields.io/badge/python-3.8+-blue)
+![Python](https://img.shields.io/badge/python-3.11+-blue)
+![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![Tests](https://img.shields.io/badge/tests-pytest-brightgreen)
 
-This repository hosts the **LLM-based ESG-Focused Portfolio Optimization Service** project. By integrating ESG (Environmental, Social, Governance) criteria and advanced portfolio optimization techniques, this service provides users with a personalized ESG-driven investment portfolio. Using a large language model (LLM) to process and evaluate text data, the service enables investors to assess companies' ESG scores and generate optimized portfolios based on their preferences.
+LEPOS evaluates the ESG (Environmental / Social / Governance) profile of Korean listed
+companies **directly from news text using LLMs and fine-tuned Korean language models**,
+then builds a **personalized portfolio** with a Black-Litterman optimizer that treats
+the user's ESG preferences as investor views.
 
-## Project Introduce focused on UI/UX
-**If you want to watch UI/UX introducing Video, Click the below ![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white) video Thumbnail.**
+Traditional ESG ratings are opaque, disagree across agencies, and cover only large
+companies. LEPOS addresses all three: the scoring pipeline is fully transparent, it
+learns the rating behaviour of five agencies (MSCI, S&P, Sustainalytics, ISS, KCGS),
+and — because it needs only text — it can score companies that no agency covers.
 
-(Sorry but please right-click the Thumbnail and select **'Open link in new tab'**, if you want keep this tab.)
+## 🎬 Demo
 
-[![영상 제목](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
+[![UI/UX Demo Video](https://img.youtube.com/vi/kHAtgLC4PJY/0.jpg)](https://www.youtube.com/watch?v=kHAtgLC4PJY)
 
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Key Features](#key-features)
-3. [Installation](#installation)
-4. [Usage](#usage)
-5. [Project Structure](#project-structure)
-6. [Technologies Used](#technologies-used)
-7. [Requirements](#requirements)
-8. [Future Extensions](#future-extensions)
-9. [New Features](#new-features-2024-update)
-10. [Version History](#version-history)
-11. [Contributing](#contributing)
-12. [Support and Feedback](#support-and-feedback)
-13. [License](#license)
-14. [About](#about)
+*(Click the thumbnail to watch the UI/UX walkthrough on YouTube.)*
 
-## Project Overview
-In recent years, ESG has become a critical metric for assessing a company's long-term sustainability and stability. However, traditional ESG evaluation methods often lack transparency and accessibility for non-expert investors. This project addresses these issues by providing a user-centered, transparent ESG evaluation system using an LLM, which performs text-based assessments and applies the Black-Litterman model for portfolio optimization. Through this, the system generates customized portfolios that balance ESG factors and financial returns according to user preferences.
+## 🔬 Research Highlights
 
-### Core Objectives
-1. **Technical Implementation**: Develop a pipeline using LLM for ESG assessment and produce an optimized portfolio.
-2. **User-Centered Service**: Provide personalized portfolio construction with ESG evaluation based on user-selected criteria and preferences.
+After the graduation exhibition, the optimization model was refined and validated in a
+follow-up backtesting study (2020–2024, annual rebalancing with year *t−1* scores —
+no look-ahead). The LLM-ESG optimized portfolio beat every benchmark **on every
+metric**:
 
-## Key Features
-1. **Text Data Collection and Processing**  
-   - Collect articles related to selected companies from various sources using `Selenium` and `BeautifulSoup`, storing the data in `MongoDB` for efficient management.
-   - Preprocess the collected data, anonymizing company names and filtering irrelevant content to ensure high data quality.
-   
-2. **LLM-based ESG Scoring**
-   - Use an LLM (via the OpenAI API) to evaluate collected articles based on ESG relevance, extracting and labeling content by ESG factors and sentiment.
-   - Fine-tune a `KoElectra` model for classification, allowing independent ESG assessments without API dependency.
+| Portfolio | 5y Cumulative Return | CAGR | Volatility | Sharpe | Max Drawdown | Calmar |
+|---|---|---|---|---|---|---|
+| KOSPI | 1.092 | 0.018 | 0.202 | 0.190 | 0.357 | 0.051 |
+| ESG ETF | 1.159 | 0.031 | 0.203 | 0.251 | 0.352 | 0.087 |
+| Equal-weighted | 1.247 | 0.046 | 0.204 | 0.323 | 0.362 | 0.128 |
+| **LEPOS (τ = 1.3)** | **1.377** | **0.068** | **0.154** | **0.503** | **0.187** | **0.362** |
 
-3. **Comprehensive ESG Evaluation**
-   - Utilize user input for adjusting weights on ESG factors (environmental, social, governance) to customize scoring.
-   - Adjust scores dynamically based on investment style preferences: financial-centered, ESG-centered, or balanced.
-   - Apply a scoring model that integrates multiple ESG rating agencies' criteria to build a comprehensive score, enabling evaluation for companies outside major agency coverage.
+➡️ Full methodology, charts, and reproducible data: [docs/research/RESEARCH.md](docs/research/RESEARCH.md)
 
-4. **Enhanced Portfolio Optimization via Black-Litterman Model**
-   - Implement year-by-year optimization approach using ESG data from multiple rating agencies (MSCI, S&P, Sustainalytics, ISS, ESG기준원).
-   - Utilize the Ledoit-Wolf method for robust covariance matrix estimation, improving numerical stability.
-   - Apply user trust weights to ESG scores, creating a personalized view vector for the Black-Litterman model.
-   - Calculate optimized portfolio weights by maximizing the Sharpe ratio through quadratic programming with `scipy.optimize`.
-   - Store and analyze yearly investment weights to track portfolio performance over time (2020-2025).
-   - Implement robust error handling for data gaps and numerical computation issues.
+## 🏗️ How It Works
 
-5. **User Interface with Streamlit**
-   - A user-friendly interface allows users to input ESG preferences and visualize optimized portfolios.
-   - Interactive sliders for ESG weights and investment styles, providing an intuitive way to construct personalized portfolios.
-   - Visualization of portfolio metrics, including expected return, volatility, and Sharpe ratio.
+![Architecture](docs/architecture.png)
 
-## Installation
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/fairyofdata/LLM-ESG-POS.git
-   cd LLM-ESG-POS
-   ```
+### 1. Text data pipeline (research, in `notebooks/`)
 
-2. **Install Required Packages**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+News articles for 68 KOSPI companies (2019–2023, **1.38M articles**) were crawled from
+Naver News, cleaned (company-name normalization & anonymization, metadata removal),
+and passed through a cascade of fine-tuned **KoELECTRA** classifiers whose labels were
+bootstrapped with the OpenAI API (GPT-3.5-turbo):
 
-3. **Run Streamlit Application**:
-   ```bash
-   streamlit run app.py
-   ```
+| Model | Task | Output | Accuracy / R² |
+|---|---|---|---|
+| A0 | Filter irrelevant articles | keep / drop | 0.69 |
+| A1 | Company relevance | relevant / not | — |
+| A2 | ESG relevance | relevant / not | 0.76 |
+| A3 | ESG sentiment | −1 / 0 / +1 | 0.73 |
+| B1 | Agency-style ESG score regression | 0.0–7.0 per agency | R² 0.69 |
+| C | E/S/G sector classification | per-pillar flags | 0.83 |
 
-## Usage
-1. **Data Collection**: Configure company tickers and data sources for article collection.
-2. **Set ESG Preferences**: Use the Streamlit UI to define weights for environmental, social, and governance factors.
-3. **Investment Style Selection**: Choose from financial-centered, ESG-centered, or balanced portfolio options.
-4. **View Portfolio Results**: See portfolio composition and performance metrics, including expected return and volatility.
+Model B1 is trained per agency (5 models) on article text plus quantitative domain
+data (emissions, board composition, financials), so it reproduces each agency's rating
+tendencies — and can score companies the agencies don't cover.
 
-## Project Structure
-![Structrue](LEPOS_Structrue.png)
-```plaintext
-├── data/                   # Data and ESG score tables
-├── src/                    # Source code for ESG scoring and portfolio optimization
-│   ├── data_processing.py   # LLM-based text processing
-│   ├── esg_scoring.py       # ESG scoring functions
-│   ├── portfolio_optimization.py  # Optimization with Black-Litterman
-│   └── ui/                  # Streamlit UI code
-├── app.py                  # Main application script
-├── README.md               # Project documentation
-└── requirements.txt        # List of dependencies
+### 2. Personalization & optimization (serving, in `src/`)
+
+1. A 15-question survey maps the user's values onto the five agencies' methodologies,
+   yielding a pillar-by-agency preference matrix (`src/scoring/survey.py`).
+2. Company E/S/G component scores + user preferences form the views (P, Q) of a
+   **Black-Litterman** model; the investment style (financial ↔ ESG centered) sets τ.
+   Covariance uses **Ledoit-Wolf shrinkage** (`src/optimization/black_litterman.py`).
+3. Weights maximize the Sharpe ratio (long-only, fully invested) and are visualized in
+   the Streamlit dashboard with per-company drill-downs (5-year ESG history, price
+   candlesticks, news word cloud) and PDF/HTML report export.
+
+## 📁 Project Structure
+
+```text
+LLM_ESG_POS/
+├── app/                     # Streamlit UI (st.navigation multipage)
+│   ├── main.py              #   entry point
+│   └── pages/               #   home, survey, portfolio dashboard, news, ESG intro
+├── src/                     # Business logic (typed, documented, UI-free)
+│   ├── config.py            #   pathlib-based paths & constants
+│   ├── data/                #   ESG table loading, market data (FinanceDataReader)
+│   ├── scoring/             #   survey scoring matrix
+│   ├── optimization/        #   Black-Litterman + max-Sharpe solver
+│   ├── collection/          #   Naver news crawler
+│   ├── visualization/       #   portfolio-weighted word cloud
+│   └── reporting/           #   HTML/PDF report export
+├── notebooks/               # Research pipeline (01 collection → 06 optimization)
+├── data/
+│   ├── processed/           # ESG score tables (2019–2023), company profiles
+│   ├── dummy/               # sample data for experimentation
+│   └── user/                # runtime state (gitignored)
+├── docs/                    # architecture, final report, presentation
+│   └── research/            # backtesting study (RESEARCH.md + data + charts)
+├── tests/                   # pytest suite (scoring / loading / optimization)
+└── requirements.txt
 ```
 
-## Technologies Used
-- **Data Processing**: Python, Pandas, NumPy
-- **Web Scraping**: Selenium, BeautifulSoup4
-- **Database**: MongoDB
-- **Machine Learning**: scikit-learn, KoElectra
-- **Portfolio Optimization**: Black-Litterman model, SciPy, cvxopt
-- **Data Visualization**: Plotly, Matplotlib
-- **UI/UX**: Streamlit
-- **LLM Integration**: OpenAI API
+## 🚀 Getting Started
 
-## Requirements
-- Python 3.8+
-- scikit-learn 1.0.0+
-- pandas 1.3.0+
-- numpy 1.20.0+
-- streamlit 1.10.0+
-- yfinance 0.1.70+
-- FinanceDataReader 0.9.0+
+```bash
+git clone https://github.com/fairyofdata/LLM_ESG_POS.git
+cd LLM_ESG_POS
+pip install -r requirements.txt
+streamlit run app/main.py
+```
 
-## Future Extensions
-1. **Expanded ESG Evaluation**: Integrate additional ESG rating sources and add real-time news updates for responsive scoring.
-2. **Scalability for Non-listed Companies**: Develop scoring mechanisms that leverage LLMs to assess startups and non-public companies.
-3. **Improved Constraints in Optimization**: Include sector-specific constraints for better portfolio diversification.
-4. **Time-Series Portfolio Analysis**: Extend the year-by-year optimization approach to provide historical performance comparisons and trend analysis.
+Then complete the survey; the dashboard downloads 5 years of KRX prices on first run
+(takes a minute) and renders your personalized portfolio.
 
-## New Features (2024 Update)
-- **Year-by-Year Portfolio Optimization**: Track investment performance across multiple years
-- **Multi-Agency ESG Data Integration**: Comprehensive scoring from five major ESG rating agencies
-- **Enhanced Stability**: Improved covariance estimation and numerical computation techniques
-- **Interactive Portfolio Visualization**: Detailed insights into portfolio composition and performance
+Run the tests with:
 
-## Version History
-- **v2.0** (March 2025): Enhanced optimization algorithm and multi-agency ESG data integration
-- **v1.0** (November 2024): Initial release with basic ESG scoring and portfolio optimization
+```bash
+pytest
+```
 
-## Contributing
-Contributions are welcome! If you'd like to improve this project, please follow these steps:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes and commit (`git commit -m 'Add amazing feature'`)
-4. Push to your branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+**Optional system dependencies** (the app degrades gracefully without them):
 
-## Support and Feedback
-If you encounter any issues or have suggestions for improvements, please submit an issue on our GitHub repository.
+| Dependency | Feature |
+|---|---|
+| [wkhtmltopdf](https://wkhtmltopdf.org/) | PDF report export (HTML export always available) |
+| Chrome / Chromium | "Recent news" live crawling page |
+| Korean font (Malgun Gothic / NanumGothic) | Word cloud rendering |
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## 📚 Documentation
 
-## About 
-**KWU 8th Industry-Academic Cooperation SW Project & AI Convergence Graduation Project**
-- **Adviser**: Professor Cho Min-soo (Department of Information Convergence at Kwangwoon Univ.)
-- **Applied company**: Billions Lab (Dr. Soo-jin Pyo)
-- **Contributor**: Team KWargs (Baek Ji-heon (PM), Kim Na-yeon, Jang Han-jae)
+- [Final project report (KR, PDF)](docs/final_report_kr.pdf) — full 28-page write-up
+- [Exhibition presentation (KR, PPTX)](docs/presentation_kr.pptx)
+- [Backtesting research](docs/research/RESEARCH.md)
+- System diagram: [docs/system_diagram_kr.png](docs/system_diagram_kr.png)
+
+## 🔭 Future Extensions
+
+1. **Coverage expansion**: extend scoring to ~1,000 companies (B2 model) including
+   startups and unlisted companies where agency ratings don't exist.
+2. **Real-time scoring**: refresh ESG scores from live news streams.
+3. **Optimization constraints**: sector caps and turnover limits.
+4. **Per-agency trust weighting**: expose the research-grade P/Q design (agency-level
+   views with user trust vector) in the app.
+
+## 👥 About
+
+**KWU 8th Industry-Academic Cooperation SW Project & College of SW Convergence Graduation Project**
+
+- **Team KWargs**: Baek Ji-heon (PM · preprocessing, NLP models A0/C, optimization),
+  Kim Na-yeon (FE · crawling pipeline, Streamlit UI), Jang Han-jae (BE · labeling
+  pipeline, NLP models A2/A3/B1)
+- **Adviser**: Prof. Cho Min-soo (Dept. of Information Convergence, Kwangwoon Univ.)
+- **Partner company**: Billions Lab (Dr. Pyo Su-jin)
+- **Software registration**: C-2024-042035
+
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
