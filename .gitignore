@@ -15,9 +15,10 @@ venv/
 .env
 *.pem
 
-# --- IDE / OS ---
+# --- IDE / OS / local tooling ---
 .idea/
 .vscode/
+.claude/
 .DS_Store
 Thumbs.db
 
