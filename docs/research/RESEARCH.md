@@ -80,6 +80,41 @@ The finding that returns keep improving while a substantial ESG tilt is applied 
 the core thesis: **incorporating text-derived ESG signals improves long-horizon,
 risk-adjusted performance** rather than sacrificing it.
 
+### 3.3 Robustness: transaction costs and ESG ablation
+
+Two follow-up checks address the most common objections to the headline result
+(reproducible via [`robustness_backtest.py`](robustness_backtest.py), which independently
+rebuilds all portfolio return series from the raw weight tables and prices in this
+directory):
+
+| | 5y Cum. Return | CAGR | Volatility | Sharpe | Max DD | Calmar |
+|---|---|---|---|---|---|---|
+| KOSPI | 1.103 | 0.020 | 0.202 | 0.201 | 0.357 | 0.057 |
+| ESG ETF | 1.173 | 0.033 | 0.203 | 0.263 | 0.352 | 0.094 |
+| Equal-weighted | 1.238 | 0.045 | 0.204 | 0.316 | 0.362 | 0.124 |
+| Financial-only max-Sharpe (no ESG, w/ costs) | **1.399** | 0.071 | 0.227 | 0.416 | 0.465 | 0.153 |
+| Optimized ESG (gross) | 1.373 | 0.067 | **0.154** | 0.499 | **0.187** | 0.359 |
+| **Optimized ESG (w/ costs)** | 1.363 | 0.065 | **0.154** | **0.489** | **0.187** | **0.350** |
+
+- **Transaction costs barely dent the result.** With realistic Korean-market costs
+  (5 bp commission per side + 18 bp securities transaction tax on sells) charged on
+  annual-rebalance turnover, the cumulative return drops by only ~1 pp and the Sharpe
+  ratio by 0.01 — the low-turnover design (one rebalance per year) makes the strategy
+  cost-robust.
+- **The ESG signal's contribution is risk reduction, not raw return.** A max-Sharpe
+  portfolio optimized on the same universe, history, and constraints but *without* ESG
+  views earns slightly more in absolute terms, yet carries ~47 % higher volatility and
+  2.5× the maximum drawdown. On risk-adjusted metrics the ESG-tilted portfolio wins
+  (Sharpe 0.49 vs 0.42, Calmar 0.35 vs 0.15).
+- The independent reproduction of the gross ESG row (1.373 / 0.154 / 0.187) matches the
+  published table in §3.1 (1.377 / 0.154 / 0.187), validating the original study's
+  return computation.
+
+**Known limitations** (acknowledged rather than hidden): the universe is today's large
+caps (survivorship bias), the window is a single 5-year period, and τ was selected
+in-sample; an out-of-sample τ protocol and multi-period windows are the natural next
+step.
+
 ## 4. Files in this directory
 
 | File | Description |
@@ -91,6 +126,7 @@ risk-adjusted performance** rather than sacrificing it.
 | `portfolio_weights_2020..2024.csv` | Final per-year optimized weight tables (τ = 1.3 run) |
 | `portfolio_daily_returns_2020_2024.csv` | Daily returns of experiment vs. benchmark portfolios |
 | `*.png` | Result charts (cumulative return, Sharpe, volatility, MDD, Calmar, τ influence) |
+| `robustness_backtest.py` | Reproduces §3.3: transaction-cost and ESG-ablation checks |
 
 The backtesting notebook is at
 [`notebooks/06_portfolio_optimization/esg_portfolio_backtest.ipynb`](../../notebooks/06_portfolio_optimization/esg_portfolio_backtest.ipynb).

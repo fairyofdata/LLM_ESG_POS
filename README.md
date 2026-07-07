@@ -10,7 +10,7 @@
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-pytest-brightgreen)
+[![tests](https://github.com/fairyofdata/LLM_ESG_POS/actions/workflows/tests.yml/badge.svg)](https://github.com/fairyofdata/LLM_ESG_POS/actions/workflows/tests.yml)
 
 LEPOS evaluates the ESG (Environmental / Social / Governance) profile of Korean listed
 companies **directly from news text using LLMs and fine-tuned Korean language models**,
@@ -28,6 +28,14 @@ and — because it needs only text — it can score companies that no agency cov
 
 *(Click the thumbnail to watch the UI/UX walkthrough on YouTube.)*
 
+**Portfolio dashboard** — E/S/G preference sliders, optimized allocation, and performance metrics:
+
+![Dashboard](docs/screenshot_dashboard.png)
+
+**Per-company drill-down** — 5-year ESG score history, price candlesticks, and a portfolio-weighted news word cloud:
+
+![Company detail](docs/screenshot_detail.png)
+
 ## 🔬 Research Highlights
 
 After the graduation exhibition, the optimization model was refined and validated in a
@@ -42,7 +50,11 @@ metric**:
 | Equal-weighted | 1.247 | 0.046 | 0.204 | 0.323 | 0.362 | 0.128 |
 | **LEPOS (τ = 1.3)** | **1.377** | **0.068** | **0.154** | **0.503** | **0.187** | **0.362** |
 
-➡️ Full methodology, charts, and reproducible data: [docs/research/RESEARCH.md](docs/research/RESEARCH.md)
+The result survives realistic Korean-market transaction costs (−1 pp cumulative), and an
+ablation against a financial-only optimizer on the same universe shows the ESG signal's
+contribution is **risk reduction**: 2.5× lower max drawdown at a higher Sharpe ratio.
+
+➡️ Full methodology, robustness checks, and reproducible data: [docs/research/RESEARCH.md](docs/research/RESEARCH.md)
 
 ## 🏗️ How It Works
 
@@ -67,6 +79,9 @@ bootstrapped with the OpenAI API (GPT-3.5-turbo):
 Model B1 is trained per agency (5 models) on article text plus quantitative domain
 data (emissions, board composition, financials), so it reproduces each agency's rating
 tendencies — and can score companies the agencies don't cover.
+
+Classifier inference can be reproduced with any of the fine-tuned checkpoints via
+[`scripts/score_text.py`](scripts/score_text.py).
 
 ### 2. Personalization & optimization (serving, in `src/`)
 
@@ -101,6 +116,7 @@ LLM_ESG_POS/
 │   └── user/                # runtime state (gitignored)
 ├── docs/                    # architecture, final report, presentation
 │   └── research/            # backtesting study (RESEARCH.md + data + charts)
+├── scripts/                 # standalone tools (e.g. KoELECTRA inference demo)
 ├── tests/                   # pytest suite (scoring / loading / optimization)
 └── requirements.txt
 ```
