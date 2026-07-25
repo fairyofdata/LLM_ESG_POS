@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- Virtual environments ---
+env/
+venv/
+.venv/
+
+# --- Secrets & local config ---
+.env
+*.pem
+
+# --- IDE / OS / local tooling ---
+.idea/
+.vscode/
+.claude/
+.DS_Store
+Thumbs.db
+
+# --- Project runtime artifacts ---
+data/raw/
+data/user/*
+!data/user/.gitkeep
+*.log
+
+# --- Local reference material (kept out of the repo intentionally) ---
+LEPOS 졸업전시회/
+LEPOS 논문자료/
+
+# --- Sensitive documents & PDFs ---
+*.pdf
+*.docx
+*.hwp
+*.xlsx
+docs/*.pdf
