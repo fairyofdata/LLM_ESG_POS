@@ -28,11 +28,7 @@ and — because it needs only text — it can score companies that no agency cov
 
 *(Click the thumbnail to watch the UI/UX walkthrough on YouTube.)*
 
-**Portfolio dashboard** — E/S/G preference sliders, optimized allocation, and performance metrics:
-
-![Dashboard](docs/screenshot_dashboard.png)
-
-**Per-company drill-down** — 5-year ESG score history, price candlesticks, and a portfolio-weighted news word cloud:
+**Per-company drill-down** (exhibition version, Dec 2024) — 5-year ESG score history, price candlesticks, and a portfolio-weighted news word cloud:
 
 ![Company detail](docs/screenshot_detail.png)
 
@@ -48,11 +44,17 @@ metric**:
 | KOSPI | 1.092 | 0.018 | 0.202 | 0.190 | 0.357 | 0.051 |
 | ESG ETF | 1.159 | 0.031 | 0.203 | 0.251 | 0.352 | 0.087 |
 | Equal-weighted | 1.247 | 0.046 | 0.204 | 0.323 | 0.362 | 0.128 |
-| **LEPOS (τ = 1.3)** | **1.377** | **0.068** | **0.154** | **0.503** | **0.187** | **0.362** |
+| **LEPOS (τ = 0.5)** | **1.373** | **0.067** | **0.154** | **0.499** | **0.187** | **0.359** |
 
-The result survives realistic Korean-market transaction costs (−1 pp cumulative), and an
-ablation against a financial-only optimizer on the same universe shows the ESG signal's
-contribution is **risk reduction**: 2.5× lower max drawdown at a higher Sharpe ratio.
+The LEPOS row is the τ = 0.5 run, whose yearly weights are included in the repository
+and whose return series is independently reproduced by
+[`robustness_backtest.py`](docs/research/robustness_backtest.py). The in-sample best
+τ = 1.3 was marginally higher (1.377 cumulative) but its weights are not published here.
+
+The table follows the study's return method (daily constant-mix, no costs). Under a
+stricter check — annual buy-and-hold with realistic Korean-market trading costs — the
+cumulative return falls to **1.319**, still above every benchmark, with ~25 % lower
+volatility and about half the maximum drawdown.
 
 ➡️ Full methodology, robustness checks, and reproducible data: [docs/research/RESEARCH.md](docs/research/RESEARCH.md)
 
