@@ -37,7 +37,7 @@ and — because it needs only text — it can score companies that no agency cov
 
 After the graduation exhibition, the optimization model was refined and validated in a
 follow-up backtesting study (2020–2024, annual rebalancing with year *t−1* scores —
-no look-ahead), later published in *Computational Economics* (2026). The LLM-ESG optimized portfolio beat every benchmark **on every
+no look-ahead). A peer-reviewed version of the study was published in *Computational Economics* (2026); the figures below are this repository's reproduction and may differ from those reported in the paper. The LLM-ESG optimized portfolio beat every benchmark **on every
 metric**:
 
 | Portfolio | 5y Cumulative Return | CAGR | Volatility | Sharpe | Max Drawdown | Calmar |
