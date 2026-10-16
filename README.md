@@ -6,6 +6,7 @@
 
 > 🏆🥈 Excellence Award (2nd) — 8th Industry-Academia SW Project Exhibition, Kwangwoon University
 > 🏆🥈 Excellence Award (2nd) — 2024 Graduation Exhibition, Kwangwoon University College of SW Convergence
+> 📄 Published in *Computational Economics* (Springer, 2026) — [doi:10.1007/s10614-026-11413-9](https://doi.org/10.1007/s10614-026-11413-9)
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
@@ -36,7 +37,7 @@ and — because it needs only text — it can score companies that no agency cov
 
 After the graduation exhibition, the optimization model was refined and validated in a
 follow-up backtesting study (2020–2024, annual rebalancing with year *t−1* scores —
-no look-ahead). The LLM-ESG optimized portfolio beat every benchmark **on every
+no look-ahead), later published in *Computational Economics* (2026). The LLM-ESG optimized portfolio beat every benchmark **on every
 metric**:
 
 | Portfolio | 5y Cumulative Return | CAGR | Volatility | Sharpe | Max Drawdown | Calmar |
@@ -174,6 +175,7 @@ pytest
 - **Adviser**: Prof. Cho Min-soo (Dept. of Information Convergence, Kwangwoon Univ.)
 - **Partner company**: Billions Lab (Dr. Pyo Su-jin)
 - **Software registration**: C-2024-042035
+- **Publication**: Pyo, S., Baek, J., Kim, N., & Cho, M. (2026). Integrating Text-Derived ESG Signals into Bayesian Portfolio Optimization: Evidence from South Korea. *Computational Economics*. https://doi.org/10.1007/s10614-026-11413-9
 
 ## 📄 License
 

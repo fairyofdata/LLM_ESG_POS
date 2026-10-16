@@ -6,6 +6,7 @@
 
 > 🏆🥈 光云大学 第8回 産学連携SWプロジェクト展示会 優秀賞(2位)
 > 🏆🥈 光云大学 SW融合大学 2024年卒業展示会 優秀賞(2位)
+> 📄 *Computational Economics*（Springer, 2026）掲載 — [doi:10.1007/s10614-026-11413-9](https://doi.org/10.1007/s10614-026-11413-9)
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
@@ -35,7 +36,7 @@ Sustainalytics、ISS、KCGS)の評価傾向を学習し、テキストさえあ�
 ## 🔬 研究ハイライト
 
 卒業展示会の後、最適化モデルを改良し、フォローアップのバックテスト研究(2020–2024年、
-t−1年のスコアでt年をリバランス — 先読みバイアスを除去)で検証しました。LLM-ESG最適化
+t−1年のスコアでt年をリバランス — 先読みバイアスを除去)で検証し、その成果は *Computational Economics*（2026）に掲載されました。LLM-ESG最適化
 ポートフォリオは**すべての指標で**ベンチマークを上回りました:
 
 | ポートフォリオ | 5年累積リターン | CAGR | ボラティリティ | シャープ | 最大ドローダウン | カルマー |
@@ -172,6 +173,7 @@ pytest
 - **指導教授**: チョ・ミンス教授 (光云大学 情報融合学部)
 - **連携企業**: Billions Lab (ピョ・スジン博士)
 - **SW登録番号**: C-2024-042035
+- **論文**: Pyo, S., Baek, J., Kim, N., & Cho, M. (2026). Integrating Text-Derived ESG Signals into Bayesian Portfolio Optimization: Evidence from South Korea. *Computational Economics*. https://doi.org/10.1007/s10614-026-11413-9
 
 ## 📄 ライセンス
 

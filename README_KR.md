@@ -6,6 +6,7 @@
 
 > 🏆🥈 광운대학교 제8회 산학연계 SW 프로젝트 전시회 우수상(2위)
 > 🏆🥈 광운대학교 SW융합대학 2024년 졸업전시회 우수상(2위)
+> 📄 *Computational Economics*(Springer, 2026) 게재 — [doi:10.1007/s10614-026-11413-9](https://doi.org/10.1007/s10614-026-11413-9)
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)
@@ -34,7 +35,7 @@ Sustainalytics, ISS, ESG기준원)의 평가 경향을 학습하며, 텍스트�
 ## 🔬 연구 하이라이트
 
 졸업전시회 이후 최적화 모델을 개선하고 후속 백테스트 연구(2020–2024, t−1년 스코어로
-t년 리밸런싱 — 룩어헤드 편향 제거)로 검증했습니다. LLM-ESG 최적화 포트폴리오는
+t년 리밸런싱 — 룩어헤드 편향 제거)로 검증했고, 이 연구는 *Computational Economics*(2026)에 게재됐습니다. LLM-ESG 최적화 포트폴리오는
 **모든 지표에서** 벤치마크를 상회했습니다:
 
 | 포트폴리오 | 5년 누적수익률 | CAGR | 변동성 | 샤프비율 | 최대낙폭 | 칼마비율 |
@@ -170,6 +171,7 @@ pytest
 - **지도교수**: 조민수 교수 (광운대학교 정보융합학부)
 - **참여기업**: 빌리언스랩 (표수진 박사)
 - **SW 등록번호**: C-2024-042035
+- **논문**: Pyo, S., Baek, J., Kim, N., & Cho, M. (2026). Integrating Text-Derived ESG Signals into Bayesian Portfolio Optimization: Evidence from South Korea. *Computational Economics*. https://doi.org/10.1007/s10614-026-11413-9
 
 ## 📄 라이선스
 
